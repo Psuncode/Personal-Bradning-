@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/layout/container";
 import { SectionHeading } from "@/components/section-heading";
-import { CalEmbed } from "@/components/cal-embed";
 import { siteConfig } from "@/data/site-config";
+import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Book a Meeting",
@@ -15,29 +15,53 @@ export default function MeetPage() {
       <Container>
         <SectionHeading
           title="Book a Meeting"
-          subtitle="Pick a time that works for you. I'll receive a notification and confirm."
+          subtitle="Let's connect and discuss your project or opportunity."
         />
 
-        {siteConfig.calLink ? (
-          <div className="mx-auto max-w-4xl overflow-hidden rounded-xl border border-byu-sky/30 bg-white p-2 shadow-sm">
-            <div className="min-h-[600px]">
-              <CalEmbed calLink={siteConfig.calLink} />
+        <div className="mx-auto max-w-lg rounded-xl border border-byu-sky/30 bg-white p-8 text-center shadow-sm">
+          <div className="mb-6">
+            <h3 className="mb-4 text-xl font-semibold text-byu-navy">
+              Get in Touch
+            </h3>
+            <p className="mb-6 text-byu-dark-gray">
+              The best way to reach me is via email. I typically respond within 24 hours.
+            </p>
+          </div>
+
+          <a
+            href={siteConfig.links.email}
+            className="inline-block"
+          >
+            <Button className="bg-byu-blue hover:bg-byu-navy">
+              Send me an email
+            </Button>
+          </a>
+
+          <div className="mt-8 border-t border-byu-sky/30 pt-6">
+            <p className="mb-4 text-sm text-byu-dark-gray">
+              You can also connect with me on:
+            </p>
+            <div className="flex justify-center gap-4">
+              <a
+                href={siteConfig.links.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-byu-blue hover:text-byu-navy underline"
+              >
+                GitHub
+              </a>
+              <span className="text-byu-sky">/</span>
+              <a
+                href={siteConfig.links.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-byu-blue hover:text-byu-navy underline"
+              >
+                LinkedIn
+              </a>
             </div>
           </div>
-        ) : (
-          <div className="mx-auto max-w-lg rounded-xl border border-byu-sky/30 bg-white p-8 text-center shadow-sm">
-            <p className="text-lg text-byu-dark-gray">
-              Calendar booking is being set up. In the meantime, reach out
-              directly:
-            </p>
-            <a
-              href={siteConfig.links.email}
-              className="mt-4 inline-block text-lg font-semibold text-byu-navy underline"
-            >
-              Send me an email
-            </a>
-          </div>
-        )}
+        </div>
       </Container>
     </div>
   );

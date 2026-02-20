@@ -8,7 +8,9 @@ export const siteConfig = {
   links: {
     github: "https://github.com/Psuncode",
     linkedin: "https://www.linkedin.com/in/-philipsun/",
-    email: "mailto:philip@example.com",
+    email: "mailto:contact@example.com", // TODO: Update with your actual email
   },
-  calLink: "", // Add your Cal.com link here (e.g., "yourname/30min")
+  // To add Cal.com booking, set this to your Cal.com link (e.g., "yourname/30min")
+  // Then uncomment the CalEmbed section in src/app/meet/page.tsx
+  calLink: "",
 };
