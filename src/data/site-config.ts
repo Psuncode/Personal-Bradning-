@@ -7,7 +7,7 @@ export const siteConfig = {
   ogImage: "/og-image.png",
   links: {
     github: "https://github.com/Psuncode",
-    linkedin: "https://linkedin.com/in/philipsun",
+    linkedin: "https://www.linkedin.com/in/-philipsun/",
     email: "mailto:philip@example.com",
   },
   calLink: "", // Add your Cal.com link here (e.g., "yourname/30min")
