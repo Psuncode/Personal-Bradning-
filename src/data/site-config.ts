@@ -3,12 +3,12 @@ export const siteConfig = {
   title: "Philip Sun | Software Developer",
   description:
     "Personal website of Philip Sun — software developer, projects, and booking.",
-  url: "https://philip-sun-website.vercel.app",
+  url: "https://personal-bradning-uxl12vfcg.vercel.app",
   ogImage: "/og-image.png",
   links: {
-    github: "https://github.com/philipsun",
+    github: "https://github.com/Psuncode",
     linkedin: "https://linkedin.com/in/philipsun",
     email: "mailto:philip@example.com",
   },
-  calLink: "philipsun/30min",
+  calLink: "", // Add your Cal.com link here (e.g., "yourname/30min")
 };

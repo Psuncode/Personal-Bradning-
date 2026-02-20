@@ -14,7 +14,7 @@ export function CalEmbed({ calLink }: CalEmbedProps) {
       cal("ui", {
         theme: "light",
         styles: {
-          branding: { brandColor: "#002E5D" },
+          branding: { brandColor: "#003DA5" },
         },
         hideEventTypeDetails: false,
         layout: "month_view",
