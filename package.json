@@ -16,11 +16,14 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.34.2",
+    "gray-matter": "^4.0.3",
     "lucide-react": "^0.574.0",
     "next": "16.1.6",
+    "next-mdx-remote": "^6.0.0",
     "radix-ui": "^1.4.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "reading-time": "^1.5.0",
     "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {

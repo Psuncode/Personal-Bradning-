@@ -66,6 +66,16 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
               </Button>
             )}
           </div>
+          {project.slug && (
+            <div className="mt-3">
+              <Link
+                href={`/projects/${project.slug}`}
+                className="text-sm text-byu-blue hover:text-byu-navy underline underline-offset-2 transition-colors"
+              >
+                View Details →
+              </Link>
+            </div>
+          )}
         </CardContent>
       </Card>
     </motion.div>

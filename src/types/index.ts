@@ -8,6 +8,12 @@ export interface Project {
   githubUrl?: string;
   liveUrl?: string;
   featured?: boolean;
+  slug?: string;
+  problem?: string;
+  solution?: string;
+  results?: string;
+  metrics?: string[];
+  lessonsLearned?: string;
 }
 
 export interface SocialLink {
