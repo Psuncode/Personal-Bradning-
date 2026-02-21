@@ -60,7 +60,9 @@ async function fetchCalendarEvents(
 
   try {
     console.log(`Connecting to ${server} as ${username}`);
+    console.log(`Looking for calendar: ${calendarId}`);
 
+    // Create client with proper authentication
     const client = new DAVClient({
       serverUrl: server,
       credentials: {
@@ -72,12 +74,37 @@ async function fetchCalendarEvents(
 
     // Fetch calendars
     console.log('Fetching calendars...');
-    const calendars = await client.fetchCalendars();
+    let calendars;
+    
+    try {
+      calendars = await client.fetchCalendars();
+      console.log(`Successfully fetched ${calendars?.length || 0} calendars`);
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      console.error('Failed to fetch calendars:', msg);
+      
+      // If authentication fails, provide helpful error message
+      if (msg.includes('no account') || msg.includes('401') || msg.includes('Unauthorized')) {
+        console.error('Authentication failed. Please verify:');
+        console.error('  1. iCloud email (ICAL_USERNAME) is correct');
+        console.error('  2. App-specific password (ICAL_PASSWORD) is correct');
+        console.error('  3. Calendar ID (ICAL_CALENDAR_ID) exists');
+        throw new Error('iCloud authentication failed - check credentials');
+      }
+      
+      throw error;
+    }
     
     if (!calendars || calendars.length === 0) {
       console.warn('No calendars found');
       return [];
     }
+
+    // Log available calendars for debugging
+    calendars.forEach((cal: any, idx: number) => {
+      const name = cal.displayName || cal.url || 'Unnamed';
+      console.log(`  [${idx}] ${name}`);
+    });
 
     // Find the target calendar
     let targetCalendar = calendars[0];
@@ -86,19 +113,27 @@ async function fetchCalendarEvents(
     const matchingCalendar = calendars.find((cal: any) => {
       const calUrl = String(cal.url || '');
       const calName = String(cal.displayName || '');
-      return calUrl.includes(calendarId) || calName.includes(calendarId);
+      const calResourceType = String((cal as any).resourcetype || '');
+      
+      return (
+        calUrl.includes(calendarId) || 
+        calName.includes(calendarId) ||
+        calResourceType.includes('calendar')
+      );
     });
 
     if (matchingCalendar) {
       targetCalendar = matchingCalendar;
+      console.log(`Using matched calendar: ${(targetCalendar as any).displayName || (targetCalendar as any).url}`);
+    } else {
+      console.log(`No exact match for ${calendarId}, using first calendar`);
     }
-
-    console.log(`Using calendar: ${(targetCalendar as any).displayName || (targetCalendar as any).url}`);
 
     // Fetch calendar objects within date range
     const startISO = startDate.toISOString();
     const endISO = endDate.toISOString();
     console.log(`Fetching events from ${startISO} to ${endISO}`);
+    
     const calendarObjects = await client.fetchCalendarObjects({
       calendar: targetCalendar,
       timeRange: {
@@ -117,6 +152,11 @@ async function fetchCalendarEvents(
     
     for (const obj of calendarObjects) {
       try {
+        if (!obj.data) {
+          console.warn('Calendar object has no data');
+          continue;
+        }
+        
         // Parse ICS data
         const jcalData = ICAL.parse(obj.data);
         const component = new ICAL.Component(jcalData);
@@ -136,7 +176,7 @@ async function fetchCalendarEvents(
       }
     }
 
-    console.log(`Successfully fetched ${events.length} events`);
+    console.log(`Successfully fetched ${events.length} events from ${calendarObjects.length} objects`);
     return events;
   } catch (error) {
     console.error('Error fetching calendar events:', error);
