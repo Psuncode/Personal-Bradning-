@@ -1,18 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-/**
- * CalDAV API endpoint to fetch iCloud calendar events
- * 
- * POST /api/calendar
- * Body: { startDate: ISO string, endDate: ISO string }
- * Returns: { events: CalendarEvent[] }
- * 
- * This endpoint requires environment variables:
- * - ICAL_USERNAME: iCloud email
- * - ICAL_PASSWORD: App-specific password
- * - ICAL_SERVER: CalDAV server URL (default: https://caldav.icloud.com)
- * - ICAL_CALENDAR_ID: Calendar identifier
- */
+import { DAVClient } from 'tsdav';
+import ICAL from 'ical.js';
 
 interface CalendarEvent {
   title: string;
@@ -20,91 +8,182 @@ interface CalendarEvent {
   endTime: string;
 }
 
+/**
+ * Parse ICS event data from iCal.js component
+ */
+function parseICALEvent(component: any): CalendarEvent | null {
+  try {
+    const summary = component.getFirstPropertyValue('summary') || 'Event';
+    const dtstart = component.getFirstPropertyValue('dtstart');
+    const dtend = component.getFirstPropertyValue('dtend');
+
+    if (!dtstart || !dtend) {
+      return null;
+    }
+
+    // Convert to ISO string
+    const startTime = dtstart instanceof ICAL.Time 
+      ? dtstart.toJSDate().toISOString()
+      : new Date(dtstart).toISOString();
+    
+    const endTime = dtend instanceof ICAL.Time
+      ? dtend.toJSDate().toISOString()
+      : new Date(dtend).toISOString();
+
+    return {
+      title: String(summary),
+      startTime,
+      endTime,
+    };
+  } catch (error) {
+    console.error('Error parsing ICAL event:', error);
+    return null;
+  }
+}
+
+/**
+ * Fetch calendar events from iCloud CalDAV
+ */
+async function fetchCalendarEvents(
+  startDate: Date,
+  endDate: Date
+): Promise<CalendarEvent[]> {
+  const username = process.env.ICAL_USERNAME;
+  const password = process.env.ICAL_PASSWORD;
+  const server = process.env.ICAL_SERVER || 'https://caldav.icloud.com';
+  const calendarId = process.env.ICAL_CALENDAR_ID;
+
+  if (!username || !password || !calendarId) {
+    console.log('Calendar not configured, returning empty events');
+    return [];
+  }
+
+  try {
+    console.log(`Connecting to ${server} as ${username}`);
+
+    const client = new DAVClient({
+      serverUrl: server,
+      credentials: {
+        username,
+        password,
+      },
+      authMethod: 'Basic',
+    });
+
+    // Fetch calendars
+    console.log('Fetching calendars...');
+    const calendars = await client.fetchCalendars();
+    
+    if (!calendars || calendars.length === 0) {
+      console.warn('No calendars found');
+      return [];
+    }
+
+    // Find the target calendar
+    let targetCalendar = calendars[0];
+    
+    // Try to find calendar by ID or name
+    const matchingCalendar = calendars.find((cal: any) => {
+      const calUrl = String(cal.url || '');
+      const calName = String(cal.displayName || '');
+      return calUrl.includes(calendarId) || calName.includes(calendarId);
+    });
+
+    if (matchingCalendar) {
+      targetCalendar = matchingCalendar;
+    }
+
+    console.log(`Using calendar: ${(targetCalendar as any).displayName || (targetCalendar as any).url}`);
+
+    // Fetch calendar objects within date range
+    const startISO = startDate.toISOString();
+    const endISO = endDate.toISOString();
+    console.log(`Fetching events from ${startISO} to ${endISO}`);
+    const calendarObjects = await client.fetchCalendarObjects({
+      calendar: targetCalendar,
+      timeRange: {
+        start: startISO,
+        end: endISO,
+      },
+    });
+
+    if (!calendarObjects || calendarObjects.length === 0) {
+      console.log('No events found in date range');
+      return [];
+    }
+
+    // Parse calendar objects to events
+    const events: CalendarEvent[] = [];
+    
+    for (const obj of calendarObjects) {
+      try {
+        // Parse ICS data
+        const jcalData = ICAL.parse(obj.data);
+        const component = new ICAL.Component(jcalData);
+        
+        // Get VEVENT components
+        const veventComponents = component.getAllSubcomponents('vevent');
+        
+        for (const vevent of veventComponents) {
+          const event = parseICALEvent(vevent);
+          if (event) {
+            events.push(event);
+          }
+        }
+      } catch (error) {
+        console.error('Error parsing calendar object:', error);
+        // Continue with next object
+      }
+    }
+
+    console.log(`Successfully fetched ${events.length} events`);
+    return events;
+  } catch (error) {
+    console.error('Error fetching calendar events:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    throw new Error(`CalDAV error: ${errorMessage}`);
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { startDate, endDate } = await request.json();
 
-    // Validate environment variables
-    const username = process.env.ICAL_USERNAME;
-    const password = process.env.ICAL_PASSWORD;
-    const server = process.env.ICAL_SERVER || 'https://caldav.icloud.com';
-    const calendarId = process.env.ICAL_CALENDAR_ID;
-
-    if (!username || !password || !calendarId) {
+    if (!startDate || !endDate) {
       return NextResponse.json(
-        {
-          error: 'Calendar credentials not configured',
-          message: 'Please set ICAL_USERNAME, ICAL_PASSWORD, and ICAL_CALENDAR_ID environment variables',
-        },
-        { status: 500 }
+        { error: 'Missing startDate or endDate' },
+        { status: 400 }
       );
     }
 
-    // TODO: Implement actual CalDAV connection using tsdav library
-    // For now, return mock data to show the integration works
-    const mockEvents: CalendarEvent[] = [
-      {
-        title: 'Team Standup',
-        startTime: new Date(startDate).toISOString(),
-        endTime: new Date(new Date(startDate).getTime() + 60 * 60000).toISOString(),
-      },
-    ];
+    // Fetch events from iCloud
+    const events = await fetchCalendarEvents(
+      new Date(startDate),
+      new Date(endDate)
+    );
 
     return NextResponse.json({
       success: true,
-      events: mockEvents,
+      events,
       dateRange: {
         start: startDate,
         end: endDate,
       },
+      eventCount: events.length,
     });
   } catch (error) {
-    console.error('Error fetching calendar events:', error);
+    console.error('API error:', error);
+    
+    // Return detailed error for debugging
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    
     return NextResponse.json(
       {
         error: 'Failed to fetch calendar events',
-        message: error instanceof Error ? error.message : 'Unknown error',
+        message: errorMessage,
+        details: process.env.NODE_ENV === 'development' ? String(error) : undefined,
       },
       { status: 500 }
     );
   }
 }
-
-/**
- * CalDAV Implementation Notes:
- * 
- * To implement actual CalDAV connection, use tsdav library:
- * 
- * import { DAVClient } from 'tsdav';
- * 
- * const client = new DAVClient({
- *   serverUrl: `${server}/`,
- *   credentials: {
- *     username,
- *     password,
- *   },
- * });
- * 
- * // Authenticate
- * await client.login();
- * 
- * // Fetch calendars
- * const calendars = await client.fetchCalendars();
- * const calendar = calendars.find(c => c.url?.includes(calendarId));
- * 
- * // Fetch events in date range
- * const events = await client.fetchCalendarObjects({
- *   calendar: calendar,
- *   timeRange: {
- *     start: new Date(startDate),
- *     end: new Date(endDate),
- *   },
- * });
- * 
- * // Parse ICS data and format response
- * const parsedEvents = events.map(event => ({
- *   title: event.summary || '',
- *   startTime: new Date(event.startDate).toISOString(),
- *   endTime: new Date(event.endDate).toISOString(),
- * }));
- */
