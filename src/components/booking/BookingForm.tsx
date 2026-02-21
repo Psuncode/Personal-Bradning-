@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { getAvailableSlots, getAvailableDays, isWorkDay } from '@/lib/availabilityService';
 import { generateICSContent, downloadICS } from '@/lib/icsService';
+import { fetchICloudEvents } from '@/lib/icalendarService';
 import { format } from 'date-fns-tz';
 
 const TIMEZONE = 'America/Denver';
@@ -31,13 +32,36 @@ export function BookingForm({ onBooking }: BookingFormProps) {
   });
   const [availableSlots, setAvailableSlots] = useState<any[]>([]);
   const [icsContent, setIcsContent] = useState<string>('');
+  const [isLoadingSlots, setIsLoadingSlots] = useState(false);
+  const [slotError, setSlotError] = useState<string | null>(null);
 
-  const handleDateSelect = (date: Date) => {
+  const handleDateSelect = async (date: Date) => {
     if (isWorkDay(date)) {
       setSelectedDate(date);
-      const slots = getAvailableSlots(date);
-      setAvailableSlots(slots);
-      setStep('time');
+      setIsLoadingSlots(true);
+      setSlotError(null);
+      
+      try {
+        // Fetch events for this day from iCloud
+        const endOfDay = new Date(date);
+        endOfDay.setHours(23, 59, 59, 999);
+        
+        const events = await fetchICloudEvents(date, endOfDay);
+        
+        // Get available slots excluding booked times
+        const slots = getAvailableSlots(date, events);
+        setAvailableSlots(slots);
+        setStep('time');
+      } catch (error) {
+        console.error('Error loading availability:', error);
+        setSlotError('Failed to load available slots. Please try again.');
+        // Fall back to showing all slots
+        const slots = getAvailableSlots(date);
+        setAvailableSlots(slots);
+        setStep('time');
+      } finally {
+        setIsLoadingSlots(false);
+      }
     }
   };
 
@@ -109,7 +133,7 @@ export function BookingForm({ onBooking }: BookingFormProps) {
         <div className="space-y-6">
           <h3 className="text-2xl font-semibold text-byu-navy">Select a Date</h3>
           <p className="text-byu-dark-gray">
-            Choose a weekday (Monday - Friday) to meet.
+            Choose a weekday (Monday - Friday) to meet. All times are in Mountain Time.
           </p>
           <div className="grid grid-cols-7 gap-2">
             {getAvailableDays(new Date(), 30).slice(0, 35).map((date) => (
@@ -142,25 +166,44 @@ export function BookingForm({ onBooking }: BookingFormProps) {
           <p className="text-byu-dark-gray">
             {format(selectedDate, 'MMMM d, yyyy')} - Available slots (Mountain Time):
           </p>
-          <div className="grid grid-cols-3 gap-2">
-            {availableSlots.length > 0 ? (
-              availableSlots.map((slot, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleTimeSelect(slot)}
-                  className={`p-3 rounded-lg border-2 transition-colors font-medium ${
-                    selectedSlot === slot
-                      ? 'border-byu-navy bg-byu-navy text-white'
-                      : 'border-byu-sky/30 hover:border-byu-navy text-byu-navy'
-                  }`}
-                >
-                  {slot.display}
-                </button>
-              ))
-            ) : (
-              <p className="col-span-3 text-byu-dark-gray">No available slots for this day</p>
-            )}
-          </div>
+          
+          {isLoadingSlots && (
+            <div className="text-center py-8">
+              <div className="inline-block">
+                <div className="animate-spin h-8 w-8 border-4 border-byu-navy border-t-transparent rounded-full"></div>
+              </div>
+              <p className="mt-4 text-byu-dark-gray">Loading availability...</p>
+            </div>
+          )}
+          
+          {slotError && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-yellow-700">
+              {slotError}
+            </div>
+          )}
+
+          {!isLoadingSlots && (
+            <div className="grid grid-cols-3 gap-2">
+              {availableSlots.length > 0 ? (
+                availableSlots.map((slot, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleTimeSelect(slot)}
+                    className={`p-3 rounded-lg border-2 transition-colors font-medium ${
+                      selectedSlot === slot
+                        ? 'border-byu-navy bg-byu-navy text-white'
+                        : 'border-byu-sky/30 hover:border-byu-navy text-byu-navy'
+                    }`}
+                  >
+                    {slot.display}
+                  </button>
+                ))
+              ) : (
+                <p className="col-span-3 text-byu-dark-gray">No available slots for this day</p>
+              )}
+            </div>
+          )}
+
           <div className="flex gap-4">
             <Button
               onClick={() => setStep('date')}
@@ -171,7 +214,7 @@ export function BookingForm({ onBooking }: BookingFormProps) {
             </Button>
             <Button
               onClick={() => setStep('details')}
-              disabled={!selectedSlot}
+              disabled={!selectedSlot || isLoadingSlots}
               className="bg-byu-navy hover:bg-byu-blue"
             >
               Continue
@@ -275,6 +318,7 @@ export function BookingForm({ onBooking }: BookingFormProps) {
               setSelectedDate(null);
               setSelectedSlot(null);
               setFormData({ name: '', email: '', description: '' });
+              setSlotError(null);
             }}
             variant="outline"
             className="w-full border-byu-navy text-byu-navy"
