@@ -1,131 +1,136 @@
-# Apple iCloud Calendar Integration Setup Guide
+# Apple iCloud Calendar Integration Setup
 
-## Overview
-Your booking system is now set up to integrate with your personal iCloud calendar. This guide walks you through configuring it.
+This guide helps you connect your Apple Calendar to the booking system for real availability.
 
-## Prerequisites
-- Apple iCloud account with calendar enabled
-- App-specific password (for security)
-- Calendar identifier
+## Current Status
 
-## Step 1: Generate App-Specific Password
+The booking system supports:
+- ✅ Multi-step booking UI with date and time selection
+- ✅ 30-minute availability slots
+- ✅ ICS file generation for calendar invites
+- ✅ Backend CalDAV integration (awaiting credentials)
 
-1. Go to [Apple ID Account](https://appleid.apple.com/)
-2. Click "Security"
-3. Under "App-Specific Passwords", click "Generate password"
-4. Select "Other App" and type "Booking System"
-5. Apple will generate a password like: `xxxx-xxxx-xxxx-xxxx`
-6. Copy and save this password
+## Setup Instructions
 
-## Step 2: Find Your Calendar ID
+### Step 1: Create App-Specific Password
 
-1. Go to [iCloud.com](https://www.icloud.com/)
-2. Sign in to your iCloud account
-3. Open Calendar
-4. Right-click on your calendar name (in the left sidebar)
-5. Select "Share Settings" or look for settings
-6. Look for the calendar URL or ID
-   - Usually formatted like: `philip.sun@icloud.com`
-   - Or a UUID like: `A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6@icloud.com`
+1. Go to [appleid.apple.com](https://appleid.apple.com)
+2. Click "Security" → "App-Specific Passwords"
+3. Click the "+" icon and generate a password for "Website Booking"
+4. Apple will give you a 16-character password (e.g., `xzzv-upns-bzmz-ibep`)
+5. Keep this password secure - it's different from your iCloud password
 
-## Step 3: Configure Environment Variables
+### Step 2: Find Your Calendar Information
 
-Create a `.env.local` file in your project root:
+**iCloud Email:**
+- This is your iCloud email address (e.g., `name@icloud.com`)
+- Should be the same as your iCloud login
 
-```env
+**Calendar ID:**
+- Open the Calendar app on macOS or iOS
+- Right-click your calendar → "Get Info"
+- You should see an email-style identifier
+- Could be a username format (e.g., `name@icloud.com`) or UUID
+- Note: If you use a family calendar, use the primary calendar email
+
+### Step 3: Configure Environment Variables
+
+Create or update `.env.local` in your project root:
+
+```bash
 ICAL_USERNAME=your-icloud@icloud.com
 ICAL_PASSWORD=xxxx-xxxx-xxxx-xxxx
 ICAL_CALENDAR_ID=your-calendar-id
 ICAL_SERVER=https://caldav.icloud.com
 ```
 
-### Example:
-```env
-ICAL_USERNAME=philip.sun@icloud.com
-ICAL_PASSWORD=wxyz-abcd-efgh-ijkl
-ICAL_CALENDAR_ID=philip.sun@icloud.com
-ICAL_SERVER=https://caldav.icloud.com
-```
-
-## Step 4: Verify Configuration
+### Step 4: Test the Connection
 
 1. Start the development server: `npm run dev`
-2. Visit `/meet`
-3. Select a date
-4. The system should fetch your calendar events
-5. You'll see error messages in the console if credentials are incorrect
-
-## Step 5: Deploy to Vercel (if using Vercel)
-
-1. Go to your Vercel project settings
-2. Add environment variables:
-   - `ICAL_USERNAME`
-   - `ICAL_PASSWORD`
-   - `ICAL_CALENDAR_ID`
-   - `ICAL_SERVER`
-3. Redeploy your project
+2. Navigate to the "/meet" page
+3. Select a date - it should attempt to fetch real events
+4. Check the browser console and server logs for errors
 
 ## Troubleshooting
 
-### "Calendar credentials not configured" error
-- Check that all environment variables are set correctly
-- Verify `.env.local` file exists (for local development)
-- For Vercel, check Project Settings > Environment Variables
+### "iCloud authentication failed - check credentials"
 
-### "Failed to fetch calendar events" error
-- Verify app-specific password is correct
-- Check iCloud calendar ID is correct
-- Ensure iCloud account has calendar enabled
-- Check that CalDAV is enabled in iCloud settings
+This means the CalDAV server rejected the credentials. Check:
 
-### No events showing up
-- Verify calendar ID points to the right calendar
-- Check that events are actually scheduled in iCloud Calendar
-- Look at browser console for detailed error messages
+1. **Is your app-specific password correct?**
+   - Make sure you copied the entire password without spaces
+   - It should be 16 characters in format: `xxxx-xxxx-xxxx-xxxx`
+   - Don't use your regular iCloud password
 
-## How It Works
+2. **Is the password active?**
+   - Go to appleid.apple.com → Security
+   - Check if the password is listed as active
+   - If not, regenerate a new one
 
-1. User selects a date on `/meet`
-2. Frontend calls `/api/calendar` endpoint
-3. Backend authenticates to iCloud CalDAV using credentials
-4. Backend fetches events for that date
-5. Frontend removes booked times from available slots
-6. User only sees actually free 30-minute slots
-7. 9 AM - 5 PM Mountain Time, Monday-Friday only
+3. **Is your iCloud email correct?**
+   - Should match your actual iCloud email (ends with @icloud.com)
+   - Not a forwarding email or alias
 
-## Security Notes
+4. **Do you have CalDAV enabled?**
+   - Some iCloud accounts have CalDAV disabled
+   - Check Settings → iCloud → Calendar is enabled
+   - You may need to enable "Calendars" in the iCloud settings
 
-- **Never** commit `.env.local` to git (already in .gitignore)
-- App-specific passwords are safer than regular passwords
-- Credentials are stored server-side, never exposed to frontend
-- API endpoint validates all date inputs
+### "No calendars found"
 
-## Future Enhancements
+1. Verify you have at least one calendar in iCloud
+2. The calendar should be visible in the Calendar app
+3. Try using your iCloud email as the calendar ID first
 
-- [ ] Add tsdav library for direct CalDAV integration
-- [ ] Support multiple calendars
-- [ ] Add timezone handling for different user locations
-- [ ] Cache calendar events for 15 minutes
-- [ ] Add rate limiting to API endpoint
-- [ ] Support recurring event exceptions
-- [ ] Add email notifications for bookings
+### Events not showing up
 
-## Testing with Mock Data
+1. Make sure the calendar ID is correct
+2. Check that events are within the selected date range
+3. Look at server logs: `tail -f /tmp/server.log`
 
-While credentials are not configured, the system returns mock data:
-- One "Team Standup" event 9-10 AM
-- All other slots shown as available
-- Perfect for testing the booking flow
+## Server Logs
 
-## Related Files
+When debugging, check the server output for detailed logs:
 
-- `/api/calendar/route.ts` - Backend API endpoint
-- `/lib/icalendarService.ts` - Calendar utilities
-- `/components/booking/BookingForm.tsx` - Frontend integration
-- `/lib/availabilityService.ts` - Slot calculation logic
+```bash
+npm run dev
+# Look for messages like:
+# - "Connecting to https://caldav.icloud.com as..."
+# - "Fetching calendars..."
+# - "Using calendar: ..."
+# - "Fetching events from..."
+```
 
-## Support
+## API Response Format
 
-For issues with iCloud Calendar setup, visit:
-- [Apple iCloud Help](https://support.apple.com/icloud)
-- [CalDAV Documentation](https://en.wikipedia.org/wiki/CalDAV)
+The `/api/calendar` endpoint returns:
+
+```json
+{
+  "success": true,
+  "events": [
+    {
+      "title": "Meeting",
+      "startTime": "2026-02-21T14:00:00.000Z",
+      "endTime": "2026-02-21T15:00:00.000Z"
+    }
+  ],
+  "dateRange": {
+    "start": "2026-02-21T00:00:00Z",
+    "end": "2026-02-28T00:00:00Z"
+  },
+  "eventCount": 1
+}
+```
+
+## Contact Information
+
+Email: ps324@byu.edu
+
+For booking inquiries and technical support, please use the contact form or send an email.
+
+## Additional Resources
+
+- [Apple Support: App-Specific Passwords](https://support.apple.com/en-us/105056)
+- [iCloud CalDAV Support](https://support.apple.com/en-us/119195)
+- [WebDAV/CalDAV Documentation](https://caldav.icloud.com/)
