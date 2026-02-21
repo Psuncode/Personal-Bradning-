@@ -8,6 +8,6 @@ export const siteConfig = {
   links: {
     github: "https://github.com/Psuncode",
     linkedin: "https://www.linkedin.com/in/-philipsun/",
-    email: "mailto:contact@example.com",
+    email: "mailto:ps324@byu.edu",
   },
 };

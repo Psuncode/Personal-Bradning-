@@ -1,0 +1,45 @@
+---
+title: "5 Lessons From Building Things That Actually Shipped"
+date: "2026-02-01"
+excerpt: "The gap between a side project and a shipped product is mostly about decisions. Here's what I've learned from crossing that gap a few times."
+tags: ["building", "software", "lessons"]
+published: true
+---
+
+There's a big difference between building something and shipping something.
+
+Most tutorials and courses will teach you the former. Very few prepare you for the latter. Here are five things I've learned from projects that made it out into the world.
+
+## 1. Schema design is a forcing function for product thinking
+
+Before you write a single line of application code, you have to decide what your data looks like. That decision encodes your product assumptions in a way that's expensive to change later.
+
+I've learned to treat the first migration as a design review. If you can't clearly name your entities and their relationships, you don't understand the product well enough yet.
+
+## 2. The most dangerous phrase is "we can add that later"
+
+"Later" has a cost that compounds. Every feature added later has to fit into a system that wasn't designed for it. The feature gets awkward, the codebase gets messier, and the user experience gets inconsistent.
+
+This doesn't mean you should over-engineer from the start. It means you should be honest about the cost of deferring decisions — and sometimes that honesty means cutting scope before you start.
+
+## 3. Performance is a feature, not a polish task
+
+I used to treat performance optimization as something you do after the core functionality works. That's backwards.
+
+Users notice a 200ms delay. They don't always know why something feels slow, but they feel it. I now treat performance budgets as first-class requirements, especially on mobile.
+
+## 4. Documentation is a product
+
+If you're building something other people will use — even just a few teammates — the documentation is part of the experience.
+
+The most underrated form of documentation is a well-named function. The second most underrated is a README that answers the three questions every new user has: what is this, how do I set it up, and where do I go if something breaks.
+
+## 5. Shipping is a habit
+
+The first time you ship something, it feels like a big deal. The second time, it feels less scary. By the fifth time, it feels like the natural conclusion of starting something.
+
+The developers I respect most aren't the ones who write the cleverest code. They're the ones who ship consistently, learn from what they ship, and improve with each iteration.
+
+---
+
+These lessons took me longer to internalize than they should have. I hope reading them saves you some of the time I spent learning them the hard way.
