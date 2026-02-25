@@ -34,6 +34,19 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
         </CardHeader>
 
         <CardContent>
+          {project.metrics && project.metrics.length > 0 && (
+            <div className="mb-3 flex flex-wrap gap-2">
+              {project.metrics.map((metric) => (
+                <Badge
+                  key={metric}
+                  className="bg-byu-navy/10 text-byu-navy border border-byu-navy/20"
+                >
+                  {metric}
+                </Badge>
+              ))}
+            </div>
+          )}
+
           <div className="mb-4 flex flex-wrap gap-2">
             {project.techStack.map((tech) => (
               <Badge

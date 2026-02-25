@@ -35,7 +35,7 @@ export function Hero() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="mt-4 text-xl text-byu-sky sm:text-2xl"
           >
-            Software Developer &amp; Student at BYU
+            Product Manager · Founder · Investor
           </motion.p>
 
           <motion.p
@@ -44,8 +44,8 @@ export function Hero() {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="mt-6 max-w-xl text-lg leading-relaxed text-white/80"
           >
-            Building things that matter. Passionate about creating clean,
-            thoughtful software that solves real problems.
+            I build products, acquire businesses, and back founders. BYU · open
+            to the right opportunity.
           </motion.p>
 
           <motion.div
