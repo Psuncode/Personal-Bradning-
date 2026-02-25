@@ -42,6 +42,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     ...blogPostRoutes,
     {
+      url: `${siteConfig.url}/resume`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.9,
+    },
+    {
       url: `${siteConfig.url}/meet`,
       lastModified: new Date(),
       changeFrequency: "monthly",
