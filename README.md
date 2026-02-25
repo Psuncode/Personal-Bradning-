@@ -2,9 +2,9 @@
 
 > A high-conviction personal site showcasing projects, ventures, and strategic thinking. Built to convert visitors into recruiter calls, investor conversations, startup partnerships, and acquisition leads.
 
-**Live:** [philip-sun-website.vercel.app](https://philip-sun-website.vercel.app)  
-**Version:** v0.1.0  
-**Status:** Active Development (V1 complete, V1.5 roadmap in progress)
+**Live:** [philip-sun-website.vercel.app](https://philip-sun-website.vercel.app)
+**Version:** v1.5.0
+**Status:** Active Development (V1.5 complete)
 
 ---
 
@@ -47,15 +47,38 @@ Every element serves a purpose. The site is fast, mobile-first, and optimized fo
 
 ## Features
 
-### V1 Features (Complete)
+### V1.5 Features (Complete)
 
-#### 🏠 **Homepage**
-- **Hero Section**: Strategic one-liner and value proposition
-- **Current Focus**: Real-time insight into what's being worked on
-- **Featured Projects**: Showcase of 3-5 best projects with problem/solution overview
-- **Social Proof**: Metrics, testimonials, or results
+#### ✍️ **Blog System**
+- MDX-powered blog with full syntax highlighting
+- Tag filtering and featured post badges
+- RSS feed at `/feed.xml` for newsletter subscribers
+- Individual post pages with OG image support
+
+#### 📄 **Resume Page**
+- Timeline-based work history
+- Skills matrix
+- Recruiting CTA with direct booking link
+
+#### 🔍 **SEO Infrastructure**
+- JSON-LD Person schema (Google structured data)
+- Dynamic OG image at `/og` (branded 1200×630, fixes social sharing)
+- Twitter `summary_large_image` cards
+- Security headers (X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy)
+
+#### 🏠 **Homepage V1.5**
+- **Hero Section**: Sharpened UVP — "Product Manager · Founder · Investor"
+- **Current Focus**: Real-time "What I'm working on" cards (Building / Reading / Open To)
+- **Featured Projects**: Project cards now surface `metrics[]` as social-proof pills
 - **CTA**: Prominent link to booking system
 - **Technical Details**: Built with Framer Motion animations, responsive design
+
+### V1 Features (Complete)
+
+#### 🏠 **Homepage V1**
+- Hero section with Framer Motion animations
+- Featured projects showcase
+- CTA to booking system
 
 #### 📊 **Projects Page**
 - **Full Projects Grid**: Complete project portfolio with filtering/search
@@ -182,9 +205,14 @@ src/
 ├── app/
 │   ├── page.tsx              # Homepage
 │   ├── projects/page.tsx      # Projects listing
+│   ├── blog/page.tsx          # Blog listing with tag filtering
+│   ├── blog/[slug]/page.tsx   # Individual blog post
+│   ├── resume/page.tsx        # Resume with timeline & skills
 │   ├── meet/page.tsx          # Booking page (Cal.com)
 │   ├── contact/page.tsx       # Contact page
-│   ├── layout.tsx             # Root layout
+│   ├── og/route.tsx           # Dynamic OG image (1200×630)
+│   ├── feed.xml/route.ts      # RSS feed
+│   ├── layout.tsx             # Root layout (JSON-LD, OG, Twitter cards)
 │   ├── sitemap.ts             # SEO sitemap
 │   └── robots.ts              # SEO robots.txt
 │
@@ -407,8 +435,13 @@ npm run lint
 philip-sun-website/
 ├── src/
 │   ├── app/                    # Next.js App Router (pages)
+│   │   ├── blog/               # Blog listing + [slug] post pages
+│   │   ├── resume/             # Resume page
+│   │   ├── og/                 # Dynamic OG image route
+│   │   └── feed.xml/           # RSS feed route
 │   ├── components/             # Reusable React components
-│   ├── data/                   # Static data (projects, config)
+│   ├── content/                # MDX blog posts
+│   ├── data/                   # Static data (projects, config, current-focus)
 │   ├── lib/                    # Utility functions
 │   ├── types/                  # TypeScript type definitions
 │   └── globals.css             # Global styles
@@ -880,31 +913,29 @@ To add Google Analytics:
 
 ## Future Roadmap
 
-### V1.5 (Next Quarter)
-**Goal: Deeper engagement and content authority**
+### V1.5 — Complete ✅
 
-- **Blog/Insights Page**: Thought writing on PM, Startups, Investing
-  - Using MDX for markdown + interactive components
-  - RSS feed for newsletter
-- **Newsletter Signup**: Email capture for future announcements
-  - Integration with Substack or Resend
-- **Case Study Archive**: Deeper project documentation
-  - Video demos or screenshots
-  - Metrics and learnings
-- **Social Proof**: Testimonials, social links, media mentions
-- **Analytics Dashboard**: Track key metrics (bookings, conversions)
-  - Vercel Analytics enhanced view
+- Blog system (MDX, tag filtering, featured badges)
+- RSS feed at `/feed.xml`
+- Resume page (timeline, skills, recruiting CTA)
+- Dynamic OG image (`/og`) — fixes social sharing
+- JSON-LD Person schema
+- Twitter `summary_large_image` cards
+- Security headers (X-Frame-Options, CSP-lite, Referrer-Policy)
+- Hero UVP sharpened to PM+Founder+Investor positioning
+- Current Focus section (Building / Reading / Open To)
+- Project card metrics pills
 
-### V2 (6+ Months)
-**Goal: Full content platform and CRM integration**
+### V2 (Next Phase)
+**Goal: Full content platform, CRM, and personalization**
 
-- **AI Meeting Prep**: Auto-summarize visitor's LinkedIn/company before meeting
 - **CRM Integration**: Sync Cal.com bookings to HubSpot/Salesforce
-- **Paid Meeting Option**: Premium 1:1 strategy sessions
+- **AI Meeting Prep**: Auto-summarize visitor's LinkedIn/company before meeting
+- **Private Deal Room**: Password-protected pages for investor/M&A conversations
+- **Analytics Dashboard**: Vercel Analytics with booking funnel + conversion tracking
+- **Personalized CTAs**: Detect visitor type (recruiter / investor / founder) and adapt copy
+- **Newsletter Signup**: Email capture integrated with Resend or Beehiiv
 - **Podcast/Video**: Long-form content hosted on-site
-- **Dashboard for Philip**: Admin panel to manage projects, bookings, metrics
-- **Open API**: Allow external tools to book meetings
-- **Team Page**: Add co-founders or team members
 
 ### Known Limitations & Technical Debt
 
@@ -944,9 +975,9 @@ This project is the personal website of Philip Sun. All content and design are p
 
 ---
 
-**Last Updated:** 2024  
-**Version:** 0.1.0  
-**Status:** Active Development (V1 complete)
+**Last Updated:** 2026
+**Version:** v1.5.0
+**Status:** Active Development (V1.5 complete)
 
 ---
 
