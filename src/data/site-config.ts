@@ -1,8 +1,8 @@
 export const siteConfig = {
   name: "Philip Sun",
-  title: "Philip Sun | Software Developer",
+  title: "Philip Sun | Product Manager · Founder · Investor",
   description:
-    "Personal website of Philip Sun — software developer, projects, and booking.",
+    "Philip Sun — product manager, founder, and investor. Building products, acquiring businesses, and backing founders. BYU.",
   url: "https://personal-bradning-uxl12vfcg.vercel.app",
   ogImage: "/og-image.png",
   links: {
