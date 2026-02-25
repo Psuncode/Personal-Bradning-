@@ -8,24 +8,24 @@ import {
 
 const faqs = [
   {
-    q: "What kind of roles are you open to?",
-    a: "Product Manager, Strategy, or Chief of Staff roles at growth-stage companies ($10M–$200M ARR). Also open to co-founding conversations — especially in healthcare tech or B2B SaaS where I can bring both product and operator DNA.",
+    q: "What kind of PM roles are you targeting?",
+    a: "Full-time PM roles starting May 2026 (BYU graduation Apr 2026). Interested in healthcare tech, B2B SaaS, or companies building complex physical-digital products. Strongest background in enterprise tech, clinician-facing apps, and 0→1 product development.",
   },
   {
-    q: "What's your M&A / ETA thesis?",
-    a: "I'm running a focused search on small healthcare services businesses in the $2–10M revenue range, primarily in the Intermountain West. I'm looking for founder-owned businesses with stable cash flow and a clear operational improvement opportunity.",
+    q: "What is Inara Health?",
+    a: "A healthcare diagnostics startup building a continuous progesterone monitoring device for early pregnancy care. I founded it in Jan 2025 and lead a cross-functional team across biosensing research, hardware prototyping, and clinical outreach. We've deployed ~$40K in capital with 60% going toward R&D.",
   },
   {
-    q: "What does 'Investor' mean in your positioning?",
-    a: "I write small angel checks ($5K–$25K) into pre-seed healthcare and B2B SaaS startups where I can add operator value — product strategy, GTM, or early hiring. I prioritize companies where I know the founder personally.",
+    q: "What's your strongest PM experience?",
+    a: "Two PM internships with real production impact: at the LDS Church (migrated 1,200+ phones with zero downtime, saved $30K/yr on licenses) and at Nursa (shipped an AI TB verification model that replaced an external vendor, saving another $30K/yr). Both involved working directly with engineers and shipping to production.",
   },
   {
     q: "How do I book a meeting with you?",
-    a: "Head to /meet and pick the meeting type that fits: Recruiting for job conversations, Startup for venture or partnership discussions, or Investing for deal flow and co-investment. I keep 5–10 slots open per week.",
+    a: "Head to /meet and pick the type that fits — Recruiting for job conversations, Startup for partnerships or co-founder discussions, or Healthcare for domain-specific conversations. I keep 5–10 slots open per week.",
   },
   {
     q: "Where are you based?",
-    a: "Provo, Utah (BYU). Fully remote-friendly for the right role or opportunity — I've worked across US time zones without issue.",
+    a: "Provo, Utah (BYU). Graduating Apr 2026. Open to relocating for the right full-time role, and remote-friendly for startup or part-time work.",
   },
 ];
 

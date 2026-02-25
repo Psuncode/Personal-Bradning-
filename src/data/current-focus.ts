@@ -7,17 +7,17 @@ export interface FocusItem {
 export const currentFocus: FocusItem[] = [
   {
     label: "Building",
-    heading: "Healthcare M&A search",
-    body: "Running an ETA (Entrepreneurship Through Acquisition) search focused on small healthcare services businesses in the $2–10M revenue range.",
+    heading: "Inara Health Diagnostic",
+    body: "Founder & CEO of a continuous progesterone monitoring device for early pregnancy care. Building a cross-functional team across biosensing, hardware prototyping, and clinical outreach.",
   },
   {
     label: "Reading / Learning",
-    heading: "Operator-turned-investor playbooks",
-    body: "Deep-diving into how operators think about capital allocation, unit economics, and building durable moats — HBS cases, 10-Ks, and long-form interviews.",
+    heading: "Medtech product-market fit",
+    body: "Studying how successful medtech hardware companies navigate FDA pathways, reimbursement strategy, and clinical validation — especially in women's health diagnostics.",
   },
   {
     label: "Open To",
-    heading: "Product, Strategy & Founding roles",
-    body: "Full-time PM or Strategy roles at growth-stage companies. Also open to co-founding conversations in healthcare tech or B2B SaaS. Reach out →",
+    heading: "Full-time PM roles — Apr 2026",
+    body: "Graduating BYU Marriott Apr 2026. Actively seeking full-time PM roles at healthcare tech or high-growth companies where product thinking and domain expertise matter.",
   },
 ];

@@ -35,7 +35,7 @@ export function Hero() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="mt-4 text-xl text-byu-sky sm:text-2xl"
           >
-            Product Manager · Founder · Investor
+            PM · Founder · Healthcare
           </motion.p>
 
           <motion.p
@@ -44,8 +44,9 @@ export function Hero() {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="mt-6 max-w-xl text-lg leading-relaxed text-white/80"
           >
-            I build products, acquire businesses, and back founders. BYU · open
-            to the right opportunity.
+            Building healthcare diagnostics at Inara Health and shipping PM
+            strategy at scale. BYU Marriott · 3.96 GPA · open to full-time PM
+            roles.
           </motion.p>
 
           <motion.div
