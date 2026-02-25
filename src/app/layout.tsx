@@ -29,6 +29,13 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     locale: "en_US",
     type: "website",
+    images: [{ url: `${siteConfig.url}/og`, width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.title,
+    description: siteConfig.description,
+    images: [`${siteConfig.url}/og`],
   },
 };
 
@@ -42,6 +49,29 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${geistMono.variable} min-h-screen font-sans antialiased`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              name: "Philip Sun",
+              url: siteConfig.url,
+              jobTitle: "Product Manager & Founder",
+              alumniOf: {
+                "@type": "EducationalOrganization",
+                name: "Brigham Young University",
+              },
+              sameAs: [siteConfig.links.linkedin, siteConfig.links.github],
+              knowsAbout: [
+                "Product Management",
+                "Healthcare M&A",
+                "ETA",
+                "Software Engineering",
+              ],
+            }),
+          }}
+        />
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
