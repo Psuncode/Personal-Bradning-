@@ -4,6 +4,7 @@ export interface BlogPostFrontmatter {
   excerpt: string;
   tags: string[];
   published: boolean;
+  featured?: boolean;
 }
 
 export interface BlogPost {
