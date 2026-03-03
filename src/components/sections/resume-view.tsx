@@ -1,9 +1,5 @@
 import Link from "next/link";
-import { Download, Calendar, MapPin } from "lucide-react";
-import { Container } from "@/components/layout/container";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Download } from "lucide-react";
 import { roles, education, skills } from "@/data/resume";
 
 const typeLabel: Record<string, string> = {
@@ -15,129 +11,143 @@ const typeLabel: Record<string, string> = {
 
 export function ResumeView() {
   return (
-    <Container>
-      {/* Header */}
-      <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-byu-navy sm:text-4xl">
-            Philip Sun
-          </h1>
-          <p className="mt-1 text-byu-dark-gray/70">
-            Product · Engineering · Strategy
-          </p>
+    <div className="bg-white py-24 px-6 md:px-12">
+      <div className="max-w-5xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6 mb-16">
+          <div>
+            <h1 className="font-[family-name:var(--font-playfair)] text-5xl md:text-6xl text-gray-900 mb-3">
+              Resume
+            </h1>
+            <p className="text-gray-600 text-lg">Product · Strategy · Healthcare</p>
+          </div>
+          <a
+            href="/Philip-Sun-Resume.pdf"
+            download
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition-colors text-sm font-medium self-start"
+          >
+            <Download className="size-4" />
+            Download PDF
+          </a>
         </div>
-        <div className="flex flex-wrap gap-3">
-          <Button asChild variant="outline" className="border-byu-blue text-byu-blue hover:bg-byu-blue hover:text-white">
-            <a href="/Philip-Sun-Resume.pdf" download>
-              <Download className="mr-1.5 size-4" />
-              Download PDF
-            </a>
-          </Button>
-          <Button asChild className="bg-byu-blue text-white hover:bg-byu-navy">
-            <Link href="/meet">Book a Recruiting Call</Link>
-          </Button>
-        </div>
-      </div>
 
-      <Separator className="mb-10" />
-
-      {/* Experience */}
-      <section className="mb-12">
-        <h2 className="mb-6 text-xl font-bold text-byu-navy">Experience</h2>
-        <div className="relative space-y-8 pl-6 before:absolute before:left-0 before:top-2 before:h-[calc(100%-1.5rem)] before:w-px before:bg-byu-sky/60">
-          {roles.map((role, i) => (
-            <div key={i} className="relative">
-              {/* Timeline dot */}
-              <span className="absolute -left-[1.4375rem] top-1.5 size-2.5 rounded-full border-2 border-byu-blue bg-white" />
-              <div className="rounded-xl border border-byu-sky/30 bg-white p-5 shadow-sm">
-                <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
+        {/* Experience */}
+        <section className="mb-20">
+          <h2 className="font-[family-name:var(--font-playfair)] text-3xl text-gray-900 mb-10">
+            Experience
+          </h2>
+          <div className="relative pl-8 border-l-2 border-gray-200 space-y-10">
+            {roles.map((role, i) => (
+              <div key={i} className="relative">
+                <span className="absolute -left-[1.5625rem] top-1.5 w-4 h-4 bg-gray-900 rounded-full" />
+                <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
                   <div>
-                    <h3 className="font-semibold text-byu-navy">{role.title}</h3>
-                    <p className="text-sm font-medium text-byu-blue">{role.company}</p>
+                    <h3 className="font-semibold text-xl text-gray-900">{role.title}</h3>
+                    <p className="text-gray-600 font-medium">{role.company}</p>
                   </div>
-                  <Badge variant="secondary" className="bg-byu-sky/30 text-byu-navy text-xs">
-                    {typeLabel[role.type]}
-                  </Badge>
+                  <div className="text-right text-sm text-gray-500">
+                    <div>{role.period}</div>
+                    <div>{role.location}</div>
+                    <div>{typeLabel[role.type]}</div>
+                  </div>
                 </div>
-                <div className="mb-3 flex flex-wrap gap-4 text-xs text-byu-dark-gray/60">
-                  <span className="flex items-center gap-1">
-                    <Calendar className="size-3" />
-                    {role.period}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <MapPin className="size-3" />
-                    {role.location}
-                  </span>
-                </div>
-                <ul className="space-y-1.5 text-sm text-byu-dark-gray">
+                <ul className="mt-3 space-y-2 text-gray-600 leading-relaxed">
                   {role.bullets.map((b, j) => (
                     <li key={j} className="flex gap-2">
-                      <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-byu-light-blue" />
+                      <span className="mt-2 size-1.5 shrink-0 rounded-full bg-gray-400" />
                       {b}
                     </li>
                   ))}
                 </ul>
               </div>
-            </div>
-          ))}
-        </div>
-      </section>
+            ))}
+          </div>
+        </section>
 
-      {/* Skills */}
-      <section className="mb-12">
-        <h2 className="mb-6 text-xl font-bold text-byu-navy">Skills</h2>
-        <div className="grid gap-6 sm:grid-cols-3">
-          {(
-            [
-              { label: "Product", items: skills.product },
-              { label: "Technical", items: skills.technical },
-              { label: "Business", items: skills.business },
-            ] as const
-          ).map(({ label, items }) => (
-            <div key={label} className="rounded-xl border border-byu-sky/30 bg-white p-5 shadow-sm">
-              <h3 className="mb-3 text-sm font-semibold text-byu-navy">{label}</h3>
+        {/* Education */}
+        <section className="mb-20">
+          <h2 className="font-[family-name:var(--font-playfair)] text-3xl text-gray-900 mb-10">
+            Education
+          </h2>
+          <div className="relative pl-8 border-l-2 border-gray-200 space-y-10">
+            {education.map((edu, i) => (
+              <div key={i} className="relative">
+                <span className="absolute -left-[1.5625rem] top-1.5 w-4 h-4 bg-gray-900 rounded-full" />
+                <div className="flex flex-wrap items-start justify-between gap-2 mb-1">
+                  <div>
+                    <h3 className="font-semibold text-xl text-gray-900">{edu.school}</h3>
+                    <p className="text-gray-600">{edu.degree}</p>
+                  </div>
+                  <div className="text-right text-sm text-gray-500">
+                    <div>{edu.period}</div>
+                    {edu.gpa && <div>GPA {edu.gpa}</div>}
+                  </div>
+                </div>
+                {edu.highlights.length > 0 && (
+                  <ul className="mt-3 space-y-1.5 text-gray-600">
+                    {edu.highlights.map((h, j) => (
+                      <li key={j} className="flex gap-2">
+                        <span className="mt-2 size-1.5 shrink-0 rounded-full bg-gray-400" />
+                        {h}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Skills */}
+        <section className="mb-20">
+          <h2 className="font-[family-name:var(--font-playfair)] text-3xl text-gray-900 mb-10">
+            Skills
+          </h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <h3 className="font-semibold text-gray-900 mb-4">Product Management</h3>
               <div className="flex flex-wrap gap-2">
-                {items.map((s) => (
-                  <Badge key={s} variant="secondary" className="bg-byu-sky/30 text-byu-navy text-xs">
+                {skills.product.map((s) => (
+                  <span key={s} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
                     {s}
-                  </Badge>
+                  </span>
                 ))}
               </div>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Education */}
-      <section className="mb-12">
-        <h2 className="mb-6 text-xl font-bold text-byu-navy">Education</h2>
-        <div className="space-y-4">
-          {education.map((edu, i) => (
-            <div key={i} className="rounded-xl border border-byu-sky/30 bg-white p-5 shadow-sm">
-              <div className="flex flex-wrap items-start justify-between gap-2">
-                <div>
-                  <h3 className="font-semibold text-byu-navy">{edu.school}</h3>
-                  <p className="text-sm text-byu-dark-gray/70">{edu.degree}</p>
-                </div>
-                <div className="text-right text-xs text-byu-dark-gray/60">
-                  <div>{edu.period}</div>
-                  {edu.gpa && <div>GPA {edu.gpa}</div>}
-                </div>
+            <div>
+              <h3 className="font-semibold text-gray-900 mb-4">Technical Skills</h3>
+              <div className="flex flex-wrap gap-2">
+                {skills.technical.map((s) => (
+                  <span key={s} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                    {s}
+                  </span>
+                ))}
               </div>
-              {edu.highlights.length > 0 && (
-                <ul className="mt-3 space-y-1 text-sm text-byu-dark-gray">
-                  {edu.highlights.map((h, j) => (
-                    <li key={j} className="flex gap-2">
-                      <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-byu-light-blue" />
-                      {h}
-                    </li>
-                  ))}
-                </ul>
-              )}
             </div>
-          ))}
+            <div>
+              <h3 className="font-semibold text-gray-900 mb-4">Business</h3>
+              <div className="flex flex-wrap gap-2">
+                {skills.business.map((s) => (
+                  <span key={s} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <div className="text-center border-t border-gray-200 pt-12">
+          <p className="text-gray-600 mb-6">Interested in working together?</p>
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition-colors font-medium"
+          >
+            Get in Touch
+          </Link>
         </div>
-      </section>
-    </Container>
+      </div>
+    </div>
   );
 }

@@ -3,7 +3,7 @@ import { ContactSection } from "@/components/sections/contact-section";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Get in touch with Philip Sun",
+  description: "Connect with Philip Sun about PM roles, healthcare startups, and partnership opportunities",
 };
 
 export default function ContactPage() {

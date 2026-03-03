@@ -62,12 +62,9 @@ export function getAvailableSlots(
   while (isBefore(currentTime, dayEnd)) {
     const slotEnd = addMinutes(currentTime, SLOT_DURATION_MINUTES);
 
-    // Check if this slot conflicts with any booked events
+    // Check if this slot conflicts with any booked events (standard half-open interval overlap)
     const isBooked = bookedEvents.some(
-      (event) =>
-        (isAfter(currentTime, event.startTime) && isBefore(currentTime, event.endTime)) ||
-        (isAfter(slotEnd, event.startTime) && isBefore(slotEnd, event.endTime)) ||
-        (isBefore(currentTime, event.startTime) && isAfter(slotEnd, event.endTime))
+      (event) => event.startTime < slotEnd && event.endTime > currentTime
     );
 
     if (!isBooked) {

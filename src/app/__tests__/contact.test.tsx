@@ -18,76 +18,65 @@ vi.mock("framer-motion", () => ({
   },
 }));
 
-// Mock social-links component
-vi.mock("@/components/social-links", () => ({
-  SocialLinks: () => <div data-testid="social-links">Social Links</div>,
-}));
-
 describe("Contact Page", () => {
   it("renders the contact page", () => {
     render(<ContactPage />);
-    expect(screen.getByText("Get In Touch")).toBeDefined();
+    expect(screen.getByText("Get in Touch")).toBeDefined();
   });
 
   it("renders page heading", () => {
     render(<ContactPage />);
-    const heading = screen.getByText("Get In Touch");
+    const heading = screen.getByText("Get in Touch");
     expect(heading).toBeDefined();
-  });
-
-  it("renders section subtitle", () => {
-    render(<ContactPage />);
-    expect(
-      screen.getByText(/Have a question or want to work together?/i)
-    ).toBeDefined();
   });
 
   it("renders contact description", () => {
     render(<ContactPage />);
     expect(
       screen.getByText(
-        /Feel free to reach out. I'm always open to discussing new/i
+        /Recruiting for a PM role, building something in healthcare/i
       )
     ).toBeDefined();
   });
 
-  it("renders 'Say Hello' button", () => {
+  it("renders Send a Message heading", () => {
     render(<ContactPage />);
-    expect(screen.getByText("Say Hello")).toBeDefined();
+    expect(screen.getByText("Send a Message")).toBeDefined();
   });
 
-  it("Say Hello button has email link", () => {
+  it("renders contact form fields", () => {
     render(<ContactPage />);
-    const sayHelloLink = screen.getByText("Say Hello").closest("a");
-    expect(sayHelloLink?.getAttribute("href")).toContain("mailto:");
+    expect(screen.getByLabelText("Name")).toBeDefined();
+    expect(screen.getByLabelText("Email")).toBeDefined();
+    expect(screen.getByLabelText("Subject")).toBeDefined();
+    expect(screen.getByLabelText("Message")).toBeDefined();
   });
 
-  it("renders 'Book a Meeting' button", () => {
+  it("renders submit button", () => {
     render(<ContactPage />);
-    expect(screen.getByText("Book a Meeting")).toBeDefined();
+    expect(screen.getByText("Send Message")).toBeDefined();
   });
 
-  it("Book a Meeting button links to /meet", () => {
+  it("has link to /meet", () => {
     render(<ContactPage />);
-    const bookMeetingLink = screen.getByText("Book a Meeting").closest("a");
-    expect(bookMeetingLink?.getAttribute("href")).toBe("/meet");
+    const meetLinks = screen.getAllByRole("link").filter(
+      (link) => link.getAttribute("href") === "/meet"
+    );
+    expect(meetLinks.length).toBeGreaterThan(0);
   });
 
-  it("renders social links section", () => {
+  it("has email link", () => {
     render(<ContactPage />);
-    expect(screen.getByTestId("social-links")).toBeDefined();
+    const emailLinks = screen.getAllByRole("link").filter(
+      (link) => link.getAttribute("href")?.includes("mailto:")
+    );
+    expect(emailLinks.length).toBeGreaterThan(0);
   });
 
   it("has proper page padding", () => {
     const { container } = render(<ContactPage />);
     const wrapper = container.firstChild;
     expect(wrapper?.className).toContain("pt-8");
-  });
-
-  it("renders with proper container structure", () => {
-    const { container } = render(<ContactPage />);
-    const contentDiv = container.querySelector(".max-w-md");
-    expect(contentDiv).toBeDefined();
   });
 
   it("contact form area is centered", () => {
@@ -98,12 +87,8 @@ describe("Contact Page", () => {
 
   it("renders multiple CTAs", () => {
     render(<ContactPage />);
-    const buttons = screen.getAllByRole("link").filter(
-      (link) =>
-        link.textContent?.includes("Say Hello") ||
-        link.textContent?.includes("Book a Meeting")
-    );
-    expect(buttons.length).toBeGreaterThanOrEqual(2);
+    const links = screen.getAllByRole("link");
+    expect(links.length).toBeGreaterThanOrEqual(2);
   });
 
   it("renders without crashing", () => {
@@ -116,21 +101,27 @@ describe("Contact Page", () => {
     expect(section).toBeDefined();
   });
 
-  it("buttons are in flex layout", () => {
+  it("renders two-column layout", () => {
     const { container } = render(<ContactPage />);
-    const buttonContainer = container.querySelector(".flex.gap-4");
-    expect(buttonContainer).toBeDefined();
+    const grid = container.querySelector(".grid");
+    expect(grid?.className).toContain("md:grid-cols-2");
   });
 
-  it("primary button has correct styling", () => {
+  it("renders contact form", () => {
     const { container } = render(<ContactPage />);
-    const sayHelloBtn = screen.getByText("Say Hello").closest("a");
-    expect(sayHelloBtn?.className).toContain("bg-byu-navy");
+    const form = container.querySelector("form");
+    expect(form).toBeDefined();
   });
 
-  it("secondary button has outline styling", () => {
+  it("submit button has full-width styling", () => {
     const { container } = render(<ContactPage />);
-    const bookMeetingBtn = screen.getByText("Book a Meeting").closest("a");
-    expect(bookMeetingBtn?.className).toContain("border-byu-navy");
+    const submitBtn = container.querySelector("button[type='submit']");
+    expect(submitBtn?.className).toContain("w-full");
+  });
+
+  it("submit button has dark styling", () => {
+    const { container } = render(<ContactPage />);
+    const submitBtn = container.querySelector("button[type='submit']");
+    expect(submitBtn?.className).toContain("bg-gray-900");
   });
 });

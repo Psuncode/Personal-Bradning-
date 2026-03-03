@@ -1,8 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { ProjectsGrid } from "./projects-grid";
-import * as projectsModule from "@/data/projects";
-
 // Mock next/link
 vi.mock("next/link", () => ({
   default: ({ children, href }: any) => <a href={href}>{children}</a>,
@@ -33,35 +31,34 @@ describe("ProjectsGrid Component", () => {
 
   it("renders all projects when featured is false", () => {
     render(<ProjectsGrid featured={false} />);
-    const allProjectCards = screen.getAllByText(/Project/i);
-    // Should have all 5 projects
-    expect(allProjectCards.length).toBeGreaterThanOrEqual(4);
+    expect(screen.getByText("Inara Health Diagnostic")).toBeDefined();
+    expect(screen.getByText("Granger Medical: RVU Analytics Platform")).toBeDefined();
+    expect(screen.getByText("Cocker Innovation Fellowship")).toBeDefined();
   });
 
   it("renders only featured projects when featured is true", () => {
     render(<ProjectsGrid featured={true} />);
-    const featuredCards = screen.getAllByText(/(Project Alpha|Project Beta|Project Gamma)/i);
-    // Should have exactly 3 featured projects
-    expect(featuredCards.length).toBeLessThanOrEqual(6); // 2 instances per card
+    expect(screen.getByText("Inara Health Diagnostic")).toBeDefined();
+    expect(screen.getByText("LDS Church: Enterprise Tech PM")).toBeDefined();
+    expect(screen.getByText("Nursa: AI TB Verification Model")).toBeDefined();
   });
 
   it("renders featured projects in correct order", () => {
     render(<ProjectsGrid featured={true} />);
-    expect(screen.getByText("Project Alpha")).toBeDefined();
-    expect(screen.getByText("Project Beta")).toBeDefined();
-    expect(screen.getByText("Project Gamma")).toBeDefined();
+    const cards = screen.getAllByRole("link");
+    expect(cards.length).toBeGreaterThanOrEqual(3);
   });
 
   it("displays project descriptions", () => {
     render(<ProjectsGrid featured={false} />);
     expect(
-      screen.getByText(/A full-stack web application built with modern technologies/i)
+      screen.getByText(/Founding a continuous progesterone monitoring device/i)
     ).toBeDefined();
   });
 
   it("displays technology tags for projects", () => {
     render(<ProjectsGrid featured={false} />);
-    // Just check that at least one tech appears
+    // Projects use Python, Power BI, etc. — tech badge shows first item per card
     const techTags = screen.queryAllByText(/Next.js|TypeScript|Tailwind|React|Node|MongoDB|Python|Go|Cobra|SQLite|Storybook/i);
     expect(techTags.length).toBeGreaterThan(0);
   });
@@ -86,12 +83,9 @@ describe("ProjectsGrid Component", () => {
 
   it("limits featured projects to 3 items", () => {
     render(<ProjectsGrid featured={true} />);
-    // Count project titles that appear
-    const alphaMatches = screen.queryAllByText("Project Alpha");
-    const betaMatches = screen.queryAllByText("Project Beta");
-    const gammaMatches = screen.queryAllByText("Project Gamma");
-    const totalFeatured = alphaMatches.length + betaMatches.length + gammaMatches.length;
-    expect(totalFeatured).toBeLessThanOrEqual(9); // 3 projects x 3 max instances per project
+    // 3 featured projects: Inara Health, LDS Church, Nursa
+    expect(screen.getByText("Inara Health Diagnostic")).toBeDefined();
+    expect(screen.queryByText("Granger Medical: RVU Analytics Platform")).toBeNull();
   });
 
   it("renders with correct grid layout classes", () => {
@@ -113,6 +107,14 @@ describe("ProjectsGrid Component", () => {
   it("has proper background styling", () => {
     const { container } = render(<ProjectsGrid />);
     const section = container.querySelector("section");
-    expect(section?.className).toContain("bg-byu-gray");
+    expect(section?.className).toContain("bg-[#faf9f7]");
+  });
+
+  it("cards link to individual project pages", () => {
+    render(<ProjectsGrid />);
+    const projectLinks = screen.getAllByRole("link").filter(
+      (link) => link.getAttribute("href")?.startsWith("/projects/")
+    );
+    expect(projectLinks.length).toBeGreaterThan(0);
   });
 });

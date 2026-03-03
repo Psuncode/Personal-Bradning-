@@ -1,80 +1,70 @@
 import Link from "next/link";
-import { Github, Linkedin, Mail } from "lucide-react";
 import { siteConfig } from "@/data/site-config";
-import { Separator } from "@/components/ui/separator";
-
-const quickLinks = [
-  { href: "/", label: "Home" },
-  { href: "/projects", label: "Projects" },
-  { href: "/meet", label: "Book a Meeting" },
-  { href: "/contact", label: "Contact" },
-];
-
-const socialIcons = [
-  { href: siteConfig.links.github, icon: Github, label: "GitHub" },
-  { href: siteConfig.links.linkedin, icon: Linkedin, label: "LinkedIn" },
-  { href: siteConfig.links.email, icon: Mail, label: "Email" },
-];
 
 export function Footer() {
   return (
-    <footer className="bg-byu-navy text-white">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-8 md:grid-cols-3">
-          {/* Brand */}
+    <footer id="contact" className="bg-[#0a0a0a] text-white py-24 px-6 md:px-12">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-16 mb-16">
           <div>
-            <h3 className="text-lg font-bold">{siteConfig.name}</h3>
-            <p className="mt-2 text-sm text-white/60">
-              Software Developer &amp; Student at BYU
+            <h2 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl mb-6">
+              Let&apos;s work together.
+            </h2>
+            <p className="text-gray-400 text-lg leading-relaxed mb-8">
+              Open to opportunities in healthcare product management, medtech innovation, and AI-powered health solutions. Always interested in challenging problems and mission-driven teams.
             </p>
+            <div className="flex flex-wrap gap-4 pt-4">
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-black rounded-full hover:bg-gray-100 transition-colors font-medium"
+              >
+                Get in Touch
+              </Link>
+              <Link
+                href="/resume"
+                className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white rounded-full hover:bg-white hover:text-black transition-colors font-medium"
+              >
+                View Resume
+              </Link>
+            </div>
           </div>
 
-          {/* Quick links */}
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-white/40">
-              Links
-            </h4>
-            <ul className="mt-3 space-y-2">
-              {quickLinks.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-white/60 transition-colors hover:text-white"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Social */}
-          <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-white/40">
-              Connect
-            </h4>
-            <div className="mt-3 flex gap-3">
-              {socialIcons.map((social) => (
-                <Link
-                  key={social.label}
-                  href={social.href}
-                  target={social.href.startsWith("mailto:") ? undefined : "_blank"}
-                  rel="noopener noreferrer"
-                  className="rounded-full border border-white/20 p-2 text-white/60 transition-colors hover:border-white/40 hover:text-white"
-                  aria-label={social.label}
-                >
-                  <social.icon className="size-4" />
-                </Link>
-              ))}
+          <div className="flex flex-col justify-center space-y-4">
+            <a
+              href={siteConfig.links.email}
+              className="text-2xl hover:text-gray-300 transition-colors"
+            >
+              ps324@byu.edu
+            </a>
+            <div className="flex gap-6 pt-4">
+              <a
+                href={siteConfig.links.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                LinkedIn
+              </a>
+              <a
+                href={siteConfig.links.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                GitHub
+              </a>
             </div>
           </div>
         </div>
 
-        <Separator className="my-8 bg-white/10" />
-
-        <p className="text-center text-xs text-white/40">
-          &copy; {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
-        </p>
+        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-gray-500 text-sm">
+            &copy; {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
+          </p>
+          <p className="text-gray-500 text-sm">
+            Built with care and attention to detail.
+          </p>
+        </div>
       </div>
     </footer>
   );

@@ -3,7 +3,7 @@ import { ResumeView } from "@/components/sections/resume-view";
 
 export const metadata: Metadata = {
   title: "Resume",
-  description: "Philip Sun — Product Manager, Engineer, and Strategist. View experience, skills, and education.",
+  description: "Philip Sun — Product Manager, Healthcare Founder, and Business Strategist. Experience, education, and skills.",
 };
 
 export default function ResumePage() {

@@ -2,84 +2,67 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Container } from "@/components/layout/container";
-import { ArrowRight, Calendar } from "lucide-react";
 
 export function Hero() {
   return (
-    <section className="relative flex min-h-[90vh] items-center overflow-hidden bg-gradient-to-br from-byu-navy via-byu-blue to-byu-navy">
-      <Container>
-        <div className="max-w-3xl">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-lg font-medium text-byu-light-blue"
-          >
-            Hello, I&apos;m
-          </motion.p>
+    <section className="bg-[#0a0a0a] text-white min-h-screen flex items-center px-6 md:px-12 relative overflow-hidden">
+      {/* Subtle white blur circles */}
+      <div className="absolute inset-0 opacity-5 pointer-events-none">
+        <div className="absolute top-20 left-20 w-96 h-96 bg-white rounded-full blur-3xl" />
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-white rounded-full blur-3xl" />
+      </div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-2 text-5xl font-bold tracking-tight text-white sm:text-7xl font-[family-name:var(--font-playfair)]"
-          >
-            Philip Sun
-          </motion.h1>
+      <div className="max-w-6xl w-full relative z-10 space-y-8">
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="text-5xl md:text-7xl lg:text-8xl font-[family-name:var(--font-playfair)] leading-[1.1] max-w-5xl"
+        >
+          Creative Thinker. Modern Builder.
+        </motion.h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-4 text-xl text-byu-sky sm:text-2xl"
-          >
-            PM · Founder · Healthcare
-          </motion.p>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
+          className="text-xl md:text-2xl text-gray-300 max-w-3xl"
+        >
+          Product Manager specializing in Healthcare Technology and AI-Powered Solutions.
+        </motion.p>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="mt-6 max-w-xl text-lg leading-relaxed text-white/80"
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="pt-4 flex flex-wrap gap-4"
+        >
+          <Link
+            href="/contact"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-black rounded-full hover:bg-gray-100 transition-colors font-medium"
           >
-            Building healthcare diagnostics at Inara Health and shipping PM
-            strategy at scale. BYU Marriott · 3.96 GPA · open to full-time PM
-            roles.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="mt-10 flex flex-col gap-4 sm:flex-row"
+            Get in Touch
+          </Link>
+          <Link
+            href="/resume"
+            className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white rounded-full hover:bg-white hover:text-black transition-colors font-medium"
           >
-            <Button
-              asChild
-              size="lg"
-              className="bg-byu-light-blue text-byu-navy hover:bg-byu-sky"
-            >
-              <Link href="/projects">
-                View Projects <ArrowRight className="ml-2 size-4" />
-              </Link>
-            </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="border-white text-white hover:bg-white/10"
-            >
-              <Link href="/meet">
-                <Calendar className="mr-2 size-4" /> Book a Meeting
-              </Link>
-            </Button>
-          </motion.div>
-        </div>
-      </Container>
+            View Resume
+          </Link>
+        </motion.div>
+      </div>
 
-      {/* Subtle radial glow */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-byu-light-blue/10 via-transparent to-transparent" />
+      {/* Animated bounce arrow */}
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 5V19M12 19L6 13M12 19L18 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </motion.div>
+      </div>
     </section>
   );
 }

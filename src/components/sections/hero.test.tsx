@@ -9,6 +9,7 @@ vi.mock("framer-motion", () => ({
     h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   },
+  animate: {},
 }));
 
 // Mock next/link
@@ -19,67 +20,39 @@ vi.mock("next/link", () => ({
 describe("Hero Component", () => {
   it("renders the hero section", () => {
     render(<Hero />);
-    expect(screen.getByText(/Hello, I'm/i)).toBeDefined();
+    expect(screen.getByText(/Creative Thinker/i)).toBeDefined();
   });
 
-  it("renders the greeting text", () => {
+  it("renders the main heading", () => {
     render(<Hero />);
-    expect(screen.getByText(/Hello, I'm/i)).toBeDefined();
+    expect(screen.getByText(/Creative Thinker\. Modern Builder\./i)).toBeDefined();
   });
 
-  it("renders the name 'Philip Sun'", () => {
+  it("renders the subtitle description", () => {
     render(<Hero />);
-    expect(screen.getByText(/Philip Sun/i)).toBeDefined();
+    expect(screen.getByText(/Product Manager specializing in Healthcare Technology/i)).toBeDefined();
   });
 
-  it("renders the subtitle", () => {
+  it("renders Get in Touch button", () => {
     render(<Hero />);
-    expect(screen.getByText(/Software Developer & Student at BYU/i)).toBeDefined();
+    expect(screen.getByText(/Get in Touch/i)).toBeDefined();
   });
 
-  it("renders the description text", () => {
+  it("renders View Resume button", () => {
     render(<Hero />);
-    expect(
-      screen.getByText(
-        /Building things that matter. Passionate about creating clean,\s*thoughtful software that solves real problems./i
-      )
-    ).toBeDefined();
+    expect(screen.getByText(/View Resume/i)).toBeDefined();
   });
 
-  it("renders View Projects button", () => {
+  it("has correct link for Get in Touch", () => {
     render(<Hero />);
-    const viewProjectsBtn = screen.getByText(/View Projects/i);
-    expect(viewProjectsBtn).toBeDefined();
+    const link = screen.getByText(/Get in Touch/i).closest("a");
+    expect(link?.getAttribute("href")).toBe("/contact");
   });
 
-  it("renders Book a Meeting button", () => {
+  it("has correct link for View Resume", () => {
     render(<Hero />);
-    const bookMeetingBtn = screen.getByText(/Book a Meeting/i);
-    expect(bookMeetingBtn).toBeDefined();
-  });
-
-  it("has correct link for View Projects", () => {
-    render(<Hero />);
-    const viewProjectsLink = screen.getByText(/View Projects/i).closest("a");
-    expect(viewProjectsLink?.getAttribute("href")).toBe("/projects");
-  });
-
-  it("has correct link for Book a Meeting", () => {
-    render(<Hero />);
-    const bookMeetingLink = screen.getByText(/Book a Meeting/i).closest("a");
-    expect(bookMeetingLink?.getAttribute("href")).toBe("/meet");
-  });
-
-  it("renders with gradient background classes", () => {
-    const { container } = render(<Hero />);
-    const section = container.querySelector("section");
-    expect(section?.className).toContain("bg-gradient-to-br");
-  });
-
-  it("applies min-height for responsive layout", () => {
-    const { container } = render(<Hero />);
-    const section = container.querySelector("section");
-    expect(section?.className).toContain("min-h-[90vh]");
+    const link = screen.getByText(/View Resume/i).closest("a");
+    expect(link?.getAttribute("href")).toBe("/resume");
   });
 
   it("renders all CTA buttons as interactive elements", () => {
@@ -88,10 +61,22 @@ describe("Hero Component", () => {
     expect(buttons.length).toBeGreaterThanOrEqual(2);
   });
 
-  it("contains text content in proper hierarchy", () => {
+  it("renders with dark background", () => {
+    const { container } = render(<Hero />);
+    const section = container.querySelector("section");
+    expect(section?.className).toContain("bg-[#0a0a0a]");
+  });
+
+  it("applies min-height for responsive layout", () => {
+    const { container } = render(<Hero />);
+    const section = container.querySelector("section");
+    expect(section?.className).toContain("min-h-screen");
+  });
+
+  it("contains heading text in h1", () => {
     const { container } = render(<Hero />);
     const heading = container.querySelector("h1");
-    expect(heading?.textContent).toBe("Philip Sun");
+    expect(heading?.textContent).toContain("Creative Thinker");
   });
 
   it("renders without crashing with animations", () => {

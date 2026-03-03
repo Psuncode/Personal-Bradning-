@@ -3,7 +3,7 @@ import { ProjectsGrid } from "@/components/sections/projects-grid";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description: "Projects built by Philip Sun",
+  description: "Healthcare diagnostics, enterprise PM work, and AI tooling — things Philip Sun has shipped",
 };
 
 export default function ProjectsPage() {

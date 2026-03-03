@@ -72,9 +72,9 @@ export default function RootLayout({
               sameAs: [siteConfig.links.linkedin, siteConfig.links.github],
               knowsAbout: [
                 "Product Management",
-                "Healthcare M&A",
-                "ETA",
-                "Software Engineering",
+                "Healthcare Operations",
+                "Hardware Product Development",
+                "Founding",
               ],
             }),
           }}

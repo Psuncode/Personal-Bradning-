@@ -34,7 +34,7 @@ export function FAQ() {
     <section className="border-b border-byu-sky/20 bg-gray-50 py-16">
       <Container>
         <h2 className="mb-8 text-2xl font-bold text-byu-navy">
-          Frequently Asked
+          Frequently Asked Questions
         </h2>
         <Accordion type="single" collapsible className="max-w-2xl">
           {faqs.map((item, i) => (

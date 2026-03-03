@@ -11,115 +11,104 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-// Mock CalEmbed component
-vi.mock("@/components/cal-embed", () => ({
-  CalEmbed: ({ calLink }: any) => (
-    <div data-testid="cal-embed">Cal Embed: {calLink}</div>
-  ),
+// Mock BookingForm component
+vi.mock("@/components/booking/BookingForm", () => ({
+  BookingForm: () => <div data-testid="booking-form">Booking Form</div>,
+}));
+
+// Mock server-side calendar fetch so the async Server Component resolves immediately
+vi.mock("@/lib/serverCalendar", () => ({
+  getServerAvailability: async () => ({ events: [], busyDates: [] }),
 }));
 
 describe("Meet Page", () => {
-  it("renders the meet page", () => {
-    render(<MeetPage />);
+  it("renders the meet page", async () => {
+    render(await MeetPage());
     expect(screen.getByText("Book a Meeting")).toBeDefined();
   });
 
-  it("renders page heading", () => {
-    render(<MeetPage />);
+  it("renders page heading", async () => {
+    render(await MeetPage());
     const heading = screen.getByText("Book a Meeting");
     expect(heading).toBeDefined();
   });
 
-  it("renders subtitle", () => {
-    render(<MeetPage />);
+  it("renders subtitle", async () => {
+    render(await MeetPage());
     expect(
       screen.getByText(
-        /Pick a time that works for you. I'll receive a notification and confirm./i
+        /Select an available time slot to meet with me/i
       )
     ).toBeDefined();
   });
 
-  it("renders Cal.com embed when calLink is configured", () => {
-    render(<MeetPage />);
-    expect(screen.getByTestId("cal-embed")).toBeDefined();
+  it("renders booking form", async () => {
+    render(await MeetPage());
+    expect(screen.getByTestId("booking-form")).toBeDefined();
   });
 
-  it("Cal embed receives correct link prop", () => {
-    render(<MeetPage />);
-    const calEmbed = screen.getByTestId("cal-embed");
-    expect(calEmbed.textContent).toContain("philipsun/30min");
+  it("booking form is rendered inside container", async () => {
+    render(await MeetPage());
+    expect(screen.getByTestId("booking-form")).toBeDefined();
   });
 
-  it("renders embed container with proper styling", () => {
-    const { container } = render(<MeetPage />);
+  it("renders embed container with proper styling", async () => {
+    const { container } = render(await MeetPage());
     const embedContainer = container.querySelector(
       ".rounded-xl.border.bg-white"
     );
     expect(embedContainer).toBeDefined();
   });
 
-  it("has proper page padding", () => {
-    const { container } = render(<MeetPage />);
+  it("has proper page padding", async () => {
+    const { container } = render(await MeetPage());
     const wrapper = container.firstChild;
     expect(wrapper?.className).toContain("pb-24");
     expect(wrapper?.className).toContain("pt-12");
   });
 
-  it("embed container has proper height", () => {
-    const { container } = render(<MeetPage />);
-    const minHeightDiv = container.querySelector(".min-h-\\[600px\\]");
-    expect(minHeightDiv).toBeDefined();
-  });
-
-  it("renders with semantic container structure", () => {
-    const { container } = render(<MeetPage />);
-    const contentDiv = container.querySelector(".mx-auto");
-    expect(contentDiv).toBeDefined();
-  });
-
-  it("has max-width constraint on content", () => {
-    const { container } = render(<MeetPage />);
-    const maxWidthDiv = container.querySelector(".max-w-4xl");
-    expect(maxWidthDiv).toBeDefined();
-  });
-
-  it("embed container has border styling", () => {
-    const { container } = render(<MeetPage />);
-    const bordered = container.querySelector(".border-byu-sky");
-    expect(bordered).toBeDefined();
-  });
-
-  it("renders without crashing", () => {
-    expect(() => render(<MeetPage />)).not.toThrow();
-  });
-
-  it("renders section heading component", () => {
-    render(<MeetPage />);
-    const headings = screen.getAllByRole("heading");
-    expect(headings.length).toBeGreaterThanOrEqual(1);
-  });
-
-  it("section has proper background in embed area", () => {
-    const { container } = render(<MeetPage />);
-    const bgWhite = container.querySelector(".bg-white");
-    expect(bgWhite).toBeDefined();
-  });
-
-  it("has overflow hidden for rounded container", () => {
-    const { container } = render(<MeetPage />);
-    const overflowDiv = container.querySelector(".overflow-hidden");
-    expect(overflowDiv).toBeDefined();
-  });
-
-  it("embed has shadow styling", () => {
-    const { container } = render(<MeetPage />);
+  it("embed container has shadow styling", async () => {
+    const { container } = render(await MeetPage());
     const shadowDiv = container.querySelector(".shadow-sm");
     expect(shadowDiv).toBeDefined();
   });
 
-  it("proper padding on embed container", () => {
-    const { container } = render(<MeetPage />);
-    const paddedDiv = container.querySelector(".p-2");
+  it("renders with semantic container structure", async () => {
+    const { container } = render(await MeetPage());
+    const contentDiv = container.querySelector(".mx-auto");
+    expect(contentDiv).toBeDefined();
+  });
+
+  it("embed container has border styling", async () => {
+    const { container } = render(await MeetPage());
+    const bordered = container.querySelector('[class*="border-gray"]');
+    expect(bordered).toBeDefined();
+  });
+
+  it("renders without crashing", async () => {
+    await expect(MeetPage()).resolves.not.toThrow();
+  });
+
+  it("renders section heading component", async () => {
+    render(await MeetPage());
+    const headings = screen.getAllByRole("heading");
+    expect(headings.length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("section has proper background in embed area", async () => {
+    const { container } = render(await MeetPage());
+    const bgWhite = container.querySelector(".bg-white");
+    expect(bgWhite).toBeDefined();
+  });
+
+  it("has proper padding on embed container", async () => {
+    const { container } = render(await MeetPage());
+    const paddedDiv = container.querySelector('[class*="p-8"]');
     expect(paddedDiv).toBeDefined();
+  });
+
+  it("renders LinkedIn fallback link", async () => {
+    render(await MeetPage());
+    expect(screen.getByText("LinkedIn")).toBeDefined();
   });
 });

@@ -32,38 +32,28 @@ describe("Projects Page", () => {
 
   it("renders all projects", () => {
     render(<ProjectsPage />);
-    // Check for multiple project titles
-    expect(screen.getByText("Project Alpha")).toBeDefined();
-    expect(screen.getByText("Project Beta")).toBeDefined();
-    expect(screen.getByText("Project Gamma")).toBeDefined();
+    expect(screen.getByText("Inara Health Diagnostic")).toBeDefined();
+    expect(screen.getByText("LDS Church: Enterprise Tech PM")).toBeDefined();
+    expect(screen.getByText("Nursa: AI TB Verification Model")).toBeDefined();
   });
 
   it("displays more than 3 projects (all projects, not just featured)", () => {
     render(<ProjectsPage />);
-    // Check that all 5 projects are rendered
-    expect(screen.getByText("Project Alpha")).toBeDefined();
-    expect(screen.getByText("Project Beta")).toBeDefined();
-    expect(screen.getByText("Project Gamma")).toBeDefined();
-    expect(screen.getByText("Project Delta")).toBeDefined();
-    expect(screen.getByText("Project Epsilon")).toBeDefined();
+    const links = screen.getAllByRole("link");
+    expect(links.length).toBeGreaterThan(3);
   });
 
   it("renders project descriptions", () => {
     render(<ProjectsPage />);
     expect(
-      screen.getByText(/A full-stack web application built with modern technologies/i)
-    ).toBeDefined();
-    expect(
-      screen.getByText(/An innovative mobile-first application/i)
+      screen.getByText(/Founding a continuous progesterone monitoring device/i)
     ).toBeDefined();
   });
 
   it("displays tech stack for all projects", () => {
     render(<ProjectsPage />);
-    expect(screen.getByText("Next.js")).toBeDefined();
-    expect(screen.getByText("React Native")).toBeDefined();
     expect(screen.getByText("Python")).toBeDefined();
-    expect(screen.getByText("Go")).toBeDefined();
+    expect(screen.getByText("Power BI")).toBeDefined();
   });
 
   it("renders project links", () => {
@@ -103,24 +93,15 @@ describe("Projects Page", () => {
 
   it("displays both featured and non-featured projects", () => {
     render(<ProjectsPage />);
-    // Project Alpha, Beta, Gamma are featured
-    // Project Delta, Epsilon are not featured
-    expect(screen.getByText("Project Delta")).toBeDefined();
-    expect(screen.getByText("Project Epsilon")).toBeDefined();
+    // Non-featured projects
+    expect(screen.getByText("Granger Medical: RVU Analytics Platform")).toBeDefined();
+    expect(screen.getByText("Cocker Innovation Fellowship")).toBeDefined();
   });
 
   it("shows all projects with their descriptions", () => {
     render(<ProjectsPage />);
-    const descriptions = [
-      "A full-stack web application",
-      "An innovative mobile-first application",
-      "A data-driven dashboard",
-      "A CLI tool that automates",
-      "An open-source library",
-    ];
-    descriptions.forEach((desc) => {
-      expect(screen.getByText(new RegExp(desc))).toBeDefined();
-    });
+    expect(screen.queryAllByText(/7,000\+ CPT codes/i).length).toBeGreaterThan(0);
+    expect(screen.queryAllByText(/synthetic biology/i).length).toBeGreaterThan(0);
   });
 
   it("renders projects in grid with proper gap", () => {

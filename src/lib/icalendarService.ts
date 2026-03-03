@@ -40,7 +40,7 @@ export async function fetchICloudEvents(
     }));
   } catch (error) {
     console.error('Error fetching calendar events:', error);
-    return [];
+    throw error; // propagate so BookingForm's useEffect catch sets calendarError
   }
 }
 

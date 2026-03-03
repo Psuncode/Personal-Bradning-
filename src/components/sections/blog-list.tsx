@@ -3,17 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Calendar, Clock, Star } from "lucide-react";
-import { Container } from "@/components/layout/container";
-import { SectionHeading } from "@/components/section-heading";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Calendar, Clock } from "lucide-react";
 import type { BlogPost } from "@/types/blog";
 
 interface BlogListProps {
@@ -40,22 +30,26 @@ export function BlogList({ posts }: BlogListProps) {
     : posts;
 
   return (
-    <section className="bg-byu-gray py-24">
-      <Container>
-        <SectionHeading
-          title="Writing"
-          subtitle="Thoughts on software, building things, and lessons learned along the way"
-        />
+    <section className="bg-[#faf9f7] py-24 px-6 md:px-12">
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-12">
+          <h1 className="font-[family-name:var(--font-playfair)] text-5xl md:text-6xl text-gray-900 mb-4">
+            Writing
+          </h1>
+          <p className="text-gray-600 text-lg">
+            Thoughts on software, building things, and lessons learned along the way
+          </p>
+        </div>
 
         {/* Tag filter pills */}
         {allTags.length > 0 && (
-          <div className="mx-auto mb-8 flex max-w-2xl flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 mb-10">
             <button
               onClick={() => setSelectedTag(null)}
               className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                 selectedTag === null
-                  ? "bg-byu-blue text-white"
-                  : "bg-byu-sky/40 text-byu-navy hover:bg-byu-sky/70"
+                  ? "bg-gray-900 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
               }`}
             >
               All
@@ -66,8 +60,8 @@ export function BlogList({ posts }: BlogListProps) {
                 onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
                 className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                   selectedTag === tag
-                    ? "bg-byu-blue text-white"
-                    : "bg-byu-sky/40 text-byu-navy hover:bg-byu-sky/70"
+                    ? "bg-gray-900 text-white"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 }`}
               >
                 {tag}
@@ -77,11 +71,9 @@ export function BlogList({ posts }: BlogListProps) {
         )}
 
         {filtered.length === 0 ? (
-          <p className="text-center text-byu-dark-gray/60">
-            No posts yet. Check back soon.
-          </p>
+          <p className="text-center text-gray-500">No posts yet. Check back soon.</p>
         ) : (
-          <div className="mx-auto max-w-2xl space-y-6">
+          <div className="space-y-6">
             {filtered.map((post, index) => (
               <motion.div
                 key={post.slug}
@@ -90,54 +82,43 @@ export function BlogList({ posts }: BlogListProps) {
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.4, delay: index * 0.08 }}
               >
-                <Card className="border-byu-sky/30 transition-all duration-300 hover:border-byu-light-blue hover:shadow-md hover:shadow-byu-light-blue/10">
-                  <CardHeader>
-                    <div className="flex items-start justify-between gap-2">
-                      <CardTitle className="text-byu-navy hover:text-byu-blue transition-colors">
-                        <Link href={`/blog/${post.slug}`}>
-                          {post.frontmatter.title}
-                        </Link>
-                      </CardTitle>
-                      {post.frontmatter.featured && (
-                        <Star className="mt-1 size-4 shrink-0 fill-amber-400 text-amber-400" />
-                      )}
-                    </div>
-                    <div className="flex flex-wrap items-center gap-3 text-sm text-byu-dark-gray/60">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="size-3.5" />
-                        {formatDate(post.frontmatter.date)}
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="block group bg-white border-2 border-gray-200 rounded-2xl p-8 hover:border-gray-900 hover:shadow-lg transition-all"
+                >
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {post.frontmatter.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                      >
+                        {tag}
                       </span>
-                      <span className="flex items-center gap-1">
-                        <Clock className="size-3.5" />
-                        {post.readingTime}
-                      </span>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="mb-4 text-byu-dark-gray/80 leading-relaxed">
-                      {post.frontmatter.excerpt}
-                    </CardDescription>
-                    <div className="flex flex-wrap gap-2">
-                      {post.frontmatter.tags.map((tag) => (
-                        <Badge
-                          key={tag}
-                          variant="secondary"
-                          className="bg-byu-sky/30 text-byu-navy cursor-pointer hover:bg-byu-sky/60 transition-colors"
-                          onClick={() =>
-                            setSelectedTag(tag === selectedTag ? null : tag)
-                          }
-                        >
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+                    ))}
+                  </div>
+
+                  <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl text-gray-900 mb-3 group-hover:underline">
+                    {post.frontmatter.title}
+                  </h2>
+
+                  <p className="text-gray-600 leading-relaxed mb-4">{post.frontmatter.excerpt}</p>
+
+                  <div className="flex items-center gap-4 text-sm text-gray-500">
+                    <span className="flex items-center gap-1">
+                      <Calendar className="size-3.5" />
+                      {formatDate(post.frontmatter.date)}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="size-3.5" />
+                      {post.readingTime}
+                    </span>
+                  </div>
+                </Link>
               </motion.div>
             ))}
           </div>
         )}
-      </Container>
+      </div>
     </section>
   );
 }

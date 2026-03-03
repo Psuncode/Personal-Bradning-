@@ -18,63 +18,49 @@ vi.mock("framer-motion", () => ({
     h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   },
+  animate: {},
 }));
 
 describe("Home Page", () => {
   it("renders the home page", () => {
     render(<HomePage />);
-    expect(screen.getByText(/Philip Sun/i)).toBeDefined();
+    expect(screen.getByText(/Creative Thinker/i)).toBeDefined();
   });
 
   it("renders Hero section", () => {
     render(<HomePage />);
-    expect(screen.getByText(/Software Developer & Student at BYU/i)).toBeDefined();
+    expect(screen.getByText(/Product Manager specializing in Healthcare Technology/i)).toBeDefined();
   });
 
-  it("renders Featured Projects section", () => {
+  it("renders About section", () => {
     render(<HomePage />);
-    expect(screen.getByText("Featured Projects")).toBeDefined();
+    expect(screen.getByText(/Building healthcare solutions/i)).toBeDefined();
   });
 
-  it("renders Contact section", () => {
+  it("renders Featured Work section", () => {
     render(<HomePage />);
-    expect(screen.getByText("Get In Touch")).toBeDefined();
+    expect(screen.getByText("Featured Work")).toBeDefined();
   });
 
-  it("hero has View Projects button", () => {
+  it("renders Projects & Thought Leadership section", () => {
     render(<HomePage />);
-    expect(screen.getByText(/View Projects/i)).toBeDefined();
+    expect(screen.getByText(/Projects.*Thought Leadership/i)).toBeDefined();
   });
 
-  it("hero has Book a Meeting button", () => {
+  it("hero has Get in Touch button", () => {
     render(<HomePage />);
-    const buttons = screen.getAllByText(/Book a Meeting/i);
-    expect(buttons.length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/Get in Touch/i).length).toBeGreaterThanOrEqual(1);
   });
 
-  it("featured projects section shows only 3 projects", () => {
+  it("hero has View Resume button", () => {
     render(<HomePage />);
-    const alphaMatches = screen.queryAllByText("Project Alpha");
-    const betaMatches = screen.queryAllByText("Project Beta");
-    const gammaMatches = screen.queryAllByText("Project Gamma");
-    const totalFeatured = alphaMatches.length + betaMatches.length + gammaMatches.length;
-    expect(totalFeatured).toBeGreaterThan(0);
+    expect(screen.getAllByText(/View Resume/i).length).toBeGreaterThanOrEqual(1);
   });
 
-  it("featured projects section has View All Projects button", () => {
+  it("featured work section shows project cards", () => {
     render(<HomePage />);
-    expect(screen.getByText("View All Projects")).toBeDefined();
-  });
-
-  it("View All Projects button links to projects page", () => {
-    render(<HomePage />);
-    const viewAllLink = screen.getByText("View All Projects").closest("a");
-    expect(viewAllLink?.getAttribute("href")).toBe("/projects");
-  });
-
-  it("contact section has Say Hello button", () => {
-    render(<HomePage />);
-    expect(screen.getByText("Say Hello")).toBeDefined();
+    expect(screen.getAllByText(/Inara Health/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/LDS Church/i).length).toBeGreaterThan(0);
   });
 
   it("page has proper semantic structure", () => {
@@ -89,31 +75,8 @@ describe("Home Page", () => {
 
   it("all major sections are present", () => {
     render(<HomePage />);
-    expect(screen.getByText(/Hello, I'm/i)).toBeDefined(); // Hero
-    expect(screen.getByText("Featured Projects")).toBeDefined(); // Projects section
-    expect(screen.getByText("Get In Touch")).toBeDefined(); // Contact section
-  });
-
-  it("featured projects show description", () => {
-    render(<HomePage />);
-    expect(
-      screen.getByText(/A full-stack web application built with modern technologies/i)
-    ).toBeDefined();
-  });
-
-  it("tech stack badges are displayed", () => {
-    render(<HomePage />);
-    expect(screen.getByText("Next.js")).toBeDefined();
-    expect(screen.getByText("TypeScript")).toBeDefined();
-  });
-
-  it("contact section has multiple CTAs", () => {
-    render(<HomePage />);
-    const contactButtons = screen.getAllByRole("link").filter(
-      (link) =>
-        link.textContent?.includes("Say Hello") ||
-        link.textContent?.includes("Book a Meeting")
-    );
-    expect(contactButtons.length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByText(/Creative Thinker/i)).toBeDefined(); // Hero
+    expect(screen.getByText("Featured Work")).toBeDefined(); // CaseStudies
+    expect(screen.getByText(/Projects.*Thought Leadership/i)).toBeDefined(); // ContentGrid
   });
 });

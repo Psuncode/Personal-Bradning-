@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { render, screen } from "@testing-library/react";
 import { Navbar } from "./navbar";
 
 // Mock next/link
@@ -49,23 +48,25 @@ describe("Navbar Component", () => {
 
   it("renders all navigation links on desktop", () => {
     render(<Navbar />);
-    expect(screen.getByText("Home")).toBeDefined();
     expect(screen.getByText("Projects")).toBeDefined();
-    expect(screen.getByText("Book a Meeting")).toBeDefined();
+    expect(screen.getByText("Meet")).toBeDefined();
     expect(screen.getByText("Contact")).toBeDefined();
   });
 
   it("navigation links have correct hrefs", () => {
     render(<Navbar />);
-    const homeLink = screen.getByText("Home").closest("a");
     const projectsLink = screen.getByText("Projects").closest("a");
-    const meetLink = screen.getByText("Book a Meeting").closest("a");
+    const meetLink = screen.getByText("Meet").closest("a");
     const contactLink = screen.getByText("Contact").closest("a");
 
-    expect(homeLink?.getAttribute("href")).toBe("/");
     expect(projectsLink?.getAttribute("href")).toBe("/projects");
     expect(meetLink?.getAttribute("href")).toBe("/meet");
     expect(contactLink?.getAttribute("href")).toBe("/contact");
+  });
+
+  it("does not render Home link", () => {
+    render(<Navbar />);
+    expect(screen.queryByText("Home")).toBeNull();
   });
 
   it("renders mobile menu button", () => {
@@ -93,10 +94,10 @@ describe("Navbar Component", () => {
     expect(header?.className).toContain("z-50");
   });
 
-  it("has semi-transparent backdrop effect", () => {
+  it("has backdrop blur effect", () => {
     const { container } = render(<Navbar />);
     const header = container.querySelector("header");
-    expect(header?.className).toContain("backdrop-blur-sm");
+    expect(header?.className).toContain("backdrop-blur");
   });
 
   it("navbar has border styling", () => {
@@ -105,7 +106,7 @@ describe("Navbar Component", () => {
     expect(header?.className).toContain("border-b");
   });
 
-  it("renders navigation as a list element", () => {
+  it("renders navigation as a nav element", () => {
     const { container } = render(<Navbar />);
     const nav = container.querySelector("nav");
     expect(nav).toBeDefined();
@@ -128,10 +129,9 @@ describe("Navbar Component", () => {
     expect(nav?.className).toContain("h-16");
   });
 
-  it("has proper padding and max-width", () => {
+  it("has proper max-width", () => {
     const { container } = render(<Navbar />);
     const nav = container.querySelector("nav");
     expect(nav?.className).toContain("max-w-6xl");
-    expect(nav?.className).toContain("px-4");
   });
 });
