@@ -69,33 +69,31 @@
 
 ## Traceability
 
-*Populated during roadmap creation.*
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PHOTO-01 | — | Pending |
-| PHOTO-02 | — | Pending |
-| PHOTO-03 | — | Pending |
-| PHOTO-04 | — | Pending |
-| CRM-01 | — | Pending |
-| CRM-02 | — | Pending |
-| CRM-03 | — | Pending |
-| SUB-01 | — | Pending |
-| SUB-02 | — | Pending |
-| SUB-03 | — | Pending |
-| GEO-01 | — | Pending |
-| GEO-02 | — | Pending |
-| GEO-03 | — | Pending |
-| GEO-04 | — | Pending |
-| BUG-01 | — | Pending |
-| BUG-02 | — | Pending |
-| BUG-03 | — | Pending |
+| SUB-01 | Phase 1 | Pending |
+| SUB-02 | Phase 2 | Pending |
+| PHOTO-01 | Phase 2 | Pending |
+| PHOTO-02 | Phase 2 | Pending |
+| CRM-01 | Phase 2 | Pending |
+| CRM-02 | Phase 2 | Pending |
+| CRM-03 | Phase 2 | Pending |
+| BUG-02 | Phase 2 | Pending |
+| PHOTO-03 | Phase 3 | Pending |
+| PHOTO-04 | Phase 3 | Pending |
+| BUG-01 | Phase 3 | Pending |
+| BUG-03 | Phase 3 | Pending |
+| GEO-01 | Phase 4 | Pending |
+| GEO-02 | Phase 4 | Pending |
+| GEO-03 | Phase 4 | Pending |
+| GEO-04 | Phase 4 | Pending |
+| SUB-03 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 17 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 17 ⚠️
+- Mapped to phases: 17
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-17*
-*Last updated: 2026-03-17 after initial definition*
+*Last updated: 2026-03-17 — traceability populated after roadmap creation*
