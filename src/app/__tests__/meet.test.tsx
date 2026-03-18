@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import MeetPage from "@/app/meet/page";
+import MeetPage from "@/app/(main)/meet/page";
 
 // Mock next/link
 vi.mock("next/link", () => ({

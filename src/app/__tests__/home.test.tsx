@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import HomePage from "@/app/page";
+import HomePage from "@/app/(main)/page";
 
 // Mock next/link
 vi.mock("next/link", () => ({
@@ -19,6 +19,7 @@ vi.mock("framer-motion", () => ({
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   },
   animate: {},
+  useReducedMotion: () => false,
 }));
 
 describe("Home Page", () => {

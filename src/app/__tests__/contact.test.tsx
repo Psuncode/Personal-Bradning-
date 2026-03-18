@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import ContactPage from "@/app/contact/page";
+import ContactPage from "@/app/(main)/contact/page";
 
 // Mock next/link
 vi.mock("next/link", () => ({
@@ -46,10 +46,10 @@ describe("Contact Page", () => {
 
   it("renders contact form fields", () => {
     render(<ContactPage />);
-    expect(screen.getByLabelText("Name")).toBeDefined();
-    expect(screen.getByLabelText("Email")).toBeDefined();
-    expect(screen.getByLabelText("Subject")).toBeDefined();
-    expect(screen.getByLabelText("Message")).toBeDefined();
+    expect(screen.getByLabelText(/^Name/i)).toBeDefined();
+    expect(screen.getByLabelText(/^Email/i)).toBeDefined();
+    expect(screen.getByLabelText(/^Subject/i)).toBeDefined();
+    expect(screen.getByLabelText(/^Message/i)).toBeDefined();
   });
 
   it("renders submit button", () => {
