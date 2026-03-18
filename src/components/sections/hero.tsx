@@ -1,9 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 
 export function Hero() {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <section className="bg-[#0a0a0a] text-white min-h-screen flex items-center px-6 md:px-12 relative overflow-hidden">
       {/* Subtle white blur circles */}
@@ -14,27 +16,27 @@ export function Hero() {
 
       <div className="max-w-6xl w-full relative z-10 space-y-8">
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
           className="text-5xl md:text-7xl lg:text-8xl font-[family-name:var(--font-playfair)] leading-[1.1] max-w-5xl"
         >
           Creative Thinker. Modern Builder.
         </motion.h1>
 
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.25 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
           className="text-xl md:text-2xl text-gray-300 max-w-3xl"
         >
           Product Manager specializing in Healthcare Technology and AI-Powered Solutions.
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
           className="pt-4 flex flex-wrap gap-4"
         >
           <Link
@@ -52,17 +54,19 @@ export function Hero() {
         </motion.div>
       </div>
 
-      {/* Animated bounce arrow */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2">
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 5V19M12 19L6 13M12 19L18 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </motion.div>
-      </div>
+      {/* Animated bounce arrow — hidden when reduced motion is preferred */}
+      {!shouldReduceMotion && (
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2" aria-hidden="true">
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 5V19M12 19L6 13M12 19L18 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </motion.div>
+        </div>
+      )}
     </section>
   );
 }

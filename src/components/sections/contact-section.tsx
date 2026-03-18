@@ -54,8 +54,9 @@ export function ContactSection() {
           {/* Left column */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.35 }}
           >
             <h1 className="font-[family-name:var(--font-playfair)] text-5xl md:text-6xl text-gray-900 mb-6">
               Get in Touch
@@ -126,8 +127,9 @@ export function ContactSection() {
           {/* Right column: form */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.35, delay: 0.1 }}
             className="bg-[#faf9f7] rounded-2xl p-8"
           >
             <h2 className="font-[family-name:var(--font-playfair)] text-3xl text-gray-900 mb-6">
@@ -135,25 +137,26 @@ export function ContactSection() {
             </h2>
 
             {status === "success" && (
-              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm">
+              <div role="alert" aria-live="polite" className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm">
                 Message sent! I&apos;ll get back to you soon.
               </div>
             )}
             {status === "error" && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
-                Something went wrong. Please try again or email me directly.
+              <div role="alert" aria-live="polite" className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
+                Message failed to send. Check your connection and try again, or email me at ps324@byu.edu directly.
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                  Name
+                  Name <span aria-hidden="true" className="text-red-500">*</span>
                 </label>
                 <input
                   id="name"
                   type="text"
                   required
+                  autoComplete="name"
                   value={formData.name}
                   onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
                   className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900"
@@ -162,12 +165,13 @@ export function ContactSection() {
 
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
+                  Email <span aria-hidden="true" className="text-red-500">*</span>
                 </label>
                 <input
                   id="email"
                   type="email"
                   required
+                  autoComplete="email"
                   value={formData.email}
                   onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
                   className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900"
@@ -176,12 +180,13 @@ export function ContactSection() {
 
               <div>
                 <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
-                  Subject
+                  Subject <span aria-hidden="true" className="text-red-500">*</span>
                 </label>
                 <input
                   id="subject"
                   type="text"
                   required
+                  autoComplete="off"
                   value={formData.subject}
                   onChange={(e) => setFormData((prev) => ({ ...prev, subject: e.target.value }))}
                   className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900"
@@ -190,7 +195,7 @@ export function ContactSection() {
 
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                  Message
+                  Message <span aria-hidden="true" className="text-red-500">*</span>
                 </label>
                 <textarea
                   id="message"
@@ -205,7 +210,7 @@ export function ContactSection() {
               <button
                 type="submit"
                 disabled={status === "submitting"}
-                className="w-full py-4 bg-gray-900 text-white rounded-full font-medium hover:bg-gray-700 transition-colors disabled:opacity-50"
+                className="w-full py-4 bg-gray-900 text-white rounded-full font-medium hover:bg-gray-700 transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
               >
                 {status === "submitting" ? "Sending..." : "Send Message"}
               </button>

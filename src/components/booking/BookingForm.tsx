@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
+import { siteConfig } from '@/data/site-config';
 import { Button } from '@/components/ui/button';
 import { getAvailableSlots } from '@/lib/availabilityService';
 import { generateICSContent, downloadICS } from '@/lib/icsService';
@@ -170,7 +171,7 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
       description: formData.description || 'Scheduled meeting',
       startTime: selectedSlot.startTime,
       endTime: selectedSlot.endTime,
-      organizer: { name: 'Philip Sun', email: 'ps324@byu.edu' },
+      organizer: { name: siteConfig.name, email: siteConfig.email },
       attendee: { name: formData.name, email: formData.email },
     });
 
@@ -193,7 +194,7 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
     if (formData.email && selectedDate && selectedSlot) {
       const subject = encodeURIComponent('Meeting Confirmation with Philip Sun');
       const body = encodeURIComponent(
-        `Hi ${formData.name},\n\nYour meeting has been scheduled:\n\nDate: ${format(selectedDate, 'MMMM d, yyyy')}\nTime: ${selectedSlot.display} (Mountain Time)\nWith: Philip Sun (ps324@byu.edu)\n\nPlease find the ICS file attached to add this to your calendar.\n\nBest regards,\nPhilip Sun`
+        `Hi ${formData.name},\n\nYour meeting has been scheduled:\n\nDate: ${format(selectedDate, 'MMMM d, yyyy')}\nTime: ${selectedSlot.display} (Mountain Time)\nWith: ${siteConfig.name} (${siteConfig.email})\n\nPlease find the ICS file attached to add this to your calendar.\n\nBest regards,\n${siteConfig.name}`
       );
       window.location.href = `mailto:${formData.email}?subject=${subject}&body=${body}`;
     }

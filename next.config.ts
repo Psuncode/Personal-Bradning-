@@ -14,6 +14,15 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https' as const,
+        hostname: '**.public.blob.vercel-storage.com',
+        pathname: '/**',
+      },
+    ],
+  },
 };
 
 export default nextConfig;
