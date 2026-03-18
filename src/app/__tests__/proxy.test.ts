@@ -85,4 +85,45 @@ describe("proxy subdomain routing", () => {
       expect(isRewrite(response)).toBe(false);
     });
   });
+
+  describe("admin route protection — CRM-02", () => {
+    it("redirects /admin to /admin/login when no admin_session cookie", () => {
+      const request = new NextRequest("https://philipsun.com/admin");
+      const response = proxy(request);
+
+      // Should be a redirect (302/307), not a pass-through
+      expect(response.status).toBeGreaterThanOrEqual(300);
+      expect(response.status).toBeLessThan(400);
+      expect(response.headers.get("location")).toContain("/admin/login");
+    });
+
+    it("does not redirect /admin/login (avoids redirect loop)", () => {
+      const request = new NextRequest("https://philipsun.com/admin/login");
+      const response = proxy(request);
+
+      // Should pass through (200, not redirect)
+      expect(response.headers.get("location")).toBeNull();
+    });
+
+    it("passes through /admin when admin_session cookie is present", () => {
+      const request = new NextRequest("https://philipsun.com/admin", {
+        headers: {
+          cookie: "admin_session=some-sealed-value",
+        },
+      });
+      const response = proxy(request);
+
+      // Should not redirect — passes through to the page
+      expect(response.headers.get("location")).toBeNull();
+    });
+  });
+
+  describe("photography subdomain deep paths — SUB-02", () => {
+    it("rewrites photography.philipsun.com/pricing to /photography/pricing", () => {
+      const request = new NextRequest("https://photography.philipsun.com/pricing");
+      const response = proxy(request);
+      expect(isRewrite(response)).toBe(true);
+      expect(getRewrittenUrl(response)).toContain("/photography/pricing");
+    });
+  });
 });
