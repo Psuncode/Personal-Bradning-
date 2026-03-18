@@ -28,7 +28,7 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Visiting `ecommerce.philipsun.com` routes to the ecommerce route group
   3. Preview deployments on `.vercel.app` fall back to path-prefix routing and do not break
   4. Neon database is provisioned and connected; Drizzle schema migrations run clean with all five tables (`contacts`, `inquiries`, `bookings`, `payments`, `packages`) and the `pending_reservations` table present
-**Plans**: TBD
+**Plans**: 2 plans
 
 ### Phase 2: Content and CRM
 **Goal**: Visitors on the photography subdomain can browse a real gallery and pricing, and every contact form submission is owned in Philip's database with an admin view to see them
@@ -40,7 +40,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. A contact form submission on the main site is saved to the `contacts` table and captures the traffic source (UTM/referrer)
   4. Philip can view all contacts and bookings at a password-protected `/admin` route
   5. BookingForm sources the organizer email from `siteConfig` (hardcoded `ps324@byu.edu` removed)
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Photography subdomain content (gallery + pricing + layout nav) and BUG-02 email fix
+- [ ] 02-02-PLAN.md — CRM contact capture Server Action and contact form rewrite
+- [ ] 02-03-PLAN.md — Admin route with iron-session auth and contacts dashboard
 
 ### Phase 3: Booking and Payments
 **Goal**: A photography client can complete the full booking flow — package selection, date/time from live CalDAV availability, deposit payment via Stripe — and receive a confirmation email with a calendar invite
@@ -69,11 +74,11 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 **Execution Order:**
 Phases execute in numeric order: 1 → 2 → 3
-Phase 4 depends only on Phase 1 and can run in parallel with Phases 2–3 if desired.
+Phase 4 depends only on Phase 1 and can run in parallel with Phases 2-3 if desired.
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Infrastructure | 2/2 | Complete    | 2026-03-18 |
-| 2. Content and CRM | 0/TBD | Not started | - |
+| 2. Content and CRM | 0/3 | Not started | - |
 | 3. Booking and Payments | 0/TBD | Not started | - |
 | 4. GEO and Ecommerce Subdomain | 0/TBD | Not started | - |
