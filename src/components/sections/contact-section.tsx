@@ -1,51 +1,33 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-import Link from "next/link";
-import { Mail, MapPin, Github, Linkedin } from "lucide-react";
-import { siteConfig } from "@/data/site-config";
+import { useEffect, useState, useActionState } from 'react';
+import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { Mail, MapPin, Github, Linkedin } from 'lucide-react';
+import { siteConfig } from '@/data/site-config';
+import { saveContact } from '@/app/actions/contact';
+import type { ContactFormState } from '@/app/actions/contact';
 
 export function ContactSection() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
+  const [utmParams, setUtmParams] = useState({
+    utm_source: '',
+    utm_medium: '',
+    utm_campaign: '',
   });
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setStatus("submitting");
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setUtmParams({
+      utm_source: params.get('utm_source') ?? '',
+      utm_medium: params.get('utm_medium') ?? '',
+      utm_campaign: params.get('utm_campaign') ?? '',
+    });
+  }, []);
 
-    // Set NEXT_PUBLIC_FORMSPREE_ID in your environment to enable form submissions.
-    // Falls back to a mailto link if not configured.
-    const formspreeId = process.env.NEXT_PUBLIC_FORMSPREE_ID;
-
-    if (!formspreeId) {
-      const mailto = `mailto:ps324@byu.edu?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`From: ${formData.name} <${formData.email}>\n\n${formData.message}`)}`;
-      window.location.href = mailto;
-      setStatus("idle");
-      return;
-    }
-
-    try {
-      const res = await fetch(`https://formspree.io/f/${formspreeId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      if (res.ok) {
-        setStatus("success");
-        setFormData({ name: "", email: "", subject: "", message: "" });
-      } else {
-        setStatus("error");
-      }
-    } catch {
-      setStatus("error");
-    }
-  }
+  const [state, formAction, isPending] = useActionState<ContactFormState, FormData>(
+    saveContact,
+    { success: false }
+  );
 
   return (
     <section className="bg-white py-24 px-6 md:px-12">
@@ -73,7 +55,7 @@ export function ContactSection() {
                 <span className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 group-hover:bg-gray-900 group-hover:text-white transition-colors">
                   <Mail className="size-5" />
                 </span>
-                <span className="text-gray-700">ps324@byu.edu</span>
+                <span className="text-gray-700">{siteConfig.email}</span>
               </a>
 
               <div className="flex items-center gap-4">
@@ -110,15 +92,15 @@ export function ContactSection() {
 
             <div className="bg-gray-50 rounded-2xl p-6">
               <p className="text-sm text-gray-600">
-                <span className="font-semibold text-gray-900">Response time:</span>{" "}
-                I typically respond within 24–48 hours on weekdays.
+                <span className="font-semibold text-gray-900">Response time:</span>{' '}
+                I typically respond within 24-48 hours on weekdays.
               </p>
               <div className="mt-4">
                 <Link
                   href="/meet"
                   className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:underline"
                 >
-                  Or book a meeting directly →
+                  Or book a meeting directly &rarr;
                 </Link>
               </div>
             </div>
@@ -136,29 +118,34 @@ export function ContactSection() {
               Send a Message
             </h2>
 
-            {status === "success" && (
+            {state.success && (
               <div role="alert" aria-live="polite" className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm">
                 Message sent! I&apos;ll get back to you soon.
               </div>
             )}
-            {status === "error" && (
+            {state.error && (
               <div role="alert" aria-live="polite" className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
-                Message failed to send. Check your connection and try again, or email me at ps324@byu.edu directly.
+                {state.error} You can also email me at{' '}
+                <a href={siteConfig.links.email} className="underline">{siteConfig.email}</a> directly.
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form action={formAction} className="space-y-4">
+              {/* Hidden UTM inputs — populated from URL on mount */}
+              <input type="hidden" name="utm_source" value={utmParams.utm_source} />
+              <input type="hidden" name="utm_medium" value={utmParams.utm_medium} />
+              <input type="hidden" name="utm_campaign" value={utmParams.utm_campaign} />
+
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                   Name <span aria-hidden="true" className="text-red-500">*</span>
                 </label>
                 <input
                   id="name"
+                  name="name"
                   type="text"
                   required
                   autoComplete="name"
-                  value={formData.name}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
                   className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900"
                 />
               </div>
@@ -169,26 +156,23 @@ export function ContactSection() {
                 </label>
                 <input
                   id="email"
+                  name="email"
                   type="email"
                   required
                   autoComplete="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
                   className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900"
                 />
               </div>
 
               <div>
                 <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
-                  Subject <span aria-hidden="true" className="text-red-500">*</span>
+                  Subject
                 </label>
                 <input
                   id="subject"
+                  name="subject"
                   type="text"
-                  required
                   autoComplete="off"
-                  value={formData.subject}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, subject: e.target.value }))}
                   className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900"
                 />
               </div>
@@ -199,20 +183,19 @@ export function ContactSection() {
                 </label>
                 <textarea
                   id="message"
+                  name="message"
                   required
                   rows={6}
-                  value={formData.message}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, message: e.target.value }))}
                   className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 resize-none"
                 />
               </div>
 
               <button
                 type="submit"
-                disabled={status === "submitting"}
+                disabled={isPending}
                 className="w-full py-4 bg-gray-900 text-white rounded-full font-medium hover:bg-gray-700 transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
               >
-                {status === "submitting" ? "Sending..." : "Send Message"}
+                {isPending ? 'Sending...' : 'Send Message'}
               </button>
             </form>
           </motion.div>
