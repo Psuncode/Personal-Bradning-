@@ -28,6 +28,20 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Admin guard: redirect /admin to /admin/login if no session cookie present.
+  // Checks cookie presence only (edge-safe) — full session validation happens in the page.
+  if (
+    request.nextUrl.pathname.startsWith('/admin') &&
+    !request.nextUrl.pathname.startsWith('/admin/login')
+  ) {
+    const adminSession = request.cookies.get('admin_session');
+    if (!adminSession?.value) {
+      const loginUrl = new URL('/admin/login', request.url);
+      loginUrl.searchParams.set('from', request.nextUrl.pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
   // Main domain — no rewrite needed
   const mainDomain = process.env.NEXT_PUBLIC_DOMAIN ?? "philipsun.com";
   if (hostWithoutPort === mainDomain || hostWithoutPort === `www.${mainDomain}`) {
