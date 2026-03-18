@@ -12,7 +12,7 @@ Four phases transform the existing Next.js portfolio into a complete professiona
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Infrastructure** - Subdomain middleware routing + Neon/Drizzle persistence layer — foundation for everything
+- [x] **Phase 1: Infrastructure** - Subdomain middleware routing + Neon/Drizzle persistence layer — foundation for everything (completed 2026-03-18)
 - [ ] **Phase 2: Content and CRM** - Photography gallery, pricing page, photography subdomain layout, CRM contact capture and admin view
 - [ ] **Phase 3: Booking and Payments** - Full photography booking flow with Stripe deposit, confirmation email+ICS, CalDAV bug fixes
 - [ ] **Phase 4: GEO and Ecommerce Subdomain** - GEO blog schema, llms.txt, expanded Person schema, first optimized post, ecommerce landing page
@@ -73,7 +73,7 @@ Phase 4 depends only on Phase 1 and can run in parallel with Phases 2–3 if des
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Infrastructure | 1/2 | In Progress|  |
+| 1. Infrastructure | 2/2 | Complete   | 2026-03-18 |
 | 2. Content and CRM | 0/TBD | Not started | - |
 | 3. Booking and Payments | 0/TBD | Not started | - |
 | 4. GEO and Ecommerce Subdomain | 0/TBD | Not started | - |

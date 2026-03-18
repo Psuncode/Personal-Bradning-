@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 01-infrastructure-01-PLAN.md
-last_updated: "2026-03-18T03:44:55.674Z"
+stopped_at: "Completed 01-infrastructure-02-PLAN.md (task 5 blocked: needs DATABASE_URL_UNPOOLED)"
+last_updated: "2026-03-18T03:50:14.408Z"
 last_activity: 2026-03-17 — Roadmap created; 17/17 v1 requirements mapped across 4 phases
 progress:
   total_phases: 4
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
   percent: 50
 ---
 
@@ -51,6 +51,7 @@ Progress: [█████░░░░░] 50%
 
 *Updated after each plan completion*
 | Phase 01-infrastructure P01 | 8 | 2 tasks | 22 files |
+| Phase 01-infrastructure P02 | 3 | 4 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -65,6 +66,8 @@ Recent decisions affecting current work:
 - Pre-roadmap: Middleware-based subdomain routing (single Vercel deployment, `NextResponse.rewrite()`) over Multi-Zones
 - [Phase 01-infrastructure]: Subdomain proxy rewrites to /photography and /ecommerce URL paths (not /(photography) filesystem paths) — Next.js Turbopack forbids multiple route group root pages resolving to the same URL
 - [Phase 01-infrastructure]: Proxy uses nextUrl.host fallback when host header is null (Vitest jsdom environment does not auto-populate host header in NextRequest constructor)
+- [Phase 01-infrastructure]: Integer cents for monetary storage, text 'true'/'false' for booleans, pooled URL for app / unpooled for migrations
+- [Phase 01-infrastructure]: drizzle-kit generate + migrate pattern (never push) — preserves migration history, avoids silent column drops
 
 ### Pending Todos
 
@@ -78,6 +81,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T03:44:55.671Z
-Stopped at: Completed 01-infrastructure-01-PLAN.md
+Last session: 2026-03-18T03:50:14.405Z
+Stopped at: Completed 01-infrastructure-02-PLAN.md (task 5 blocked: needs DATABASE_URL_UNPOOLED)
 Resume file: None
