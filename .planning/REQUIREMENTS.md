@@ -20,7 +20,7 @@
 
 ### Subdomains
 
-- [ ] **SUB-01**: Next.js middleware reads the `host` header and routes `photography.philipsun.com` and the ecommerce subdomain to their respective route groups within a single Vercel deployment
+- [x] **SUB-01**: Next.js middleware reads the `host` header and routes `photography.philipsun.com` and the ecommerce subdomain to their respective route groups within a single Vercel deployment
 - [ ] **SUB-02**: `photography.philipsun.com` has its own layout and surfaces the photography gallery, pricing page, and booking flow
 - [ ] **SUB-03**: Ecommerce subdomain (`ecommerce.philipsun.com`) has a static landing page for the ecommerce business with CTA
 
@@ -71,7 +71,7 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SUB-01 | Phase 1 | Pending |
+| SUB-01 | Phase 1 | Complete |
 | SUB-02 | Phase 2 | Pending |
 | PHOTO-01 | Phase 2 | Pending |
 | PHOTO-02 | Phase 2 | Pending |

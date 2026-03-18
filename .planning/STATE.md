@@ -1,3 +1,19 @@
+---
+gsd_state_version: 1.0
+milestone: v1.0
+milestone_name: milestone
+status: planning
+stopped_at: Completed 01-infrastructure-01-PLAN.md
+last_updated: "2026-03-18T03:44:55.674Z"
+last_activity: 2026-03-17 — Roadmap created; 17/17 v1 requirements mapped across 4 phases
+progress:
+  total_phases: 4
+  completed_phases: 0
+  total_plans: 2
+  completed_plans: 1
+  percent: 50
+---
+
 # Project State
 
 ## Project Reference
@@ -14,7 +30,7 @@ Plan: 0 of TBD in current phase
 Status: Ready to plan
 Last activity: 2026-03-17 — Roadmap created; 17/17 v1 requirements mapped across 4 phases
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
@@ -34,6 +50,7 @@ Progress: [░░░░░░░░░░] 0%
 - Trend: —
 
 *Updated after each plan completion*
+| Phase 01-infrastructure P01 | 8 | 2 tasks | 22 files |
 
 ## Accumulated Context
 
@@ -46,6 +63,8 @@ Recent decisions affecting current work:
 - Pre-roadmap: Neon + Drizzle for persistence layer (Vercel KV deprecated Dec 2024, PlanetScale free tier removed 2024)
 - Pre-roadmap: Stripe Checkout (hosted redirect) for payments — eliminates PCI card-capture scope
 - Pre-roadmap: Middleware-based subdomain routing (single Vercel deployment, `NextResponse.rewrite()`) over Multi-Zones
+- [Phase 01-infrastructure]: Subdomain proxy rewrites to /photography and /ecommerce URL paths (not /(photography) filesystem paths) — Next.js Turbopack forbids multiple route group root pages resolving to the same URL
+- [Phase 01-infrastructure]: Proxy uses nextUrl.host fallback when host header is null (Vitest jsdom environment does not auto-populate host header in NextRequest constructor)
 
 ### Pending Todos
 
@@ -59,6 +78,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-17
-Stopped at: Roadmap created, STATE.md initialized — ready to run /gsd:plan-phase 1
+Last session: 2026-03-18T03:44:55.671Z
+Stopped at: Completed 01-infrastructure-01-PLAN.md
 Resume file: None
