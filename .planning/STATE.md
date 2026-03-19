@@ -28,7 +28,7 @@ See: .planning/PROJECT.md (updated 2026-03-17)
 Phase: 1 of 4 (Infrastructure)
 Plan: 0 of TBD in current phase
 Status: Ready to plan
-Last activity: 2026-03-17 — Roadmap created; 17/17 v1 requirements mapped across 4 phases
+Last activity: 2026-03-19 - Completed quick task 260319-lxr: Restructure navbar with Business dropdown
 
 Progress: [█████░░░░░] 50%
 
@@ -86,6 +86,12 @@ Recent decisions affecting current work:
 ### Pending Todos
 
 None yet.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260319-lxr | Restructure navbar: remove standalone Photography link, add Business dropdown (Photography + Ecommerce) | 2026-03-19 | 01c2604 | [260319-lxr-restructure-the-navbar-remove-the-standa](./quick/260319-lxr-restructure-the-navbar-remove-the-standa/) |
 
 ### Blockers/Concerns
 
