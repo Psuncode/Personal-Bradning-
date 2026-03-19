@@ -4,7 +4,14 @@ import { siteConfig } from '@/data/site-config';
 import { format } from 'date-fns-tz';
 import { addMinutes } from 'date-fns';
 
-const resend = new Resend(process.env.RESEND_API_KEY!);
+// Lazy singleton — avoids Resend throwing at build time when RESEND_API_KEY is not set.
+let _resend: Resend | undefined;
+function getResend(): Resend {
+  if (!_resend) {
+    _resend = new Resend(process.env.RESEND_API_KEY!);
+  }
+  return _resend;
+}
 
 const FROM_ADDRESS = 'Philip Sun Photography <bookings@photography.psunproduction.com>';
 const TIMEZONE = 'America/Denver';
@@ -74,7 +81,7 @@ export async function sendBookingConfirmationEmail(opts: BookingEmailOpts) {
     </div>
   `;
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM_ADDRESS,
     to: clientEmail,
     subject: `Your session is confirmed — ${packageName}`,
@@ -83,7 +90,7 @@ export async function sendBookingConfirmationEmail(opts: BookingEmailOpts) {
       {
         filename: 'session.ics',
         content: icsBase64,
-        content_type: 'text/calendar; method=REQUEST',
+        contentType: 'text/calendar; method=REQUEST',
       },
     ],
   });
@@ -112,7 +119,7 @@ export async function sendPhilipNotificationEmail(opts: NotificationOpts) {
     </div>
   `;
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: FROM_ADDRESS,
     to: siteConfig.email,
     subject: `New booking: ${clientName} — ${packageName}`,
