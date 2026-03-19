@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 03-booking-and-payments 03-02-PLAN.md
-last_updated: "2026-03-19T20:20:45.029Z"
+stopped_at: Completed 03-booking-and-payments 03-03-PLAN.md
+last_updated: "2026-03-19T20:32:09.356Z"
 last_activity: 2026-03-17 — Roadmap created; 17/17 v1 requirements mapped across 4 phases
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 11
-  completed_plans: 9
+  completed_plans: 10
   percent: 50
 ---
 
@@ -55,6 +55,7 @@ Progress: [█████░░░░░] 50%
 | Phase 03-booking-and-payments P00 | 3 | 2 tasks | 5 files |
 | Phase 03-booking-and-payments P01 | 10 | 2 tasks | 8 files |
 | Phase 03-booking-and-payments P02 | 8min | 2 tasks | 5 files |
+| Phase 03-booking-and-payments P03 | 7 | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -78,6 +79,9 @@ Recent decisions affecting current work:
 - [Phase 03-booking-and-payments]: Functional Set state update pattern: setLoadedMonths(prev => new Set([...prev, monthKey]))
 - [Phase 03-booking-and-payments]: Booking page wraps PhotographyBookingForm in Suspense — required by Next.js App Router when client component uses useSearchParams()
 - [Phase 03-booking-and-payments]: Package.slug field added to photography.ts (Plan 03-01 missing dep auto-fixed)
+- [Phase 03-booking-and-payments]: Lazy Proxy pattern for Stripe and Resend singletons — prevents build-time constructor failure when env keys not set (mirrors db/index.ts pattern)
+- [Phase 03-booking-and-payments]: Mock @/lib/email directly in webhook tests — avoids Resend constructor hoisting issues with vi.mock factories
+- [Phase 03-booking-and-payments]: vi.hoisted() required for mock spy variables shared between vi.mock factories and test body
 
 ### Pending Todos
 
@@ -91,6 +95,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-19T20:20:45.026Z
-Stopped at: Completed 03-booking-and-payments 03-02-PLAN.md
+Last session: 2026-03-19T20:32:09.353Z
+Stopped at: Completed 03-booking-and-payments 03-03-PLAN.md
 Resume file: None
