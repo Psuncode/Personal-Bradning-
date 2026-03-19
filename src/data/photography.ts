@@ -14,6 +14,7 @@ export interface GalleryPhoto {
 export interface Package {
   id: number;
   name: string;
+  slug: string;
   description: string;
   priceInCents: number;
   depositInCents: number;
@@ -40,7 +41,7 @@ export const photoCategories: { value: PhotoCategory; label: string }[] = [
 ];
 
 export const photographyPackages: Package[] = [
-  { id: 1, name: 'Portrait Session', description: '1-hour studio or outdoor portrait session. Includes 15 edited digital photos, online gallery, and print release.', priceInCents: 25000, depositInCents: 7500, durationMinutes: 60 },
-  { id: 2, name: 'Event Coverage', description: '3-hour event photography. Includes full event gallery with 100+ edited photos, online delivery within 5 business days.', priceInCents: 60000, depositInCents: 20000, durationMinutes: 180 },
-  { id: 3, name: 'Landscape Half-Day', description: '4-hour golden-hour landscape session. Includes 20 edited prints, fine-art post-processing, and high-resolution files.', priceInCents: 40000, depositInCents: 15000, durationMinutes: 240 },
+  { id: 1, slug: 'portrait-session', name: 'Portrait Session', description: '1-hour studio or outdoor portrait session. Includes 15 edited digital photos, online gallery, and print release.', priceInCents: 25000, depositInCents: 7500, durationMinutes: 60 },
+  { id: 2, slug: 'event-coverage', name: 'Event Coverage', description: '3-hour event photography. Includes full event gallery with 100+ edited photos, online delivery within 5 business days.', priceInCents: 60000, depositInCents: 20000, durationMinutes: 180 },
+  { id: 3, slug: 'landscape-half-day', name: 'Landscape Half-Day', description: '4-hour golden-hour landscape session. Includes 20 edited prints, fine-art post-processing, and high-resolution files.', priceInCents: 40000, depositInCents: 15000, durationMinutes: 240 },
 ];
