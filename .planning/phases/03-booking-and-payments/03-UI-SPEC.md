@@ -57,12 +57,14 @@ Exceptions:
 
 ## Typography
 
+Two weights only: **400** (regular) and **600** (semibold).
+
 | Role | Font | Size | Weight | Line Height | Usage |
 |------|------|------|--------|-------------|-------|
 | Body | Inter | 16px | 400 | 1.5 | Helper text, package descriptions, confirmation details |
-| Label | Inter | 14px | 500 | 1.4 | Input labels, slot times, day-of-week headers, price breakdowns |
+| Label | Inter | 14px | 400 | 1.4 | Input labels, slot times, day-of-week headers, price breakdowns |
 | Heading | Inter | 24px (`text-2xl`) | 600 | 1.2 | Step titles ("Select a Package", "Choose a Date", etc.) |
-| Display | Playfair Display | 36px (`text-4xl`) on desktop / 28px on mobile | 700 | 1.15 | `/photography/book` page H1 only |
+| Display | Playfair Display | 36px (`text-4xl`) on desktop / 28px on mobile | 600 | 1.15 | `/photography/book` page H1 only |
 
 Notes:
 - Body minimum 16px on mobile — prevents iOS auto-zoom on input focus (ui-ux-pro-max §5 `readable-font-size`)
@@ -225,6 +227,8 @@ Yellow banner `bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 text-s
 | Required field marker | `*` with `sr-only` text "required" |
 | Deposit clarification | "Deposit secures your date. Balance due on the day of the shoot." |
 | Email confirmation note | "Check your inbox — calendar invite included." |
+
+Copywriting rationale — "Continue" and "Back": These single-word labels are accepted wizard convention for a linear 4-step checkout flow. Each step's heading ("Choose Your Package", "Select a Date", "Pick a Time", "Your Details") already names the current context, so repeating the destination noun on "Continue" would be redundant. The final step uses a distinct verb-noun label ("Proceed to Payment") where the action consequence differs materially. This pattern matches established e-commerce wizard patterns (Stripe Checkout, Airbnb booking, Apple Store checkout).
 
 Destructive actions in this phase: none. No cancel/delete flows exist in the booking UI. The Stripe "cancel" is a non-destructive abandonment (slot is not held after pending_reservations expiry).
 
