@@ -7,6 +7,7 @@ vi.mock("framer-motion", () => ({
   motion: {
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   },
+  useReducedMotion: () => false,
 }));
 
 // Mock next/link
@@ -45,10 +46,10 @@ describe("ContactSection Component", () => {
 
   it("renders contact form fields", () => {
     render(<ContactSection />);
-    expect(screen.getByLabelText("Name")).toBeDefined();
-    expect(screen.getByLabelText("Email")).toBeDefined();
-    expect(screen.getByLabelText("Subject")).toBeDefined();
-    expect(screen.getByLabelText("Message")).toBeDefined();
+    expect(screen.getByLabelText(/^Name/i)).toBeDefined();
+    expect(screen.getByLabelText(/^Email/i)).toBeDefined();
+    expect(screen.getByLabelText(/^Subject/i)).toBeDefined();
+    expect(screen.getByLabelText(/^Message/i)).toBeDefined();
   });
 
   it("renders submit button", () => {
