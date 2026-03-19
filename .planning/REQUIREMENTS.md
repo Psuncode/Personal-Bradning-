@@ -9,8 +9,8 @@
 
 - [ ] **PHOTO-01**: Visitor can browse a photography gallery organized by category (portrait, landscape, event, etc.)
 - [ ] **PHOTO-02**: Visitor can view a pricing page showing explicit photography package prices (no "contact for pricing")
-- [ ] **PHOTO-03**: Visitor can complete a multi-step photography booking flow: package selection → date/time picker → client info → Stripe deposit payment
-- [ ] **PHOTO-04**: Client automatically receives a booking confirmation email with an ICS calendar invite after successful payment
+- [x] **PHOTO-03**: Visitor can complete a multi-step photography booking flow: package selection → date/time picker → client info → Stripe deposit payment
+- [x] **PHOTO-04**: Client automatically receives a booking confirmation email with an ICS calendar invite after successful payment
 
 ### CRM
 
@@ -33,9 +33,9 @@
 
 ### Bug Fixes
 
-- [ ] **BUG-01**: CalDAV availability service fixed so slots are not shown as available when the calendar has a blocking event
+- [x] **BUG-01**: CalDAV availability service fixed so slots are not shown as available when the calendar has a blocking event
 - [ ] **BUG-02**: Hardcoded `ps324@byu.edu` email removed from `BookingForm.tsx` and sourced from `siteConfig`
-- [ ] **BUG-03**: `loadedMonths` Set mutation in `BookingForm.tsx` replaced with proper state management to prevent fragile month navigation
+- [x] **BUG-03**: `loadedMonths` Set mutation in `BookingForm.tsx` replaced with proper state management to prevent fragile month navigation
 
 ## v2 Requirements
 
@@ -79,10 +79,10 @@
 | CRM-02 | Phase 2 | Pending |
 | CRM-03 | Phase 2 | Pending |
 | BUG-02 | Phase 2 | Pending |
-| PHOTO-03 | Phase 3 | Pending |
-| PHOTO-04 | Phase 3 | Pending |
-| BUG-01 | Phase 3 | Pending |
-| BUG-03 | Phase 3 | Pending |
+| PHOTO-03 | Phase 3 | Complete |
+| PHOTO-04 | Phase 3 | Complete |
+| BUG-01 | Phase 3 | Complete |
+| BUG-03 | Phase 3 | Complete |
 | GEO-01 | Phase 4 | Pending |
 | GEO-02 | Phase 4 | Pending |
 | GEO-03 | Phase 4 | Pending |

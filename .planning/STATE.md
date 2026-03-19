@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Phase 3 UI-SPEC approved
-last_updated: "2026-03-19T15:31:42.866Z"
+stopped_at: Completed 03-booking-and-payments 03-00-PLAN.md
+last_updated: "2026-03-19T20:15:19.473Z"
 last_activity: 2026-03-17 — Roadmap created; 17/17 v1 requirements mapped across 4 phases
 progress:
   total_phases: 4
   completed_phases: 2
-  total_plans: 6
-  completed_plans: 6
+  total_plans: 11
+  completed_plans: 7
   percent: 50
 ---
 
@@ -52,6 +52,7 @@ Progress: [█████░░░░░] 50%
 *Updated after each plan completion*
 | Phase 01-infrastructure P01 | 8 | 2 tasks | 22 files |
 | Phase 01-infrastructure P02 | 3 | 4 tasks | 9 files |
+| Phase 03-booking-and-payments P00 | 3 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -68,6 +69,8 @@ Recent decisions affecting current work:
 - [Phase 01-infrastructure]: Proxy uses nextUrl.host fallback when host header is null (Vitest jsdom environment does not auto-populate host header in NextRequest constructor)
 - [Phase 01-infrastructure]: Integer cents for monetary storage, text 'true'/'false' for booleans, pooled URL for app / unpooled for migrations
 - [Phase 01-infrastructure]: drizzle-kit generate + migrate pattern (never push) — preserves migration history, avoids silent column drops
+- [Phase 03-booking-and-payments]: PhotographyBookingForm placeholder created so test imports resolve before Plan 03-02 builds the real component
+- [Phase 03-booking-and-payments]: vi.mock factories use inline literal values (not top-level imports) to avoid Vitest hoisting ReferenceError
 
 ### Pending Todos
 
@@ -81,6 +84,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-19T15:31:42.864Z
-Stopped at: Phase 3 UI-SPEC approved
-Resume file: .planning/phases/03-booking-and-payments/03-UI-SPEC.md
+Last session: 2026-03-19T20:15:19.470Z
+Stopped at: Completed 03-booking-and-payments 03-00-PLAN.md
+Resume file: None
