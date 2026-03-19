@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { photographyPackages } from '@/data/photography';
 
 export const metadata: Metadata = {
@@ -40,17 +41,19 @@ export default function PricingPage() {
                   {formatPrice(pkg.depositInCents)} deposit to book &middot; {formatDuration(pkg.durationMinutes)}
                 </p>
               </div>
+              <Link
+                href={`/photography/book?pkg=${pkg.slug}`}
+                className="mt-6 block w-full text-center bg-byu-navy text-white py-3 px-4 rounded-lg font-medium hover:bg-byu-blue transition-colors"
+              >
+                Book Now
+              </Link>
             </div>
           ))}
         </div>
 
         <div className="mt-12 text-center">
           <p className="text-gray-600">
-            Ready to book?{' '}
-            <a href="/contact" className="text-gray-900 font-medium underline hover:no-underline">
-              Get in touch
-            </a>{' '}
-            to schedule your session.
+            All packages include a deposit to secure your date. Balance is due on the day of the shoot.
           </p>
         </div>
       </div>
