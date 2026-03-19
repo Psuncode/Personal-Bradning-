@@ -2,7 +2,7 @@ import { DAVClient } from 'tsdav';
 import ICAL from 'ical.js';
 import { unstable_cache } from 'next/cache';
 import { startOfMonth, endOfMonth, addMonths, addDays, startOfDay, endOfDay } from 'date-fns';
-import { format } from 'date-fns-tz';
+import { format, toZonedTime } from 'date-fns-tz';
 import { getAvailableSlots } from '@/lib/availabilityService';
 
 export interface SerializedEvent {
@@ -149,16 +149,20 @@ async function _fetchServerAvailability(): Promise<ServerAvailabilityResult> {
   }
 
   // Pre-compute which workdays are fully booked
+  const TIMEZONE = 'America/Denver';
   const busyDates: string[] = [];
   let day = start;
 
   while (day <= end) {
-    const dayStart = startOfDay(day);
-    const dayEnd = endOfDay(day);
+    const dayInMT = toZonedTime(day, TIMEZONE);
+    const dayStartMT = startOfDay(dayInMT);
+    const dayEndMT = endOfDay(dayInMT);
     const dayEvents = events
-      .filter(
-        (e) => new Date(e.endTime) > dayStart && new Date(e.startTime) < dayEnd
-      )
+      .filter((e) => {
+        const eventStartMT = toZonedTime(new Date(e.startTime), TIMEZONE);
+        const eventEndMT = toZonedTime(new Date(e.endTime), TIMEZONE);
+        return eventEndMT > dayStartMT && eventStartMT < dayEndMT;
+      })
       .map((e) => ({
         startTime: new Date(e.startTime),
         endTime: new Date(e.endTime),

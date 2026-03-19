@@ -57,7 +57,7 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
 
   // Track which months we already have events for.
   // Initialized from the 3 months covered by initialData so the per-month effect skips them.
-  const [loadedMonths] = useState<Set<string>>(() => {
+  const [loadedMonths, setLoadedMonths] = useState<Set<string>>(() => {
     const set = new Set<string>();
     if (initialData?.events?.length) {
       const now = new Date();
@@ -123,7 +123,7 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
           );
           return [...notThisMonth, ...events];
         });
-        loadedMonths.add(monthKey);
+        setLoadedMonths(prev => new Set([...prev, monthKey]));
       } catch (error) {
         console.error('Error loading month availability:', error);
         setCalendarError(
