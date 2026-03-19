@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed 03-booking-and-payments-03-01-PLAN.md
-last_updated: "2026-03-19T20:16:22.574Z"
+stopped_at: Completed 03-booking-and-payments 03-02-PLAN.md
+last_updated: "2026-03-19T20:20:45.029Z"
 last_activity: 2026-03-17 — Roadmap created; 17/17 v1 requirements mapped across 4 phases
 progress:
   total_phases: 4
   completed_phases: 2
   total_plans: 11
-  completed_plans: 8
+  completed_plans: 9
   percent: 50
 ---
 
@@ -54,6 +54,7 @@ Progress: [█████░░░░░] 50%
 | Phase 01-infrastructure P02 | 3 | 4 tasks | 9 files |
 | Phase 03-booking-and-payments P00 | 3 | 2 tasks | 5 files |
 | Phase 03-booking-and-payments P01 | 10 | 2 tasks | 8 files |
+| Phase 03-booking-and-payments P02 | 8min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -75,6 +76,8 @@ Recent decisions affecting current work:
 - [Phase 03-booking-and-payments]: No hardcoded Stripe apiVersion — let SDK use bundled default
 - [Phase 03-booking-and-payments]: toZonedTime applied to both day boundary and event times for correct Mountain Time comparison in serverCalendar.ts
 - [Phase 03-booking-and-payments]: Functional Set state update pattern: setLoadedMonths(prev => new Set([...prev, monthKey]))
+- [Phase 03-booking-and-payments]: Booking page wraps PhotographyBookingForm in Suspense — required by Next.js App Router when client component uses useSearchParams()
+- [Phase 03-booking-and-payments]: Package.slug field added to photography.ts (Plan 03-01 missing dep auto-fixed)
 
 ### Pending Todos
 
@@ -88,6 +91,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-19T20:16:22.571Z
-Stopped at: Completed 03-booking-and-payments-03-01-PLAN.md
+Last session: 2026-03-19T20:20:45.026Z
+Stopped at: Completed 03-booking-and-payments 03-02-PLAN.md
 Resume file: None
