@@ -120,18 +120,28 @@ export function Navbar() {
           {/* Remaining flat links */}
           {navLinks.slice(1).map((link) => (
             <li key={link.href}>
-              <Link
-                href={link.href}
-                aria-current={pathname === link.href ? "page" : undefined}
-                className={cn(
-                  "text-sm transition-colors",
-                  pathname === link.href
-                    ? "text-black font-medium"
-                    : "text-gray-600 hover:text-black"
-                )}
-              >
-                {link.label}
-              </Link>
+              {link.href === "/meet" ? (
+                <Link
+                  href={link.href}
+                  aria-current={pathname === link.href ? "page" : undefined}
+                  className="inline-flex items-center px-4 py-1.5 text-sm font-medium bg-gray-900 text-white rounded-full hover:bg-gray-700 transition-colors"
+                >
+                  Book a Call
+                </Link>
+              ) : (
+                <Link
+                  href={link.href}
+                  aria-current={pathname === link.href ? "page" : undefined}
+                  className={cn(
+                    "text-sm transition-colors",
+                    pathname === link.href
+                      ? "text-black font-medium"
+                      : "text-gray-600 hover:text-black"
+                  )}
+                >
+                  {link.label}
+                </Link>
+              )}
             </li>
           ))}
         </ul>
