@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 interface GridItem {
-  type: "ai-project-hero" | "ai-project" | "healthcare" | "linkedin" | "photography" | "resume";
+  type: "ai-project-hero" | "ai-project" | "healthcare" | "linkedin" | "photography" | "resume" | "photography-cta";
   title: string;
   description?: string;
   excerpt?: string;
@@ -58,6 +58,7 @@ const gridItems: GridItem[] = [
     title: "Design & Space",
     image: "https://images.unsplash.com/photo-1647368890626-7e9e59c05a55?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     span: "md:col-span-1 md:row-span-1",
+    href: "/photography",
   },
   {
     type: "healthcare",
@@ -88,6 +89,14 @@ const gridItems: GridItem[] = [
     title: "Urban Studies",
     image: "https://images.unsplash.com/photo-1762436933065-fe6d7f51d4f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     span: "md:col-span-1 md:row-span-1",
+    href: "/photography",
+  },
+  {
+    type: "photography-cta",
+    title: "Book a Photography Session",
+    description: "Portraits, landscapes, and events. Select a package and secure your date online.",
+    span: "md:col-span-1",
+    href: "/photography/book",
   },
 ];
 
@@ -206,6 +215,7 @@ export function ContentGrid() {
                   <img
                     src={item.image}
                     alt={item.title}
+                    loading="lazy"
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
@@ -221,6 +231,28 @@ export function ContentGrid() {
                   </svg>
                   <h3 className="font-[family-name:var(--font-playfair)] text-xl mb-2 group-hover:text-white transition-colors">{item.title}</h3>
                   <p className="text-sm text-gray-600 group-hover:text-gray-300 transition-colors opacity-70">{item.description}</p>
+                </div>
+              )}
+
+              {item.type === "photography-cta" && (
+                <div className="bg-gradient-to-br from-[#002E5D] to-[#0057B8] h-full p-6 flex flex-col justify-between text-white">
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M23 19C23 19.5304 22.7893 20.0391 22.4142 20.4142C22.0391 20.7893 21.5304 21 21 21H3C2.46957 21 1.96086 20.7893 1.58579 20.4142C1.21071 20.0391 1 19.5304 1 19V8C1 7.46957 1.21071 6.96086 1.58579 6.58579C1.96086 6.21071 2.46957 6 3 6H7L9 3H15L17 6H21C21.5304 6 22.0391 6.21071 22.4142 6.58579C22.7893 6.96086 23 7.46957 23 8V19Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M12 17C14.2091 17 16 15.2091 16 13C16 10.7909 14.2091 9 12 9C9.79086 9 8 10.7909 8 13C8 15.2091 9.79086 17 12 17Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      <span className="text-xs uppercase tracking-wider opacity-90">Photography</span>
+                    </div>
+                    <h3 className="font-[family-name:var(--font-playfair)] text-xl mb-2">{item.title}</h3>
+                    <p className="text-sm text-blue-100 leading-relaxed">{item.description}</p>
+                  </div>
+                  <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-white/90 group-hover:text-white transition-colors">
+                    View packages
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
                 </div>
               )}
             </CardWrapper>
