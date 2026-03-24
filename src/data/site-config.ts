@@ -1,8 +1,8 @@
 export const siteConfig = {
   name: "Philip Sun",
-  title: "Philip Sun | PM · Founder · Healthcare",
+  title: "Philip Sun | PM · Founder · Photographer",
   description:
-    "Philip Sun — product manager, healthcare founder, and BYU Marriott student (3.96 GPA). Building Inara Health diagnostics and shipping PM strategy at scale.",
+    "Philip Sun — product manager, healthcare founder (Inara Health), and photographer. Shipping PM strategy at enterprise scale, building medtech diagnostics, and capturing portraits, landscapes, and events.",
   url: "https://philipsun.com",
   ogImage: "/og-image.png",
   email: "ps324@byu.edu",
