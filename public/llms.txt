@@ -31,6 +31,17 @@ Philip Sun is a product manager, healthcare founder, photographer, and B2B ecomm
 - philipsun.com/resume — Full resume and work history
 - philipsun.com/meet — Book a 30-minute call
 
+## Featured Projects
+
+- **Inara Health Diagnostic**: Founder & CEO. Continuous progesterone monitoring device for early pregnancy care. $40K capital deployed, 3-discipline cross-functional team. URL: philipsun.com/projects/inara-health
+- **LDS Church Enterprise PM**: PM intern managing Microsoft Teams Phone migration (1,200+ phones, 18 departments) and Power BI reporting for 16M+ user global org. URL: philipsun.com/projects/lds-church-pm
+- **Nursa AI TB Verification**: PM for AI/ML TB verification model replacing external vendor, shipped to production with $30K annual savings. URL: philipsun.com/projects/nursa-ai-tb
+- **Granger RVU Analytics Platform**: Analytics platform covering 7,000+ CPT codes to strengthen payer contract negotiations. URL: philipsun.com/projects/granger-rvu-analytics
+
+## Recent Writing
+
+- **How to Prepare for a Photography Session (And Get the Most Out of It)**: Practical guide to photography session preparation, session types, packages, and what to expect. URL: philipsun.com/blog/photography-session-guide
+
 ## Contact
 
 Email: ps324@byu.edu
