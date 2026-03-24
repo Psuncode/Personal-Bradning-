@@ -21,6 +21,11 @@ const nextConfig: NextConfig = {
         hostname: '**.public.blob.vercel-storage.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https' as const,
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
     ],
   },
 };

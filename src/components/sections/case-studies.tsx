@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { projects } from "@/data/projects";
 
@@ -122,12 +123,13 @@ export function CaseStudies() {
                 {/* Scrolling right column */}
                 <div className="md:col-span-7 space-y-6">
                   {images.map((image, imgIndex) => (
-                    <div key={imgIndex} className="relative group overflow-hidden rounded-2xl">
-                      <img
+                    <div key={imgIndex} className="relative group overflow-hidden rounded-2xl h-[500px]">
+                      <Image
                         src={image}
                         alt={`${project.title} visual ${imgIndex + 1}`}
-                        loading="lazy"
-                        className="w-full h-[500px] object-cover transition-transform duration-500 group-hover:scale-105"
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw, 58vw"
                       />
                       <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
                     </div>

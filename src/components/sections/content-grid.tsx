@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 interface GridItem {
@@ -212,11 +213,12 @@ export function ContentGrid() {
 
               {item.type === "photography" && (
                 <div className="relative h-full">
-                  <img
-                    src={item.image}
+                  <Image
+                    src={item.image!}
                     alt={item.title}
-                    loading="lazy"
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, 33vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
                     <h3 className="font-[family-name:var(--font-playfair)] text-xl text-white">{item.title}</h3>

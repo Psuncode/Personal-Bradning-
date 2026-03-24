@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export function About() {
@@ -75,12 +76,15 @@ export function About() {
           {/* Sticky image — 5 columns */}
           <div className="md:col-span-5 md:col-start-8">
             <div className="sticky top-32">
-              <img
-                src="https://images.unsplash.com/photo-1700619663094-be321751b545?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
-                alt="Philip Sun's workspace"
-                loading="lazy"
-                className="rounded-2xl w-full h-[600px] object-cover"
-              />
+              <div className="relative rounded-2xl overflow-hidden h-[600px]">
+                <Image
+                  src="https://images.unsplash.com/photo-1700619663094-be321751b545?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+                  alt="Philip Sun's workspace"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 40vw"
+                />
+              </div>
             </div>
           </div>
         </div>
