@@ -2,6 +2,7 @@ export interface FocusItem {
   label: string;
   heading: string;
   body: string;
+  href?: string;
 }
 
 export const currentFocus: FocusItem[] = [
@@ -19,5 +20,6 @@ export const currentFocus: FocusItem[] = [
     label: "Open To",
     heading: "Full-time PM roles — Apr 2026",
     body: "Graduating BYU Marriott Apr 2026. Actively seeking full-time PM roles at healthcare tech or high-growth companies where product thinking and domain expertise matter.",
+    href: "/meet",
   },
 ];
