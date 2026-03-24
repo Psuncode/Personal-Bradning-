@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PhotographyNav } from "@/components/photography/PhotographyNav";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -13,20 +14,13 @@ export default function PhotographyLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="min-h-screen flex flex-col font-sans antialiased">
-        <nav className="border-b border-gray-200 px-6 py-4">
-          <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <Link href="/" className="text-lg font-bold text-gray-900">
-              Philip Sun Photography
-            </Link>
-            <div className="flex items-center gap-6 text-sm font-medium text-gray-700">
-              <Link href="/gallery" className="hover:text-gray-900 transition-colors">Gallery</Link>
-              <Link href="/pricing" className="hover:text-gray-900 transition-colors">Pricing</Link>
-            </div>
-          </div>
-        </nav>
+    <html lang="en" suppressHydrationWarning>
+      <body className="min-h-screen flex flex-col font-sans antialiased bg-white">
+        <PhotographyNav />
         <main className="flex-1">{children}</main>
+        <footer className="border-t border-gray-100 py-8 px-6 text-center text-sm text-gray-400">
+          © {new Date().getFullYear()} Philip Sun Photography
+        </footer>
       </body>
     </html>
   );

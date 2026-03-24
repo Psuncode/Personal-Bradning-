@@ -19,7 +19,7 @@ export default function EcommerceLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} min-h-screen flex flex-col font-sans antialiased bg-[#F8FAFC]`}>
         <main className="flex-1">{children}</main>
       </body>

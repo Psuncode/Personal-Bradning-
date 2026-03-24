@@ -101,7 +101,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.variable} ${geistMono.variable} ${playfairDisplay.variable} min-h-screen flex flex-col font-sans antialiased`}
       >
