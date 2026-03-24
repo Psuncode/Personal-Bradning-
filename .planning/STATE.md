@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to execute
-stopped_at: Completed 04-geo-and-ecommerce-subdomain 04-01-PLAN.md
-last_updated: "2026-03-24T09:17:33.356Z"
+status: Phase complete — ready for verification
+stopped_at: Completed 04-geo-and-ecommerce-subdomain 04-03-PLAN.md
+last_updated: "2026-03-24T09:21:35.069Z"
 progress:
   total_phases: 4
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 14
-  completed_plans: 12
+  completed_plans: 14
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-17)
 ## Current Position
 
 Phase: 04 (geo-and-ecommerce-subdomain) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -54,6 +54,8 @@ Plan: 2 of 3
 | Phase 03-booking-and-payments P03 | 7 | 2 tasks | 7 files |
 | Phase 03-booking-and-payments P04 | 15 | 1 tasks | 2 files |
 | Phase 04-geo-and-ecommerce-subdomain P01 | 2 | 2 tasks | 4 files |
+| Phase 04-geo-and-ecommerce-subdomain P03 | 2 | 2 tasks | 2 files |
+| Phase 04-geo-and-ecommerce-subdomain P02 | 6 | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -84,6 +86,9 @@ Recent decisions affecting current work:
 - [Phase 03-booking-and-payments]: Navbar test lucide-react mock must include ChevronDown icon added by Business dropdown feature
 - [Phase 04-geo-and-ecommerce-subdomain]: hasOccupation built as static array in layout (not dynamic filter) — four canonical roles are known, hardcoded clarity beats fragile string-matching
 - [Phase 04-geo-and-ecommerce-subdomain]: email field added to Person JSON-LD schema from siteConfig.email; alumniOf.name uses education[0].school from resume.ts
+- [Phase 04-geo-and-ecommerce-subdomain]: Ecommerce page is pure RSC (no use client, no Framer Motion) — static supplier catalog needs no client-side interactivity
+- [Phase 04-geo-and-ecommerce-subdomain]: Inter font variable added to ecommerce layout body (separate root layout from main app) so font-sans resolves correctly on the ecommerce subdomain
+- [Phase 04-geo-and-ecommerce-subdomain]: GEO-04 post uses first-person voice and concrete operational specifics (Pixieset, Lightroom, Stripe deposit) — AI citation requires entity-specific content, not generic advice
 
 ### Pending Todos
 
@@ -103,6 +108,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T09:17:33.353Z
-Stopped at: Completed 04-geo-and-ecommerce-subdomain 04-01-PLAN.md
+Last session: 2026-03-24T09:21:35.065Z
+Stopped at: Completed 04-geo-and-ecommerce-subdomain 04-03-PLAN.md
 Resume file: None

@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Infrastructure** - Subdomain middleware routing + Neon/Drizzle persistence layer — foundation for everything (completed 2026-03-18)
 - [ ] **Phase 2: Content and CRM** - Photography gallery, pricing page, photography subdomain layout, CRM contact capture and admin view
 - [x] **Phase 3: Booking and Payments** - Full photography booking flow with Stripe deposit, confirmation email+ICS, CalDAV bug fixes (completed 2026-03-24)
-- [ ] **Phase 4: GEO and Ecommerce Subdomain** - GEO blog schema, llms.txt, expanded Person schema, first optimized post, ecommerce landing page
+- [x] **Phase 4: GEO and Ecommerce Subdomain** - GEO blog schema, llms.txt, expanded Person schema, first optimized post, ecommerce landing page (completed 2026-03-24)
 
 ## Phase Details
 
@@ -76,12 +76,12 @@ Plans:
   3. Homepage `Person` JSON-LD includes `knowsAbout`, `hasOccupation`, and `alumniOf` fields sourced from `resume.ts` and `site-config.ts`
   4. At least one published blog post is live using answer-first structure with entity depth (PM, photography, or entrepreneurship topic)
   5. Visitor on `ecommerce.philipsun.com` sees the ecommerce company landing page with a CTA
-**Plans:** 1/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 - [x] 04-01-PLAN.md — Wave 1: GEO infrastructure (BlogPostFrontmatter types + FAQPage/HowTo injection + llms.txt + Person JSON-LD expansion)
-- [ ] 04-02-PLAN.md — Wave 2: Photography session guide blog post (GEO-04, exercises GEO-01 FAQ schema)
-- [ ] 04-03-PLAN.md — Wave 2: Ecommerce landing page (SUB-03, Puno Filter + Smart Sync B2B showcase)
+- [x] 04-02-PLAN.md — Wave 2: Photography session guide blog post (GEO-04, exercises GEO-01 FAQ schema)
+- [x] 04-03-PLAN.md — Wave 2: Ecommerce landing page (SUB-03, Puno Filter + Smart Sync B2B showcase)
 
 ## Progress
 
@@ -94,4 +94,4 @@ Phase 4 depends only on Phase 1 and can run in parallel with Phases 2-3 if desir
 | 1. Infrastructure | 2/2 | Complete    | 2026-03-18 |
 | 2. Content and CRM | 0/4 | Not started | - |
 | 3. Booking and Payments | 5/5 | Complete   | 2026-03-24 |
-| 4. GEO and Ecommerce Subdomain | 1/3 | In Progress|  |
+| 4. GEO and Ecommerce Subdomain | 3/3 | Complete   | 2026-03-24 |

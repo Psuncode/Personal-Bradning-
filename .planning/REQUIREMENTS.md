@@ -22,14 +22,14 @@
 
 - [x] **SUB-01**: Next.js middleware reads the `host` header and routes `photography.philipsun.com` and the ecommerce subdomain to their respective route groups within a single Vercel deployment
 - [ ] **SUB-02**: `photography.philipsun.com` has its own layout and surfaces the photography gallery, pricing page, and booking flow
-- [ ] **SUB-03**: Ecommerce subdomain (`ecommerce.philipsun.com`) has a static landing page for the ecommerce business with CTA
+- [x] **SUB-03**: Ecommerce subdomain (`ecommerce.philipsun.com`) has a static landing page for the ecommerce business with CTA
 
 ### GEO / Search
 
 - [x] **GEO-01**: Blog post template includes `FAQPage` and `HowTo` JSON-LD schema blocks that content authors can populate per post
 - [x] **GEO-02**: `/llms.txt` file at site root describes the site's content and purpose for AI crawler discovery
 - [x] **GEO-03**: Homepage `Person` JSON-LD schema expanded with `knowsAbout`, `hasOccupation`, and `alumniOf` fields that match resume.ts data
-- [ ] **GEO-04**: At least one published blog post written with answer-first structure and entity depth optimized for AI citation (PM + photography + entrepreneurship topics)
+- [x] **GEO-04**: At least one published blog post written with answer-first structure and entity depth optimized for AI citation (PM + photography + entrepreneurship topics)
 
 ### Bug Fixes
 
@@ -86,8 +86,8 @@
 | GEO-01 | Phase 4 | Complete |
 | GEO-02 | Phase 4 | Complete |
 | GEO-03 | Phase 4 | Complete |
-| GEO-04 | Phase 4 | Pending |
-| SUB-03 | Phase 4 | Pending |
+| GEO-04 | Phase 4 | Complete |
+| SUB-03 | Phase 4 | Complete |
 
 **Coverage:**
 - v1 requirements: 17 total
