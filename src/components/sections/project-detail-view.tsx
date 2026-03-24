@@ -155,10 +155,10 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
           <div className="text-center border-t border-gray-200 pt-12">
             <p className="text-gray-600 mb-6">Want to learn more about this project?</p>
             <Link
-              href="/contact"
+              href="/meet"
               className="inline-flex items-center gap-2 px-8 py-4 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition-colors font-medium"
             >
-              Get in Touch
+              Book a Call
             </Link>
           </div>
         </div>

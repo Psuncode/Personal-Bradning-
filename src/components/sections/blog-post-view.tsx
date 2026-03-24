@@ -4,18 +4,11 @@ import { Container } from "@/components/layout/container";
 import { Separator } from "@/components/ui/separator";
 import type { BlogPost } from "@/types/blog";
 import type { MDXComponents } from "mdx/types";
+import { formatDate } from "@/lib/utils";
 
 interface BlogPostViewProps {
   post: BlogPost;
   Content: React.ComponentType;
-}
-
-function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
 }
 
 export const mdxComponents: MDXComponents = {
@@ -116,10 +109,10 @@ export function BlogPostView({ post, Content }: BlogPostViewProps) {
         </h3>
         <p className="text-gray-600 mb-6">Have thoughts on this post? I&apos;d love to hear from you.</p>
         <Link
-          href="/contact"
+          href="/meet"
           className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition-colors font-medium text-sm"
         >
-          Get in Touch
+          Book a Call
         </Link>
       </div>
     </Container>
