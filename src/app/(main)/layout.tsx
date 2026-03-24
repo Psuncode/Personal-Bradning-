@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/footer";
 import { siteConfig } from "@/data/site-config";
 import { roles, education } from "@/data/resume";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -118,6 +119,7 @@ export default function RootLayout({
         <main id="main-content" className="flex-1">{children}</main>
         <Footer />
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
