@@ -13,8 +13,7 @@ function getResend(): Resend {
   return _resend;
 }
 
-// TODO: switch to bookings@photography.psunproduction.com after verifying domain in Resend
-const FROM_ADDRESS = 'Philip Sun Photography <onboarding@resend.dev>';
+const FROM_ADDRESS = 'Philip Sun Photography <bookings@photography.psunproduction.com>';
 const TIMEZONE = 'America/Denver';
 
 export interface BookingEmailOpts {
