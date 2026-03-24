@@ -52,6 +52,19 @@ export function Hero() {
             View Resume
           </Link>
         </motion.div>
+
+        <motion.div
+          initial={shouldReduceMotion ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.5 }}
+          className="flex flex-wrap gap-6 pt-2 text-sm text-gray-500"
+        >
+          <span>16M+ users impacted</span>
+          <span className="text-gray-700">·</span>
+          <span>3+ years PM experience</span>
+          <span className="text-gray-700">·</span>
+          <span>Graduating Apr 2026</span>
+        </motion.div>
       </div>
 
       {/* Animated bounce arrow — hidden when reduced motion is preferred */}
