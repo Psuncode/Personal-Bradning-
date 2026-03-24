@@ -30,7 +30,7 @@ export function GET() {
           Philip Sun
         </div>
         <div style={{ color: "#6BB1E0", fontSize: 28, marginTop: 16 }}>
-          PM · Founder · Healthcare
+          PM · Founder · Photographer
         </div>
       </div>
     ),
