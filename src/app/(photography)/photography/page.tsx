@@ -33,9 +33,46 @@ const specialties = [
 // Pick 5 featured photos from the gallery (first available)
 const featuredPhotos = galleryPhotos.slice(0, 5);
 
+const photographerJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://philipsun.com/photography",
+  name: "Philip Sun Photography",
+  description: "Portraits, landscapes, and events photographed with intention in Utah and beyond.",
+  url: "https://philipsun.com/photography",
+  telephone: "",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Provo",
+    addressRegion: "UT",
+    addressCountry: "US",
+  },
+  geo: {
+    "@type": "GeoCoordinates",
+    latitude: 40.2338,
+    longitude: -111.6585,
+  },
+  priceRange: "$$",
+  areaServed: "Utah and surrounding states",
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Photography Packages",
+    itemListElement: photographyPackages.map((pkg) => ({
+      "@type": "Offer",
+      name: pkg.name,
+      description: pkg.description,
+      url: `https://philipsun.com/photography/book?pkg=${pkg.slug}`,
+    })),
+  },
+};
+
 export default function PhotographyHome() {
   return (
     <div className="text-gray-900">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(photographerJsonLd) }}
+      />
       {/* ── Hero ── */}
       <section className="relative min-h-[88vh] flex items-end bg-gray-950 overflow-hidden">
         {/* Background image tiled from first gallery photo */}
