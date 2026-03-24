@@ -25,12 +25,12 @@ describe("Footer Component", () => {
 
   it("renders footer description", () => {
     render(<Footer />);
-    expect(screen.getByText(/healthcare product management/i)).toBeDefined();
+    expect(screen.getByText(/PM roles in healthcare tech/i)).toBeDefined();
   });
 
-  it("renders Get in Touch button", () => {
+  it("renders Book a Call button", () => {
     render(<Footer />);
-    expect(screen.getByText("Get in Touch")).toBeDefined();
+    expect(screen.getByText("Book a Call")).toBeDefined();
   });
 
   it("renders View Resume button", () => {
@@ -38,10 +38,10 @@ describe("Footer Component", () => {
     expect(screen.getByText("View Resume")).toBeDefined();
   });
 
-  it("Get in Touch links to contact page", () => {
+  it("Book a Call links to meet page", () => {
     render(<Footer />);
-    const link = screen.getByText("Get in Touch").closest("a");
-    expect(link?.getAttribute("href")).toBe("/contact");
+    const link = screen.getByText("Book a Call").closest("a");
+    expect(link?.getAttribute("href")).toBe("/meet");
   });
 
   it("View Resume links to resume page", () => {

@@ -11,14 +11,14 @@ export function Footer() {
               Let&apos;s work together.
             </h2>
             <p className="text-gray-400 text-lg leading-relaxed mb-8">
-              Open to opportunities in healthcare product management, medtech innovation, and AI-powered health solutions. Always interested in challenging problems and mission-driven teams.
+              Open to PM roles in healthcare tech and high-growth companies. Also available for photography sessions and B2B product inquiries. Always interested in challenging problems and mission-driven teams.
             </p>
             <div className="flex flex-wrap gap-4 pt-4">
               <Link
-                href="/contact"
+                href="/meet"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-white text-black rounded-full hover:bg-gray-100 transition-colors font-medium"
               >
-                Get in Touch
+                Book a Call
               </Link>
               <Link
                 href="/resume"
@@ -34,7 +34,7 @@ export function Footer() {
               href={siteConfig.links.email}
               className="text-2xl hover:text-gray-300 transition-colors"
             >
-              ps324@byu.edu
+              {siteConfig.email}
             </a>
             <div className="flex gap-6 pt-4">
               <a
