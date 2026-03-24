@@ -30,12 +30,12 @@ describe("Home Page", () => {
 
   it("renders Hero section", () => {
     render(<HomePage />);
-    expect(screen.getByText(/Product Manager specializing in Healthcare Technology/i)).toBeDefined();
+    expect(screen.getByText(/Product Manager · Healthcare Founder · Photographer/i)).toBeDefined();
   });
 
   it("renders About section", () => {
     render(<HomePage />);
-    expect(screen.getByText(/Building healthcare solutions/i)).toBeDefined();
+    expect(screen.getByText(/PM, founder, and photographer/i)).toBeDefined();
   });
 
   it("renders Featured Work section", () => {
@@ -48,9 +48,9 @@ describe("Home Page", () => {
     expect(screen.getByText(/Projects.*Thought Leadership/i)).toBeDefined();
   });
 
-  it("hero has Get in Touch button", () => {
+  it("hero has Book a Call button", () => {
     render(<HomePage />);
-    expect(screen.getAllByText(/Get in Touch/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/Book a Call/i).length).toBeGreaterThanOrEqual(1);
   });
 
   it("hero has View Resume button", () => {

@@ -31,12 +31,12 @@ describe("Hero Component", () => {
 
   it("renders the subtitle description", () => {
     render(<Hero />);
-    expect(screen.getByText(/Product Manager specializing in Healthcare Technology/i)).toBeDefined();
+    expect(screen.getByText(/Product Manager · Healthcare Founder · Photographer/i)).toBeDefined();
   });
 
-  it("renders Get in Touch button", () => {
+  it("renders Book a Call button", () => {
     render(<Hero />);
-    expect(screen.getByText(/Get in Touch/i)).toBeDefined();
+    expect(screen.getByText(/Book a Call/i)).toBeDefined();
   });
 
   it("renders View Resume button", () => {
@@ -44,10 +44,10 @@ describe("Hero Component", () => {
     expect(screen.getByText(/View Resume/i)).toBeDefined();
   });
 
-  it("has correct link for Get in Touch", () => {
+  it("has correct link for Book a Call", () => {
     render(<Hero />);
-    const link = screen.getByText(/Get in Touch/i).closest("a");
-    expect(link?.getAttribute("href")).toBe("/contact");
+    const link = screen.getByText(/Book a Call/i).closest("a");
+    expect(link?.getAttribute("href")).toBe("/meet");
   });
 
   it("has correct link for View Resume", () => {

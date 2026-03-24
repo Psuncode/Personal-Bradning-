@@ -6,15 +6,15 @@ export function About() {
           {/* Content — 7 columns */}
           <div className="md:col-span-7 space-y-6">
             <h2 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl text-gray-900">
-              Building healthcare solutions that improve lives through thoughtful product strategy.
+              PM, founder, and photographer building things that matter.
             </h2>
 
             <div className="text-lg text-gray-600 space-y-4 leading-relaxed">
               <p>
-                As a Product Manager and Founder with a passion for healthcare innovation, I focus on bridging the gap between complex medical needs and intuitive digital solutions.
+                I&apos;m a Product Manager and Healthcare Founder (Inara Health) with 3+ years shipping products at enterprise and startup scale — from AI diagnostics and analytics platforms to smart home and filtration B2B systems.
               </p>
               <p>
-                My work spans maternal health diagnostics, enterprise-scale product management, and AI-powered healthcare verification. I believe great healthcare products start with deep empathy for patients and providers.
+                When I&apos;m not shipping product, I shoot portraits, landscapes, and events. I believe the same instinct that makes a great PM — understanding people deeply — makes a great photographer.
               </p>
             </div>
 
@@ -66,7 +66,8 @@ export function About() {
             <div className="sticky top-32">
               <img
                 src="https://images.unsplash.com/photo-1700619663094-be321751b545?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
-                alt="Workspace"
+                alt="Philip Sun's workspace"
+                loading="lazy"
                 className="rounded-2xl w-full h-[600px] object-cover"
               />
             </div>

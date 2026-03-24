@@ -30,7 +30,7 @@ export function Hero() {
           transition={{ duration: 0.4, delay: 0.2 }}
           className="text-xl md:text-2xl text-gray-300 max-w-3xl"
         >
-          Product Manager specializing in Healthcare Technology and AI-Powered Solutions.
+          Product Manager · Healthcare Founder · Photographer. Building at the intersection of health, product, and craft.
         </motion.p>
 
         <motion.div
@@ -40,10 +40,10 @@ export function Hero() {
           className="pt-4 flex flex-wrap gap-4"
         >
           <Link
-            href="/contact"
+            href="/meet"
             className="inline-flex items-center gap-2 px-8 py-4 bg-white text-black rounded-full hover:bg-gray-100 transition-colors font-medium"
           >
-            Get in Touch
+            Book a Call
           </Link>
           <Link
             href="/resume"
