@@ -6,8 +6,8 @@ import { BookingForm } from "@/components/booking/BookingForm";
 import { getServerAvailability } from "@/lib/serverCalendar";
 
 export const metadata: Metadata = {
-  title: "Book a Meeting",
-  description: `Schedule a meeting with ${siteConfig.name}`,
+  title: "Book a Call — Philip Sun",
+  description: `Book a 30-minute call with ${siteConfig.name} — PM, healthcare founder, and photographer. Let's discuss opportunities, collaborations, or photography sessions.`,
 };
 
 export default async function MeetPage() {
@@ -17,8 +17,8 @@ export default async function MeetPage() {
     <div className="pb-24 pt-12">
       <Container>
         <SectionHeading
-          title="Book a Meeting"
-          subtitle="Select an available time slot to meet with me. All times are in Mountain Time (MT)."
+          title="Book a Call"
+          subtitle="Select an available time slot. All times are in Mountain Time (MT)."
         />
 
         <div className="mx-auto max-w-3xl rounded-xl border border-gray-200 bg-white p-8 shadow-sm">

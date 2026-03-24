@@ -24,12 +24,12 @@ vi.mock("@/lib/serverCalendar", () => ({
 describe("Meet Page", () => {
   it("renders the meet page", async () => {
     render(await MeetPage());
-    expect(screen.getByText("Book a Meeting")).toBeDefined();
+    expect(screen.getByText("Book a Call")).toBeDefined();
   });
 
   it("renders page heading", async () => {
     render(await MeetPage());
-    const heading = screen.getByText("Book a Meeting");
+    const heading = screen.getByText("Book a Call");
     expect(heading).toBeDefined();
   });
 
@@ -37,7 +37,7 @@ describe("Meet Page", () => {
     render(await MeetPage());
     expect(
       screen.getByText(
-        /Select an available time slot to meet with me/i
+        /Select an available time slot/i
       )
     ).toBeDefined();
   });
