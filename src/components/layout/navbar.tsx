@@ -219,20 +219,32 @@ export function Navbar() {
 
               {/* Remaining flat links */}
               {navLinks.slice(1).map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  aria-current={pathname === link.href ? "page" : undefined}
-                  className={cn(
-                    "rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                    pathname === link.href
-                      ? "text-black bg-gray-100"
-                      : "text-gray-600 hover:text-black hover:bg-gray-50"
-                  )}
-                >
-                  {link.label}
-                </Link>
+                link.href === "/meet" ? (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    aria-current={pathname === link.href ? "page" : undefined}
+                    className="rounded-full px-4 py-2 text-sm font-medium bg-gray-900 text-white text-center hover:bg-gray-700 transition-colors"
+                  >
+                    Book a Call
+                  </Link>
+                ) : (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    aria-current={pathname === link.href ? "page" : undefined}
+                    className={cn(
+                      "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                      pathname === link.href
+                        ? "text-black bg-gray-100"
+                        : "text-gray-600 hover:text-black hover:bg-gray-50"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                )
               ))}
             </nav>
           </SheetContent>
