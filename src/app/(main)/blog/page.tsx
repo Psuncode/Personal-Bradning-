@@ -5,7 +5,7 @@ import { siteConfig } from "@/data/site-config";
 
 export const metadata: Metadata = {
   title: "Writing",
-  description: "Thoughts on software, building things, and lessons learned along the way",
+  description: "Thoughts on healthcare product management, building and shipping things, photography business, and lessons from founding.",
   alternates: {
     types: {
       "application/rss+xml": `${siteConfig.url}/feed.xml`,

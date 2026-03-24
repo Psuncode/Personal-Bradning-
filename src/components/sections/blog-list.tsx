@@ -1,29 +1,24 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useMemo } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { Calendar, Clock } from "lucide-react";
 import type { BlogPost } from "@/types/blog";
+import { formatDate } from "@/lib/utils";
 
 interface BlogListProps {
   posts: BlogPost[];
 }
 
-function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
-
 export function BlogList({ posts }: BlogListProps) {
+  const shouldReduceMotion = useReducedMotion();
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
-  const allTags = Array.from(
-    new Set(posts.flatMap((p) => p.frontmatter.tags))
-  ).sort();
+  const allTags = useMemo(
+    () => Array.from(new Set(posts.flatMap((p) => p.frontmatter.tags))).sort(),
+    [posts]
+  );
 
   const filtered = selectedTag
     ? posts.filter((p) => p.frontmatter.tags.includes(selectedTag))
@@ -37,7 +32,7 @@ export function BlogList({ posts }: BlogListProps) {
             Writing
           </h1>
           <p className="text-gray-600 text-lg">
-            Thoughts on software, building things, and lessons learned along the way
+            Healthcare PM, photography business, founding, and lessons from shipping things that actually matter.
           </p>
         </div>
 
@@ -46,6 +41,7 @@ export function BlogList({ posts }: BlogListProps) {
           <div className="flex flex-wrap gap-2 mb-10">
             <button
               onClick={() => setSelectedTag(null)}
+              aria-pressed={selectedTag === null}
               className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                 selectedTag === null
                   ? "bg-gray-900 text-white"
@@ -58,6 +54,7 @@ export function BlogList({ posts }: BlogListProps) {
               <button
                 key={tag}
                 onClick={() => setSelectedTag(tag === selectedTag ? null : tag)}
+                aria-pressed={selectedTag === tag}
                 className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                   selectedTag === tag
                     ? "bg-gray-900 text-white"
@@ -77,7 +74,7 @@ export function BlogList({ posts }: BlogListProps) {
             {filtered.map((post, index) => (
               <motion.div
                 key={post.slug}
-                initial={{ opacity: 0, y: 20 }}
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.4, delay: index * 0.08 }}
@@ -104,12 +101,12 @@ export function BlogList({ posts }: BlogListProps) {
                   <p className="text-gray-600 leading-relaxed mb-4">{post.frontmatter.excerpt}</p>
 
                   <div className="flex items-center gap-4 text-sm text-gray-500">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="size-3.5" />
+                    <span className="flex items-center gap-1.5">
+                      <Calendar className="size-4" />
                       {formatDate(post.frontmatter.date)}
                     </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="size-3.5" />
+                    <span className="flex items-center gap-1.5">
+                      <Clock className="size-4" />
                       {post.readingTime}
                     </span>
                   </div>
