@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { Globe, Factory, Handshake, Ruler, Package, Building2, ArrowRight } from "lucide-react";
 import { siteConfig } from "@/data/site-config";
+
+export const metadata: Metadata = {
+  title: "B2B Products — Philip Sun Global Trading",
+  description: "Commercial-grade water filtration (Puno Filter) and smart home technology (Smart Sync) for designers, architects, and global distributors. Inquire about wholesale and partnership opportunities.",
+};
 
 export default function EcommerceHome() {
   return (
