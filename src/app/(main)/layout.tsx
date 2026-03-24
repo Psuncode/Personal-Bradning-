@@ -4,6 +4,7 @@ import "../globals.css";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { siteConfig } from "@/data/site-config";
+import { roles, education } from "@/data/resume";
 import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({
@@ -51,6 +52,53 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const founderRole = roles.find((r) => r.company === "Inara Health Diagnostic");
+  const pmRole = roles.find((r) => r.title.includes("Product Manager"));
+
+  const personJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    jobTitle: "Product Manager & Founder",
+    email: siteConfig.email,
+    alumniOf: {
+      "@type": "EducationalOrganization",
+      name: education[0]?.school ?? "Brigham Young University",
+    },
+    sameAs: [siteConfig.links.linkedin, siteConfig.links.github],
+    knowsAbout: [
+      "Product Management",
+      "Healthcare Operations",
+      "Hardware Product Development",
+      "Founding",
+      "Photography",
+      "Entrepreneurship",
+      "Ecommerce",
+      "BYU Marriott School",
+    ],
+    hasOccupation: [
+      {
+        "@type": "Occupation",
+        name: pmRole?.title ?? "Product Manager",
+      },
+      {
+        "@type": "Occupation",
+        name: founderRole?.title ?? "Founder & CEO",
+        occupationalCategory: "Medical Device Startup",
+      },
+      {
+        "@type": "Occupation",
+        name: "Photographer",
+      },
+      {
+        "@type": "Occupation",
+        name: "Entrepreneur",
+        occupationalCategory: "B2B Ecommerce",
+      },
+    ],
+  };
+
   return (
     <html lang="en">
       <body
@@ -64,26 +112,7 @@ export default function RootLayout({
         </a>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "Person",
-              name: "Philip Sun",
-              url: siteConfig.url,
-              jobTitle: "Product Manager & Founder",
-              alumniOf: {
-                "@type": "EducationalOrganization",
-                name: "Brigham Young University",
-              },
-              sameAs: [siteConfig.links.linkedin, siteConfig.links.github],
-              knowsAbout: [
-                "Product Management",
-                "Healthcare Operations",
-                "Hardware Product Development",
-                "Founding",
-              ],
-            }),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
         <Navbar />
         <main id="main-content" className="flex-1">{children}</main>

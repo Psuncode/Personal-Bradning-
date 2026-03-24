@@ -1,0 +1,32 @@
+# llms.txt — Philip Sun
+
+## About
+
+Philip Sun is a product manager, healthcare founder, photographer, and B2B ecommerce entrepreneur based in Provo, Utah. He is currently a student at Brigham Young University — Marriott School of Business (3.96 GPA, graduating April 2026).
+
+## Identity
+
+- **Product Manager**: PM intern experience at Nursa (AI-powered credentialing) and The Church of Jesus Christ of Latter-day Saints (Microsoft Teams Phone migration, 1,200+ phones). Change management lead for BYU's Workday implementation (35,000+ users).
+- **Founder & CEO**: Founder of Inara Health Diagnostic, a medical device startup developing a continuous progesterone monitoring device for early pregnancy care. Deployed $40K in capital toward R&D.
+- **Photographer**: Runs a photography business offering portrait, event, and commercial photography. Clients can view packages and book sessions at philipsun.com.
+- **Ecommerce Entrepreneur**: Sources and distributes commercial water filtration systems (Puno Filter) and smart home technology (Smart Sync) globally through B2B wholesale channels.
+
+## Key Topics
+
+- Product management (roadmapping, user research, data analysis, Agile/Scrum)
+- Healthcare and medtech founding (medical devices, clinical outreach, biosensing)
+- Photography business (portrait, event, commercial; package pricing; booking)
+- B2B ecommerce and global wholesale (commercial filtration, smart home, China sourcing)
+- Business strategy and entrepreneurship (BYU Marriott School)
+
+## Site Structure
+
+- philipsun.com — Main portfolio and blog
+- photography.philipsun.com — Photography portfolio and booking
+- ecommerce.philipsun.com — B2B ecommerce company landing page
+
+## Contact
+
+Email: ps324@byu.edu
+LinkedIn: https://www.linkedin.com/in/-philipsun/
+GitHub: https://github.com/Psuncode
