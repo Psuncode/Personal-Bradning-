@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { projects } from "@/data/projects";
 
 // Placeholder images for the scrolling visual column
@@ -109,6 +110,13 @@ export function CaseStudies() {
                       </span>
                     ))}
                   </div>
+
+                  <Link
+                    href={`/projects/${project.slug}`}
+                    className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:underline pt-2"
+                  >
+                    View Full Case Study →
+                  </Link>
                 </div>
 
                 {/* Scrolling right column */}
@@ -118,6 +126,7 @@ export function CaseStudies() {
                       <img
                         src={image}
                         alt={`${project.title} visual ${imgIndex + 1}`}
+                        loading="lazy"
                         className="w-full h-[500px] object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
@@ -127,6 +136,15 @@ export function CaseStudies() {
               </article>
             );
           })}
+        </div>
+
+        <div className="mt-16 text-center">
+          <Link
+            href="/projects"
+            className="inline-flex items-center gap-2 px-8 py-4 border-2 border-gray-900 text-gray-900 rounded-full hover:bg-gray-900 hover:text-white transition-colors font-medium"
+          >
+            See All Projects
+          </Link>
         </div>
       </div>
     </section>
