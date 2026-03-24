@@ -21,6 +21,7 @@ vi.mock("lucide-react", () => ({
   Menu: () => <div data-testid="menu-icon">Menu</div>,
   XIcon: () => <div data-testid="close-icon">Close</div>,
   X: () => <div data-testid="close-icon">Close</div>,
+  ChevronDown: () => <div data-testid="chevron-down-icon">ChevronDown</div>,
 }));
 
 describe("Navbar Component", () => {
@@ -71,7 +72,8 @@ describe("Navbar Component", () => {
 
   it("renders mobile menu button", () => {
     render(<Navbar />);
-    const menuButton = screen.getByRole("button");
+    // Use aria-label query to target the mobile menu button specifically
+    const menuButton = screen.getByText(/Open menu/i).closest("button");
     expect(menuButton).toBeDefined();
   });
 
