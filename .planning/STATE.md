@@ -2,16 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-stopped_at: Completed 03-booking-and-payments 03-03-PLAN.md
-last_updated: "2026-03-19T20:32:09.356Z"
-last_activity: 2026-03-17 — Roadmap created; 17/17 v1 requirements mapped across 4 phases
+status: Ready to execute
+stopped_at: "Checkpoint at Task 2: 03-booking-and-payments 03-04-PLAN.md — awaiting human end-to-end verification"
+last_updated: "2026-03-24T05:17:16.830Z"
 progress:
   total_phases: 4
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 11
-  completed_plans: 10
-  percent: 50
+  completed_plans: 11
 ---
 
 # Project State
@@ -21,20 +19,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-17)
 
 **Core value:** A visitor understands who Philip is within 30 seconds and has a clear path to hire or book him.
-**Current focus:** Phase 1 — Infrastructure
+**Current focus:** Phase 03 — booking-and-payments
 
 ## Current Position
 
-Phase: 1 of 4 (Infrastructure)
-Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-03-19 - Completed quick task 260319-lxr: Restructure navbar with Business dropdown
-
-Progress: [█████░░░░░] 50%
+Phase: 03 (booking-and-payments) — EXECUTING
+Plan: 2 of 5
 
 ## Performance Metrics
 
 **Velocity:**
+
 - Total plans completed: 0
 - Average duration: —
 - Total execution time: —
@@ -46,6 +41,7 @@ Progress: [█████░░░░░] 50%
 | - | - | - | - |
 
 **Recent Trend:**
+
 - Last 5 plans: none yet
 - Trend: —
 
@@ -56,6 +52,7 @@ Progress: [█████░░░░░] 50%
 | Phase 03-booking-and-payments P01 | 10 | 2 tasks | 8 files |
 | Phase 03-booking-and-payments P02 | 8min | 2 tasks | 5 files |
 | Phase 03-booking-and-payments P03 | 7 | 2 tasks | 7 files |
+| Phase 03-booking-and-payments P04 | 15 | 1 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -82,6 +79,8 @@ Recent decisions affecting current work:
 - [Phase 03-booking-and-payments]: Lazy Proxy pattern for Stripe and Resend singletons — prevents build-time constructor failure when env keys not set (mirrors db/index.ts pattern)
 - [Phase 03-booking-and-payments]: Mock @/lib/email directly in webhook tests — avoids Resend constructor hoisting issues with vi.mock factories
 - [Phase 03-booking-and-payments]: vi.hoisted() required for mock spy variables shared between vi.mock factories and test body
+- [Phase 03-booking-and-payments]: Exclude .claude/ worktrees from vitest discovery to prevent agent worktree test files from polluting main suite
+- [Phase 03-booking-and-payments]: Navbar test lucide-react mock must include ChevronDown icon added by Business dropdown feature
 
 ### Pending Todos
 
@@ -101,6 +100,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-19T20:32:09.353Z
-Stopped at: Completed 03-booking-and-payments 03-03-PLAN.md
+Last session: 2026-03-24T05:17:16.827Z
+Stopped at: Checkpoint at Task 2: 03-booking-and-payments 03-04-PLAN.md — awaiting human end-to-end verification
 Resume file: None
