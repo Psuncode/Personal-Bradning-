@@ -24,7 +24,7 @@ export function GET() {
   <channel>
     <title><![CDATA[${siteConfig.name} — Writing]]></title>
     <link>${siteConfig.url}/blog</link>
-    <description><![CDATA[Thoughts on software, building things, and lessons learned along the way]]></description>
+    <description><![CDATA[Healthcare PM, photography business, founding, and lessons from shipping things that actually matter.]]></description>
     <language>en-US</language>
     <atom:link href="${siteConfig.url}/feed.xml" rel="self" type="application/rss+xml"/>
     ${items}
