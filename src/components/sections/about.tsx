@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function About() {
   return (
     <section id="about" className="bg-[#faf9f7] py-24 px-6 md:px-12">
@@ -16,6 +18,15 @@ export function About() {
               <p>
                 When I&apos;m not shipping product, I shoot portraits, landscapes, and events. I believe the same instinct that makes a great PM — understanding people deeply — makes a great photographer.
               </p>
+            </div>
+
+            <div className="pt-2">
+              <Link
+                href="/meet"
+                className="text-sm font-medium text-gray-900 hover:underline underline-offset-4"
+              >
+                Open to full-time PM roles starting April 2026 →
+              </Link>
             </div>
 
             <div className="pt-8">
