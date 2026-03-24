@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to plan
-stopped_at: "Checkpoint at Task 2: 03-booking-and-payments 03-04-PLAN.md — awaiting human end-to-end verification"
-last_updated: "2026-03-24T06:23:25.634Z"
+status: Ready to execute
+stopped_at: Completed 04-geo-and-ecommerce-subdomain 04-01-PLAN.md
+last_updated: "2026-03-24T09:17:33.356Z"
 progress:
   total_phases: 4
   completed_phases: 3
-  total_plans: 11
-  completed_plans: 11
+  total_plans: 14
+  completed_plans: 12
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-17)
 
 **Core value:** A visitor understands who Philip is within 30 seconds and has a clear path to hire or book him.
-**Current focus:** Phase 03 — booking-and-payments
+**Current focus:** Phase 04 — geo-and-ecommerce-subdomain
 
 ## Current Position
 
-Phase: 4
-Plan: Not started
+Phase: 04 (geo-and-ecommerce-subdomain) — EXECUTING
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -53,6 +53,7 @@ Plan: Not started
 | Phase 03-booking-and-payments P02 | 8min | 2 tasks | 5 files |
 | Phase 03-booking-and-payments P03 | 7 | 2 tasks | 7 files |
 | Phase 03-booking-and-payments P04 | 15 | 1 tasks | 2 files |
+| Phase 04-geo-and-ecommerce-subdomain P01 | 2 | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -81,6 +82,8 @@ Recent decisions affecting current work:
 - [Phase 03-booking-and-payments]: vi.hoisted() required for mock spy variables shared between vi.mock factories and test body
 - [Phase 03-booking-and-payments]: Exclude .claude/ worktrees from vitest discovery to prevent agent worktree test files from polluting main suite
 - [Phase 03-booking-and-payments]: Navbar test lucide-react mock must include ChevronDown icon added by Business dropdown feature
+- [Phase 04-geo-and-ecommerce-subdomain]: hasOccupation built as static array in layout (not dynamic filter) — four canonical roles are known, hardcoded clarity beats fragile string-matching
+- [Phase 04-geo-and-ecommerce-subdomain]: email field added to Person JSON-LD schema from siteConfig.email; alumniOf.name uses education[0].school from resume.ts
 
 ### Pending Todos
 
@@ -100,6 +103,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-24T05:17:16.827Z
-Stopped at: Checkpoint at Task 2: 03-booking-and-payments 03-04-PLAN.md — awaiting human end-to-end verification
+Last session: 2026-03-24T09:17:33.353Z
+Stopped at: Completed 04-geo-and-ecommerce-subdomain 04-01-PLAN.md
 Resume file: None

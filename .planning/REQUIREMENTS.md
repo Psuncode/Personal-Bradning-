@@ -26,9 +26,9 @@
 
 ### GEO / Search
 
-- [ ] **GEO-01**: Blog post template includes `FAQPage` and `HowTo` JSON-LD schema blocks that content authors can populate per post
-- [ ] **GEO-02**: `/llms.txt` file at site root describes the site's content and purpose for AI crawler discovery
-- [ ] **GEO-03**: Homepage `Person` JSON-LD schema expanded with `knowsAbout`, `hasOccupation`, and `alumniOf` fields that match resume.ts data
+- [x] **GEO-01**: Blog post template includes `FAQPage` and `HowTo` JSON-LD schema blocks that content authors can populate per post
+- [x] **GEO-02**: `/llms.txt` file at site root describes the site's content and purpose for AI crawler discovery
+- [x] **GEO-03**: Homepage `Person` JSON-LD schema expanded with `knowsAbout`, `hasOccupation`, and `alumniOf` fields that match resume.ts data
 - [ ] **GEO-04**: At least one published blog post written with answer-first structure and entity depth optimized for AI citation (PM + photography + entrepreneurship topics)
 
 ### Bug Fixes
@@ -83,9 +83,9 @@
 | PHOTO-04 | Phase 3 | Complete |
 | BUG-01 | Phase 3 | Complete |
 | BUG-03 | Phase 3 | Complete |
-| GEO-01 | Phase 4 | Pending |
-| GEO-02 | Phase 4 | Pending |
-| GEO-03 | Phase 4 | Pending |
+| GEO-01 | Phase 4 | Complete |
+| GEO-02 | Phase 4 | Complete |
+| GEO-03 | Phase 4 | Complete |
 | GEO-04 | Phase 4 | Pending |
 | SUB-03 | Phase 4 | Pending |
 
