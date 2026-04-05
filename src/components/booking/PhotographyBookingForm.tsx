@@ -165,10 +165,7 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
       ? 'Could not load calendar availability — some busy days may not appear blocked.'
       : null
   );
-  const availabilityWarning =
-    initialData?.error
-      ? 'Could not load calendar availability — some busy days may not appear blocked.'
-      : calendarError;
+  const availabilityWarning = calendarError;
 
   const today = new Date();
   const todayMonth = startOfMonth(today);

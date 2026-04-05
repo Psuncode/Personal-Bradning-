@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
+import { beforeEach, describe, it, expect, vi } from 'vitest';
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 
 // Mock next/navigation
 vi.mock('next/navigation', () => ({
@@ -60,9 +60,11 @@ vi.mock('@/data/photography', () => ({
   ],
 }));
 
+const mockFetchICloudEvents = vi.fn().mockResolvedValue([]);
+
 // Mock icalendarService to prevent network calls
 vi.mock('@/lib/icalendarService', () => ({
-  fetchICloudEvents: vi.fn().mockResolvedValue([]),
+  fetchICloudEvents: (...args: unknown[]) => mockFetchICloudEvents(...args),
 }));
 
 // Mock framer-motion — include all exports used across the test suite
@@ -98,9 +100,21 @@ function clickFirstAvailableDay() {
   fireEvent.click(dayButtons[0]);
 }
 
+async function renderSettledBookingForm(props?: React.ComponentProps<typeof PhotographyBookingForm>) {
+  render(<PhotographyBookingForm {...props} />);
+  await waitFor(() => {
+    expect(mockFetchICloudEvents).toHaveBeenCalledTimes(1);
+  });
+}
+
 describe('PhotographyBookingForm — PHOTO-03: multi-step booking flow', () => {
-  it('renders step 1 with package selection when no ?pkg= param', () => {
-    render(<PhotographyBookingForm />);
+  beforeEach(() => {
+    mockFetchICloudEvents.mockClear();
+    mockFetchICloudEvents.mockResolvedValue([]);
+  });
+
+  it('renders step 1 with package selection when no ?pkg= param', async () => {
+    await renderSettledBookingForm();
     expect(screen.getByText('Choose Your Package')).toBeDefined();
     expect(screen.getByText('Couples Session')).toBeDefined();
     expect(screen.getByText('Portrait Session')).toBeDefined();
@@ -114,7 +128,7 @@ describe('PhotographyBookingForm — PHOTO-03: multi-step booking flow', () => {
       new URLSearchParams('pkg=portrait-session') as any
     );
 
-    render(<PhotographyBookingForm />);
+    await renderSettledBookingForm();
 
     // Step 1 is still shown, but Continue should not be disabled
     expect(screen.getByText('Choose Your Package')).toBeDefined();
@@ -126,21 +140,21 @@ describe('PhotographyBookingForm — PHOTO-03: multi-step booking flow', () => {
     expect((continueBtn as HTMLButtonElement).disabled).toBe(false);
   });
 
-  it('advances from step 1 to step 2 (date) when Continue is clicked with a package selected', () => {
-    render(<PhotographyBookingForm />);
+  it('advances from step 1 to step 2 (date) when Continue is clicked with a package selected', async () => {
+    await renderSettledBookingForm();
     goToStep2();
     expect(screen.getByText('Select a Date')).toBeDefined();
   });
 
-  it('advances from step 2 to step 3 (time) when a date is selected', () => {
-    render(<PhotographyBookingForm />);
+  it('advances from step 2 to step 3 (time) when a date is selected', async () => {
+    await renderSettledBookingForm();
     goToStep2();
     clickFirstAvailableDay();
     expect(screen.getByText('Pick a Time')).toBeDefined();
   });
 
-  it('advances from step 3 to step 4 (details) when a time slot is selected', () => {
-    render(<PhotographyBookingForm />);
+  it('advances from step 3 to step 4 (details) when a time slot is selected', async () => {
+    await renderSettledBookingForm();
     goToStep2();
     clickFirstAvailableDay();
 
@@ -157,8 +171,8 @@ describe('PhotographyBookingForm — PHOTO-03: multi-step booking flow', () => {
     expect(screen.getByText('Your Details')).toBeDefined();
   });
 
-  it('shows "Proceed to Payment" button on step 4 instead of "Continue"', () => {
-    render(<PhotographyBookingForm />);
+  it('shows "Proceed to Payment" button on step 4 instead of "Continue"', async () => {
+    await renderSettledBookingForm();
     goToStep2();
     clickFirstAvailableDay();
 
@@ -176,8 +190,8 @@ describe('PhotographyBookingForm — PHOTO-03: multi-step booking flow', () => {
     expect(continueOnStep4).toBeUndefined();
   });
 
-  it('disables Continue button when no package is selected on step 1', () => {
-    render(<PhotographyBookingForm />);
+  it('disables Continue button when no package is selected on step 1', async () => {
+    await renderSettledBookingForm();
     const continueBtn = screen
       .getAllByRole('button')
       .find((btn) => btn.textContent === 'Continue');
@@ -185,12 +199,20 @@ describe('PhotographyBookingForm — PHOTO-03: multi-step booking flow', () => {
     expect((continueBtn as HTMLButtonElement).disabled).toBe(true);
   });
 
-  it('shows fallback warning when calendar availability fails to load', () => {
+  it('clears the fallback warning after a successful availability refresh', async () => {
     render(
       <PhotographyBookingForm initialData={{ events: [], error: 'calendar failed' } as any} />
     );
 
     expect(screen.getByText('Couples Session')).toBeDefined();
     expect(screen.getByText(/busy days may not appear blocked/i)).toBeDefined();
+
+    await waitFor(() => {
+      expect(mockFetchICloudEvents).toHaveBeenCalledTimes(1);
+    });
+
+    await waitFor(() => {
+      expect(screen.queryByText(/busy days may not appear blocked/i)).toBeNull();
+    });
   });
 });
