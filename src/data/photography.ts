@@ -25,6 +25,7 @@ export interface Package {
 }
 
 export interface PhotographyTestimonial {
+  id: string;
   name: string;
   quote: string;
 }
@@ -62,11 +63,13 @@ export const photographyPackages: Package[] = [
 
 export const photographyTestimonials: PhotographyTestimonial[] = [
   {
+    id: 'couples-client',
     name: 'Couples Client',
     quote:
       'He made us feel comfortable right away and the photos looked natural instead of stiff.',
   },
   {
+    id: 'portrait-client',
     name: 'Portrait Client',
     quote:
       'The direction was clear, the turnaround was fast, and the final gallery was exactly what I needed.',
