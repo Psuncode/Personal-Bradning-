@@ -61,6 +61,21 @@ const faqs = [
   },
 ];
 
+function formatSessionDuration(durationMinutes: number) {
+  const hours = Math.floor(durationMinutes / 60);
+  const minutes = durationMinutes % 60;
+
+  if (hours === 0) {
+    return `${minutes}m session`;
+  }
+
+  if (minutes === 0) {
+    return `${hours}h session`;
+  }
+
+  return `${hours}h ${minutes}m session`;
+}
+
 const photographerJsonLd = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
@@ -260,9 +275,7 @@ export default function PhotographyHome() {
                   ${(pkg.priceInCents / 100).toFixed(0)}
                 </p>
                 <p className="mt-2 text-sm text-gray-500">
-                  {pkg.durationMinutes >= 60
-                    ? `${pkg.durationMinutes / 60} hour session`
-                    : `${pkg.durationMinutes} minute session`}
+                  {formatSessionDuration(pkg.durationMinutes)}
                 </p>
                 <p className="mt-4 text-sm leading-6 text-gray-600">{pkg.description}</p>
                 <p className="mt-3 text-sm text-gray-500">Turnaround: {pkg.turnaround}</p>

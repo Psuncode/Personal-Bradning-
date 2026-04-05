@@ -32,4 +32,12 @@ describe("Photography Page", () => {
     expect(screen.getAllByRole("link", { name: /Book a Session/i }).length).toBeGreaterThan(0);
     expect(screen.getAllByRole("link", { name: /View Pricing/i }).length).toBeGreaterThan(0);
   });
+
+  it("renders package durations in natural time units", () => {
+    render(<PhotographyPage />);
+
+    expect(screen.getByText("1h 15m session")).toBeDefined();
+    expect(screen.getByText("1h session")).toBeDefined();
+    expect(screen.getByText("1h 45m session")).toBeDefined();
+  });
 });
