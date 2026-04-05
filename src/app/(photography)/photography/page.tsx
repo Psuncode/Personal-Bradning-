@@ -1,44 +1,73 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Image from "next/image";
-import { photographyPackages, galleryPhotos } from "@/data/photography";
-import { Camera, Sun, Users } from "lucide-react";
+import Link from "next/link";
+import { galleryPhotos, photographyPackages } from "@/data/photography";
 
 export const metadata: Metadata = {
-  title: "Photography — Philip Sun",
-  description: "Portraits, landscapes, and events photographed with intention in Utah and beyond. Book a session or explore the gallery.",
+  title: "Philip Sun Photography | Utah Couples & Portrait Photographer",
+  description:
+    "Utah couples and portrait photography by Philip Sun. Relaxed sessions for couples, graduates, and personal portraits in Provo, Utah County, and Salt Lake City.",
 };
 
-const specialties = [
+const featuredPhotos = galleryPhotos
+  .filter((photo) => photo.category === "couples" || photo.category === "portrait")
+  .slice(0, 5);
+
+const reasonsToBook = [
+  "No awkward posing or modeling experience required",
+  "Guided direction so you know exactly what to do",
+  "Fast turnaround and simple booking",
+  "Student-friendly, transparent pricing",
+];
+
+const sessionSteps = [
   {
-    icon: Users,
-    title: "Portraits",
+    title: "Pick your session",
     description:
-      "Individual and family portraits that capture genuine character — not just a pose.",
+      "Choose the package that fits your shoot, send over a couple of date options, and I will confirm the best plan.",
   },
   {
-    icon: Sun,
-    title: "Landscapes",
+    title: "Get location and prep help",
     description:
-      "Utah's dramatic light and terrain, from the Wasatch peaks to canyon country.",
+      "I help with location ideas, timing, and outfit guidance so the session feels easy before you even show up.",
   },
   {
-    icon: Camera,
-    title: "Events",
+    title: "Shoot with clear direction",
     description:
-      "Weddings, graduations, and milestones documented with care and discretion.",
+      "During the session, I guide you through natural prompts and small adjustments so nothing feels stiff or confusing.",
+  },
+  {
+    title: "Receive your gallery fast",
+    description:
+      "You get edited images with a straightforward delivery timeline and clear next steps for downloading and sharing.",
   },
 ];
 
-// Pick 5 featured photos from the gallery (first available)
-const featuredPhotos = galleryPhotos.slice(0, 5);
+const faqs = [
+  {
+    question: "What kinds of sessions do you photograph?",
+    answer:
+      "Most bookings are for couples, graduation photos, headshots, and personal portraits. If your idea fits that lane, it is likely a good fit.",
+  },
+  {
+    question: "Where do you shoot?",
+    answer:
+      "I regularly photograph sessions in Provo, across Utah County, and in Salt Lake City, with outdoor and simple urban locations depending on the look you want.",
+  },
+  {
+    question: "What if we have never been in front of a camera before?",
+    answer:
+      "That is normal. My job is to guide pacing, positioning, and prompts so you never have to guess what to do next.",
+  },
+];
 
 const photographerJsonLd = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "@id": "https://philipsun.com/photography",
   name: "Philip Sun Photography",
-  description: "Portraits, landscapes, and events photographed with intention in Utah and beyond.",
+  description:
+    "Utah couples and portrait photography for couples, graduates, and personal portraits in Provo, Utah County, and Salt Lake City.",
   url: "https://philipsun.com/photography",
   telephone: "",
   address: {
@@ -53,10 +82,10 @@ const photographerJsonLd = {
     longitude: -111.6585,
   },
   priceRange: "$$",
-  areaServed: "Utah and surrounding states",
+  areaServed: ["Provo", "Utah County", "Salt Lake City"],
   hasOfferCatalog: {
     "@type": "OfferCatalog",
-    name: "Photography Packages",
+    name: "Couples and Portrait Photography Packages",
     itemListElement: photographyPackages.map((pkg) => ({
       "@type": "Offer",
       name: pkg.name,
@@ -68,189 +97,180 @@ const photographerJsonLd = {
 
 export default function PhotographyHome() {
   return (
-    <div className="text-gray-900">
+    <div className="bg-white text-gray-900">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(photographerJsonLd) }}
       />
-      {/* ── Hero ── */}
-      <section className="relative min-h-[88vh] flex items-end bg-gray-950 overflow-hidden">
-        {/* Background image tiled from first gallery photo */}
+
+      <section className="relative overflow-hidden bg-gray-950 text-white">
         {featuredPhotos[0] && (
           <Image
             src={featuredPhotos[0].src}
             alt=""
             fill
             priority
-            className="object-cover opacity-50"
+            className="object-cover opacity-35"
             sizes="100vw"
           />
         )}
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-950 via-gray-950/90 to-gray-900/70" />
 
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-6 lg:px-8 pb-20">
-          <p className="text-sm font-medium tracking-[0.2em] text-gray-400 uppercase mb-4">
-            Provo, Utah
+        <div className="relative mx-auto flex min-h-[82vh] max-w-6xl flex-col justify-end px-6 pb-20 pt-32 lg:px-8">
+          <p className="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-amber-200/85">
+            Serving Provo, Utah County, and Salt Lake City
           </p>
-          <h1 className="font-[family-name:var(--font-playfair)] text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-[1.05] mb-6 max-w-3xl">
-            Light worth
-            <br />
-            <em className="not-italic text-gray-300">remembering.</em>
+          <h1 className="max-w-3xl font-[family-name:var(--font-playfair)] text-5xl font-bold leading-[1.05] text-white md:text-7xl">
+            Utah Couples & Portrait Photographer
           </h1>
-          <p className="text-lg text-gray-300 max-w-md mb-10 leading-relaxed">
-            Portraits, landscapes, and events — photographed with intention in
-            Utah and beyond.
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-gray-200">
+            Natural, guided photos for couples, graduates, and personal portraits
+            that feel relaxed, personal, and actually look like you.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/photography/book"
-              className="inline-flex items-center justify-center px-8 py-4 bg-white text-gray-900 rounded-full font-semibold text-sm hover:bg-gray-100 transition-colors"
+              className="inline-flex items-center justify-center rounded-full bg-white px-8 py-4 text-sm font-semibold text-gray-950 transition-colors hover:bg-gray-100"
             >
               Book a Session
             </Link>
             <Link
-              href="/photography/gallery"
-              className="inline-flex items-center justify-center px-8 py-4 border border-white/30 text-white rounded-full font-medium text-sm hover:border-white/60 hover:bg-white/5 transition-colors"
+              href="/photography/pricing"
+              className="inline-flex items-center justify-center rounded-full border border-white/25 px-8 py-4 text-sm font-medium text-white transition-colors hover:border-white/60 hover:bg-white/5"
             >
-              View Gallery
+              View Pricing
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── Featured work mosaic ── */}
-      {featuredPhotos.length >= 4 && (
-        <section className="py-20 px-6 lg:px-8 bg-gray-50">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex items-end justify-between mb-10">
+      {featuredPhotos.length > 0 && (
+        <section className="bg-gray-50 px-6 py-20 lg:px-8">
+          <div className="mx-auto max-w-6xl">
+            <div className="mb-10 flex items-end justify-between gap-6">
               <div>
-                <p className="text-xs font-medium tracking-widest text-gray-400 uppercase mb-2">
-                  Selected Work
+                <p className="mb-2 text-xs font-medium uppercase tracking-widest text-gray-500">
+                  Portfolio Highlights
                 </p>
-                <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-bold text-gray-900">
-                  Recent shoots
+                <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-bold text-gray-900 md:text-4xl">
+                  Selected Couples & Portrait Sessions
                 </h2>
               </div>
               <Link
                 href="/photography/gallery"
-                className="hidden sm:inline-flex text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors underline-offset-4 hover:underline"
+                className="hidden text-sm font-medium text-gray-700 underline-offset-4 transition-colors hover:text-gray-900 hover:underline sm:inline-flex"
               >
-                See all →
+                Browse Full Gallery
               </Link>
             </div>
 
-            {/* Asymmetric 2+3 mosaic */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {/* Large left image */}
-              <div className="col-span-2 md:col-span-1 md:row-span-2 relative aspect-[4/5] overflow-hidden rounded-xl bg-gray-200">
-                {featuredPhotos[0] && (
-                  <Image
-                    src={featuredPhotos[0].src}
-                    alt={featuredPhotos[0].alt}
-                    fill
-                    className="object-cover hover:scale-105 transition-transform duration-700"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
-                )}
+            <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+              <div className="relative col-span-2 aspect-[4/5] overflow-hidden rounded-2xl bg-gray-200 md:col-span-1 md:row-span-2">
+                <Image
+                  src={featuredPhotos[0].src}
+                  alt={featuredPhotos[0].alt}
+                  fill
+                  className="object-cover transition-transform duration-700 hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
               </div>
-              {/* Right column: 2 rows of 2 */}
-              {featuredPhotos.slice(1, 5).map((photo) => (
+              {featuredPhotos.slice(1).map((photo) => (
                 <div
                   key={photo.id}
-                  className="relative aspect-square overflow-hidden rounded-xl bg-gray-200"
+                  className="relative aspect-square overflow-hidden rounded-2xl bg-gray-200"
                 >
                   <Image
                     src={photo.src}
                     alt={photo.alt}
                     fill
-                    className="object-cover hover:scale-105 transition-transform duration-700"
+                    className="object-cover transition-transform duration-700 hover:scale-105"
                     sizes="(max-width: 768px) 50vw, 25vw"
                   />
                 </div>
               ))}
             </div>
 
-            <div className="mt-6 sm:hidden text-center">
+            <div className="mt-6 text-center sm:hidden">
               <Link
                 href="/photography/gallery"
-                className="text-sm font-medium text-gray-600 underline underline-offset-4"
+                className="text-sm font-medium text-gray-700 underline underline-offset-4"
               >
-                See all photos →
+                Browse Full Gallery
               </Link>
             </div>
           </div>
         </section>
       )}
 
-      {/* ── Specialties ── */}
-      <section className="py-20 px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <p className="text-xs font-medium tracking-widest text-gray-400 uppercase mb-2">
-            What I shoot
-          </p>
-          <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-bold text-gray-900 mb-12">
-            Specialties
-          </h2>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {specialties.map(({ icon: Icon, title, description }) => (
-              <div key={title} className="group">
-                <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center mb-4 group-hover:bg-gray-900 transition-colors duration-300">
-                  <Icon className="size-5 text-gray-700 group-hover:text-white transition-colors duration-300" />
-                </div>
-                <h3 className="font-semibold text-lg text-gray-900 mb-2">{title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{description}</p>
+      <section className="px-6 py-20 lg:px-8">
+        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+          <div>
+            <p className="mb-2 text-xs font-medium uppercase tracking-widest text-gray-500">
+              Experience
+            </p>
+            <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-bold text-gray-900 md:text-4xl">
+              Why Shoot With Me
+            </h2>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-gray-600">
+              The goal is simple: make your session feel calm, clear, and easy so
+              you walk away with images that feel like a real version of you, not a
+              forced performance.
+            </p>
+          </div>
+          <div className="grid gap-4">
+            {reasonsToBook.map((reason) => (
+              <div
+                key={reason}
+                className="rounded-2xl border border-gray-200 bg-gray-50 px-5 py-5 text-sm font-medium text-gray-900 shadow-sm"
+              >
+                {reason}
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Pricing teaser ── */}
-      <section className="py-20 px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-6xl mx-auto">
-          <div className="flex items-end justify-between mb-10">
+      <section className="bg-gray-50 px-6 py-20 lg:px-8">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-10 flex items-end justify-between gap-6">
             <div>
-              <p className="text-xs font-medium tracking-widest text-gray-400 uppercase mb-2">
+              <p className="mb-2 text-xs font-medium uppercase tracking-widest text-gray-500">
                 Packages
               </p>
-              <h2 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-bold text-gray-900">
-                Simple pricing
+              <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-bold text-gray-900 md:text-4xl">
+                Simple Pricing
               </h2>
             </div>
             <Link
               href="/photography/pricing"
-              className="hidden sm:inline-flex text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors underline-offset-4 hover:underline"
+              className="hidden text-sm font-medium text-gray-700 underline-offset-4 transition-colors hover:text-gray-900 hover:underline sm:inline-flex"
             >
-              Full details →
+              View Pricing
             </Link>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid gap-6 md:grid-cols-3">
             {photographyPackages.map((pkg) => (
               <div
                 key={pkg.id}
-                className="bg-white rounded-2xl p-6 border border-gray-200 hover:border-gray-400 hover:shadow-md transition-all duration-300"
+                className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
               >
-                <h3 className="font-semibold text-gray-900 mb-1">{pkg.name}</h3>
-                <p className="text-2xl font-bold text-gray-900 mb-1">
-                  ${(pkg.depositInCents / 100).toFixed(0)}
-                  <span className="text-sm font-normal text-gray-500 ml-1">deposit</span>
+                <h3 className="text-lg font-semibold text-gray-900">{pkg.name}</h3>
+                <p className="mt-3 text-3xl font-bold text-gray-900">
+                  ${(pkg.priceInCents / 100).toFixed(0)}
                 </p>
-                <p className="text-sm text-gray-500 mb-4">
+                <p className="mt-2 text-sm text-gray-500">
                   {pkg.durationMinutes >= 60
-                    ? `${pkg.durationMinutes / 60}h session`
-                    : `${pkg.durationMinutes}min session`}
+                    ? `${pkg.durationMinutes / 60} hour session`
+                    : `${pkg.durationMinutes} minute session`}
                 </p>
-                <p className="text-sm text-gray-600 mb-6 leading-relaxed">
-                  {pkg.description}
-                </p>
+                <p className="mt-4 text-sm leading-6 text-gray-600">{pkg.description}</p>
+                <p className="mt-3 text-sm text-gray-500">Turnaround: {pkg.turnaround}</p>
                 <Link
                   href={`/photography/book?pkg=${pkg.slug}`}
-                  className="block text-center py-2.5 px-4 rounded-full border border-gray-900 text-sm font-medium text-gray-900 hover:bg-gray-900 hover:text-white transition-colors duration-200"
+                  className="mt-6 inline-flex w-full items-center justify-center rounded-full border border-gray-900 px-4 py-3 text-sm font-medium text-gray-900 transition-colors hover:bg-gray-900 hover:text-white"
                 >
-                  Book now
+                  Book a Session
                 </Link>
               </div>
             ))}
@@ -258,24 +278,83 @@ export default function PhotographyHome() {
         </div>
       </section>
 
-      {/* ── CTA band ── */}
-      <section className="py-24 px-6 lg:px-8 bg-gray-950 text-white text-center">
-        <p className="text-xs font-medium tracking-widest text-gray-500 uppercase mb-4">
-          Let's work together
-        </p>
-        <h2 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl font-bold mb-6 max-w-xl mx-auto leading-tight">
-          Ready to create something lasting?
-        </h2>
-        <p className="text-gray-400 mb-10 max-w-md mx-auto text-sm leading-relaxed">
-          Sessions fill up fast. Secure your date with a deposit and I'll handle
-          the rest.
-        </p>
-        <Link
-          href="/photography/book"
-          className="inline-flex items-center px-8 py-4 bg-white text-gray-900 rounded-full font-semibold text-sm hover:bg-gray-100 transition-colors"
-        >
-          Book a Session
-        </Link>
+      <section className="px-6 py-20 lg:px-8">
+        <div className="mx-auto max-w-6xl">
+          <p className="mb-2 text-xs font-medium uppercase tracking-widest text-gray-500">
+            Process
+          </p>
+          <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-bold text-gray-900 md:text-4xl">
+            What To Expect
+          </h2>
+
+          <div className="mt-10 grid gap-5 md:grid-cols-2">
+            {sessionSteps.map((step, index) => (
+              <div
+                key={step.title}
+                className="rounded-3xl border border-gray-200 px-6 py-6"
+              >
+                <p className="text-xs font-medium uppercase tracking-widest text-gray-500">
+                  Step {index + 1}
+                </p>
+                <h3 className="mt-3 text-lg font-semibold text-gray-900">{step.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-gray-600">{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-gray-50 px-6 py-20 lg:px-8">
+        <div className="mx-auto max-w-4xl">
+          <p className="mb-2 text-xs font-medium uppercase tracking-widest text-gray-500">
+            FAQ
+          </p>
+          <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-bold text-gray-900 md:text-4xl">
+            Questions Clients Usually Ask
+          </h2>
+
+          <div className="mt-10 grid gap-4">
+            {faqs.map((item) => (
+              <div
+                key={item.question}
+                className="rounded-3xl border border-gray-200 bg-white px-6 py-6 shadow-sm"
+              >
+                <h3 className="text-lg font-semibold text-gray-900">{item.question}</h3>
+                <p className="mt-3 text-sm leading-6 text-gray-600">{item.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-gray-950 px-6 py-24 text-center text-white lg:px-8">
+        <div className="mx-auto max-w-3xl">
+          <p className="mb-4 text-xs font-medium uppercase tracking-widest text-gray-500">
+            Next Step
+          </p>
+          <h2 className="font-[family-name:var(--font-playfair)] text-4xl font-bold leading-tight md:text-5xl">
+            Ready To Plan Your Session?
+          </h2>
+          <p className="mx-auto mt-6 max-w-2xl text-sm leading-7 text-gray-300">
+            If you want couples photos, graduation portraits, or a personal
+            session that feels straightforward from start to finish, book a date
+            and I will help with the rest.
+          </p>
+          <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
+            <Link
+              href="/photography/book"
+              className="inline-flex items-center justify-center rounded-full bg-white px-8 py-4 text-sm font-semibold text-gray-950 transition-colors hover:bg-gray-100"
+            >
+              Book a Session
+            </Link>
+            <Link
+              href="/photography/pricing"
+              className="inline-flex items-center justify-center rounded-full border border-white/20 px-8 py-4 text-sm font-medium text-white transition-colors hover:border-white/60 hover:bg-white/5"
+            >
+              View Pricing
+            </Link>
+          </div>
+        </div>
       </section>
     </div>
   );
