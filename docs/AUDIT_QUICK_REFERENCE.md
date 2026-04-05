@@ -235,7 +235,7 @@ src/
 
 **Detailed Reports:**
 - `AUDIT_REPORT.md` - Full 20-section audit report
-- `AUDIT_SUMMARY.txt` - Executive summary
+- `docs/audits/AUDIT_SUMMARY.txt` - Executive summary
 
 **Framework Docs:**
 - [Next.js Documentation](https://nextjs.org/docs)

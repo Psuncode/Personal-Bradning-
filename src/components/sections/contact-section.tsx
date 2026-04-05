@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useActionState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
 import { Mail, MapPin, Github, Linkedin } from 'lucide-react';
 import { siteConfig } from '@/data/site-config';
@@ -9,6 +9,8 @@ import { saveContact } from '@/app/actions/contact';
 import type { ContactFormState } from '@/app/actions/contact';
 
 export function ContactSection() {
+  const shouldReduceMotion = useReducedMotion();
+
   const [utmParams, setUtmParams] = useState({
     utm_source: '',
     utm_medium: '',
@@ -35,7 +37,7 @@ export function ContactSection() {
         <div className="grid md:grid-cols-2 gap-16">
           {/* Left column */}
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.35 }}
@@ -108,7 +110,7 @@ export function ContactSection() {
 
           {/* Right column: form */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
+            initial={shouldReduceMotion ? false : { opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.35, delay: 0.1 }}

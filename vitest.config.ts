@@ -11,6 +11,10 @@ export default defineConfig({
     exclude: [
       "node_modules/**",
       ".claude/**",
+      ".workspace/claude/**",
+      ".claude-flow/**",
+      ".workspace/**",
+      "reference/**",
     ],
     coverage: {
       provider: "v8",
