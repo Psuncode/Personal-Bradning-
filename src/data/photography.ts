@@ -1,6 +1,6 @@
 // src/data/photography.ts
 
-export type PhotoCategory = 'portrait' | 'landscape' | 'event';
+export type PhotoCategory = 'couples' | 'portrait' | 'event' | 'landscape';
 
 export interface GalleryPhoto {
   id: string;
@@ -19,12 +19,15 @@ export interface Package {
   priceInCents: number;
   depositInCents: number;
   durationMinutes: number;
+  category: 'couples' | 'portrait';
+  turnaround: string;
+  featured?: boolean;
 }
 
 // Placeholder Vercel Blob URLs — replace with real URLs after uploading to Vercel Blob dashboard
 export const galleryPhotos: GalleryPhoto[] = [
-  { id: 'p1', src: 'https://placeholder.public.blob.vercel-storage.com/portrait/photo1.jpg', alt: 'Studio portrait session', category: 'portrait', width: 1200, height: 800 },
-  { id: 'p2', src: 'https://placeholder.public.blob.vercel-storage.com/portrait/photo2.jpg', alt: 'Outdoor natural light portrait', category: 'portrait', width: 800, height: 1200 },
+  { id: 'p1', src: 'https://placeholder.public.blob.vercel-storage.com/portrait/photo1.jpg', alt: 'Relaxed couples session at golden hour', category: 'couples', width: 1200, height: 800 },
+  { id: 'p2', src: 'https://placeholder.public.blob.vercel-storage.com/portrait/photo2.jpg', alt: 'Outdoor engagement portraits in natural light', category: 'couples', width: 800, height: 1200 },
   { id: 'p3', src: 'https://placeholder.public.blob.vercel-storage.com/portrait/photo3.jpg', alt: 'Professional headshot', category: 'portrait', width: 1200, height: 800 },
   { id: 'l1', src: 'https://placeholder.public.blob.vercel-storage.com/landscape/photo1.jpg', alt: 'Utah mountain sunset', category: 'landscape', width: 1600, height: 900 },
   { id: 'l2', src: 'https://placeholder.public.blob.vercel-storage.com/landscape/photo2.jpg', alt: 'Desert red rock formation', category: 'landscape', width: 1600, height: 900 },
@@ -35,13 +38,14 @@ export const galleryPhotos: GalleryPhoto[] = [
 ];
 
 export const photoCategories: { value: PhotoCategory; label: string }[] = [
+  { value: 'couples', label: 'Couples' },
   { value: 'portrait', label: 'Portraits' },
-  { value: 'landscape', label: 'Landscapes' },
   { value: 'event', label: 'Events' },
+  { value: 'landscape', label: 'Landscapes' },
 ];
 
 export const photographyPackages: Package[] = [
-  { id: 1, slug: 'portrait-session', name: 'Portrait Session', description: '1-hour studio or outdoor portrait session. Includes 15 edited digital photos, online gallery, and print release.', priceInCents: 25000, depositInCents: 7500, durationMinutes: 60 },
-  { id: 2, slug: 'event-coverage', name: 'Event Coverage', description: '3-hour event photography. Includes full event gallery with 100+ edited photos, online delivery within 5 business days.', priceInCents: 60000, depositInCents: 20000, durationMinutes: 180 },
-  { id: 3, slug: 'landscape-half-day', name: 'Landscape Half-Day', description: '4-hour golden-hour landscape session. Includes 20 edited prints, fine-art post-processing, and high-resolution files.', priceInCents: 40000, depositInCents: 15000, durationMinutes: 240 },
+  { id: 1, name: 'Couples Session', slug: 'couples-session', description: 'A relaxed outdoor session for engagements, anniversaries, and just-because photos.', priceInCents: 32500, depositInCents: 10000, durationMinutes: 75, category: 'couples', turnaround: '7-10 days', featured: true },
+  { id: 2, name: 'Portrait Session', slug: 'portrait-session', description: 'Guided portraits for seniors, headshots, graduation, and personal branding.', priceInCents: 25000, depositInCents: 7500, durationMinutes: 60, category: 'portrait', turnaround: '7-10 days' },
+  { id: 3, name: 'Extended Portrait Session', slug: 'extended-portrait-session', description: 'Extra time for outfit changes, multiple nearby locations, and a larger final gallery.', priceInCents: 42500, depositInCents: 12500, durationMinutes: 105, category: 'portrait', turnaround: '7-10 days' },
 ];

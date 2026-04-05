@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 describe('Photography pricing data — PHOTO-02', () => {
   it('exports photographyPackages with non-zero integer prices', async () => {
@@ -35,5 +35,14 @@ describe('Photography pricing data — PHOTO-02', () => {
       expect(typeof pkg.durationMinutes).toBe('number');
       expect(pkg.durationMinutes).toBeGreaterThan(0);
     });
+  });
+
+  it('prioritizes couples and portrait packages', async () => {
+    const { photographyPackages } = await import('@/data/photography');
+    const slugs = photographyPackages.map((pkg) => pkg.slug);
+
+    expect(slugs).toContain('couples-session');
+    expect(slugs).toContain('portrait-session');
+    expect(slugs).not.toContain('landscape-half-day');
   });
 });
