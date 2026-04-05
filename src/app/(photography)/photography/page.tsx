@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { galleryPhotos, photographyPackages } from "@/data/photography";
+import {
+  galleryPhotos,
+  photographyFaqs,
+  photographyPackages,
+  photographyTestimonials,
+} from "@/data/photography";
 
 export const metadata: Metadata = {
   title: "Philip Sun Photography | Utah Couples & Portrait Photographer",
@@ -40,24 +45,6 @@ const sessionSteps = [
     title: "Receive your gallery fast",
     description:
       "You get edited images with a straightforward delivery timeline and clear next steps for downloading and sharing.",
-  },
-];
-
-const faqs = [
-  {
-    question: "What kinds of sessions do you photograph?",
-    answer:
-      "Most bookings are for couples, graduation photos, headshots, and personal portraits. If your idea fits that lane, it is likely a good fit.",
-  },
-  {
-    question: "Where do you shoot?",
-    answer:
-      "I regularly photograph sessions in Provo, across Utah County, and in Salt Lake City, with outdoor and simple urban locations depending on the look you want.",
-  },
-  {
-    question: "What if we have never been in front of a camera before?",
-    answer:
-      "That is normal. My job is to guide pacing, positioning, and prompts so you never have to guess what to do next.",
   },
 ];
 
@@ -320,6 +307,33 @@ export default function PhotographyHome() {
       <section className="bg-gray-50 px-6 py-20 lg:px-8">
         <div className="mx-auto max-w-4xl">
           <p className="mb-2 text-xs font-medium uppercase tracking-widest text-gray-500">
+            Testimonials
+          </p>
+          <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-bold text-gray-900 md:text-4xl">
+            What Clients Say
+          </h2>
+
+          <div className="mt-10 grid gap-4 md:grid-cols-2">
+            {photographyTestimonials.map((testimonial) => (
+              <figure
+                key={testimonial.name}
+                className="rounded-3xl border border-gray-200 bg-white px-6 py-6 shadow-sm"
+              >
+                <blockquote className="text-base leading-7 text-gray-700">
+                  "{testimonial.quote}"
+                </blockquote>
+                <figcaption className="mt-4 text-sm font-semibold text-gray-900">
+                  {testimonial.name}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-6 py-20 lg:px-8">
+        <div className="mx-auto max-w-4xl">
+          <p className="mb-2 text-xs font-medium uppercase tracking-widest text-gray-500">
             FAQ
           </p>
           <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-bold text-gray-900 md:text-4xl">
@@ -327,7 +341,7 @@ export default function PhotographyHome() {
           </h2>
 
           <div className="mt-10 grid gap-4">
-            {faqs.map((item) => (
+            {photographyFaqs.map((item) => (
               <div
                 key={item.question}
                 className="rounded-3xl border border-gray-200 bg-white px-6 py-6 shadow-sm"
