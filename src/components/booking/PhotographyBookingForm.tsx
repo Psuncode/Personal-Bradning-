@@ -116,6 +116,10 @@ function StepIndicator({ currentStep }: { currentStep: BookingStep }) {
 
 export function PhotographyBookingForm({ initialData }: PhotographyBookingFormProps) {
   const searchParams = useSearchParams();
+  const sessionPackages = useMemo(
+    () => photographyPackages.filter((pkg) => pkg.category === 'couples' || pkg.category === 'portrait'),
+    []
+  );
 
   // ── State ──────────────────────────────────────────────────────────────────
   const [step, setStep] = useState<BookingStep>(1);
@@ -161,6 +165,10 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
       ? 'Could not load calendar availability — some busy days may not appear blocked.'
       : null
   );
+  const availabilityWarning =
+    initialData?.error
+      ? 'Could not load calendar availability — some busy days may not appear blocked.'
+      : calendarError;
 
   const today = new Date();
   const todayMonth = startOfMonth(today);
@@ -170,12 +178,12 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
   useEffect(() => {
     const pkgSlug = searchParams.get('pkg');
     if (pkgSlug) {
-      const found = photographyPackages.find((p) => p.slug === pkgSlug);
+      const found = sessionPackages.find((p) => p.slug === pkgSlug);
       if (found) {
         setSelectedPackage(found);
       }
     }
-  }, [searchParams]);
+  }, [searchParams, sessionPackages]);
 
   // ── Cancelled payment banner ───────────────────────────────────────────────
   const isCancelled = searchParams.get('cancelled') === 'true';
@@ -446,8 +454,15 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
         <div className="space-y-6">
           <h2 className="text-2xl font-semibold text-byu-navy">Choose Your Package</h2>
 
+          {availabilityWarning && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 text-sm text-yellow-800 space-y-1">
+              <p>{availabilityWarning}</p>
+              <p>If this calendar looks wrong, send an inquiry and I will confirm availability manually.</p>
+            </div>
+          )}
+
           <div className="space-y-4">
-            {photographyPackages.map((pkg) => (
+            {sessionPackages.map((pkg) => (
               <div
                 key={pkg.id}
                 role="button"
@@ -512,9 +527,10 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
             Choose a weekday for your session. All times are Mountain Time.
           </p>
 
-          {calendarError && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 text-sm text-yellow-800">
-              {calendarError}
+          {availabilityWarning && (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 text-sm text-yellow-800 space-y-1">
+              <p>{availabilityWarning}</p>
+              <p>If this calendar looks wrong, send an inquiry and I will confirm availability manually.</p>
             </div>
           )}
 

@@ -11,10 +11,10 @@ export const metadata: Metadata = {
 };
 
 const howItWorks = [
-  'Choose your package and preferred date',
-  'Pay a small deposit to hold your spot',
-  'Receive a confirmation email with an ICS invite',
-  'Show up — I handle everything else',
+  'Choose a couples or portrait package',
+  'Pick a date and preferred time',
+  'Pay the deposit to reserve your session',
+  'Receive confirmation and planning details',
 ];
 
 export default async function BookingPage() {
@@ -31,11 +31,10 @@ export default async function BookingPage() {
               Let's shoot
             </p>
             <h1 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Book a Session
+              Book a Couples or Portrait Session
             </h1>
             <p className="text-gray-500 text-sm leading-relaxed mb-8">
-              Secure your date with a deposit. I photograph throughout Utah and
-              am happy to travel for the right shoot.
+              Choose your package, pick a date, and reserve your session. If scheduling gives you trouble, send an inquiry and I will follow up directly.
             </p>
 
             <div>

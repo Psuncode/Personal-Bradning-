@@ -29,30 +29,33 @@ vi.mock('@/data/photography', () => ({
   photographyPackages: [
     {
       id: 1,
-      slug: 'portrait-session',
-      name: 'Portrait Session',
-      description: '1-hour studio or outdoor portrait session.',
-      priceInCents: 25000,
-      depositInCents: 7500,
-      durationMinutes: 60,
+      slug: 'couples-session',
+      name: 'Couples Session',
+      description: 'A relaxed outdoor session for engagements, anniversaries, and just-because photos.',
+      priceInCents: 32500,
+      depositInCents: 10000,
+      durationMinutes: 75,
+      category: 'couples',
     },
     {
       id: 2,
-      slug: 'event-coverage',
-      name: 'Event Coverage',
-      description: '3-hour event photography.',
-      priceInCents: 60000,
-      depositInCents: 20000,
-      durationMinutes: 180,
+      slug: 'portrait-session',
+      name: 'Portrait Session',
+      description: 'Guided portraits for seniors, headshots, graduation, and personal branding.',
+      priceInCents: 25000,
+      depositInCents: 7500,
+      durationMinutes: 60,
+      category: 'portrait',
     },
     {
       id: 3,
-      slug: 'landscape-half-day',
-      name: 'Landscape Half-Day',
-      description: '4-hour golden-hour landscape session.',
-      priceInCents: 40000,
-      depositInCents: 15000,
-      durationMinutes: 240,
+      slug: 'extended-portrait-session',
+      name: 'Extended Portrait Session',
+      description: 'Extra time for outfit changes, multiple nearby locations, and a larger final gallery.',
+      priceInCents: 42500,
+      depositInCents: 12500,
+      durationMinutes: 105,
+      category: 'portrait',
     },
   ],
 }));
@@ -99,9 +102,9 @@ describe('PhotographyBookingForm — PHOTO-03: multi-step booking flow', () => {
   it('renders step 1 with package selection when no ?pkg= param', () => {
     render(<PhotographyBookingForm />);
     expect(screen.getByText('Choose Your Package')).toBeDefined();
+    expect(screen.getByText('Couples Session')).toBeDefined();
     expect(screen.getByText('Portrait Session')).toBeDefined();
-    expect(screen.getByText('Event Coverage')).toBeDefined();
-    expect(screen.getByText('Landscape Half-Day')).toBeDefined();
+    expect(screen.getByText('Extended Portrait Session')).toBeDefined();
   });
 
   it('pre-selects package when ?pkg=portrait-session is in URL', async () => {
@@ -180,5 +183,14 @@ describe('PhotographyBookingForm — PHOTO-03: multi-step booking flow', () => {
       .find((btn) => btn.textContent === 'Continue');
     expect(continueBtn).toBeDefined();
     expect((continueBtn as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it('shows fallback warning when calendar availability fails to load', () => {
+    render(
+      <PhotographyBookingForm initialData={{ events: [], error: 'calendar failed' } as any} />
+    );
+
+    expect(screen.getByText('Couples Session')).toBeDefined();
+    expect(screen.getByText(/busy days may not appear blocked/i)).toBeDefined();
   });
 });
