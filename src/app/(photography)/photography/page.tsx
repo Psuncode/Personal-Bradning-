@@ -129,6 +129,14 @@ export default function PhotographyHome() {
             Natural, guided photos for couples, graduates, and personal portraits
             that feel relaxed, personal, and actually look like you.
           </p>
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-gray-300">
+            <Link
+              href="/photography/couples"
+              className="font-medium text-white underline underline-offset-4 transition-colors hover:text-amber-200"
+            >
+              Looking specifically for couples sessions?
+            </Link>
+          </p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/photography/book"
