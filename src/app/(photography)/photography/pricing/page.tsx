@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { photographyPackages } from '@/data/photography';
 
 export const metadata: Metadata = {
-  title: 'Pricing | Philip Sun Photography',
-  description: 'Photography package pricing by Philip Sun — portraits, events, and landscapes.',
+  title: 'Photography Pricing | Philip Sun Photography',
+  description: 'Simple pricing for couples and portrait sessions in Utah, with deposits, turnaround, and booking links.',
 };
 
 function formatPrice(cents: number): string {
@@ -22,9 +22,9 @@ export default function PricingPage() {
   return (
     <div className="py-16 px-6 md:px-12">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Pricing</h1>
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Couples & Portrait Pricing</h1>
         <p className="text-gray-600 mb-12 max-w-2xl">
-          Transparent pricing for every session type. A deposit secures your booking date.
+          Clear pricing for Utah couples and portrait sessions. Every package includes guided posing, edited images, and an online gallery.
         </p>
 
         <div className="grid gap-8 md:grid-cols-3">
@@ -40,6 +40,7 @@ export default function PricingPage() {
                 <p className="text-sm text-gray-500 mt-1">
                   {formatPrice(pkg.depositInCents)} deposit to book &middot; {formatDuration(pkg.durationMinutes)}
                 </p>
+                <p className="text-sm text-gray-500 mt-1">Turnaround: {pkg.turnaround}</p>
               </div>
               <Link
                 href={`/photography/book?pkg=${pkg.slug}`}

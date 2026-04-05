@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import { GalleryGrid } from './GalleryGrid';
 
 export const metadata: Metadata = {
-  title: 'Gallery | Philip Sun Photography',
-  description: 'Browse photography by Philip Sun — portraits, landscapes, and events.',
+  title: 'Photography Gallery | Philip Sun Photography',
+  description: 'Browse couples, portraits, events, and landscape photography by Philip Sun.',
 };
 
 export default function GalleryPage() {
@@ -13,14 +13,14 @@ export default function GalleryPage() {
         {/* Header */}
         <div className="mb-12">
           <p className="text-xs font-medium tracking-widest text-gray-400 uppercase mb-3">
-            Portfolio
+            Full Archive
           </p>
           <h1 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl font-bold text-gray-900 mb-3">
-            Gallery
+            Photography Gallery
           </h1>
           <p className="text-gray-500 max-w-md text-sm leading-relaxed">
-            A selection of my work across portraits, landscapes, and events. Hover any photo to
-            see details.
+            Couples and portraits are the main focus of the photography experience, with selected
+            event and landscape work collected here as part of the broader archive.
           </p>
         </div>
 
