@@ -439,7 +439,7 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
       {/* Cancelled payment banner */}
       {isCancelled && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 text-sm text-yellow-800 mb-6">
-          Payment was cancelled — your slot is still available. Pick up where you left off.
+          Payment was cancelled. Your slot is not reserved until checkout is completed, so please review your details and start a new payment attempt when you're ready.
         </div>
       )}
 

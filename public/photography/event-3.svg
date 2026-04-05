@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1200" role="img" aria-labelledby="title desc">
+  <title id="title">Graduation placeholder</title>
+  <desc id="desc">Placeholder art for a graduation celebration portrait.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#13294b"/>
+      <stop offset="100%" stop-color="#d7a448"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1200" fill="url(#bg)"/>
+  <rect x="145" y="250" width="510" height="650" rx="255" fill="#fef7ea" fill-opacity=".88"/>
+  <circle cx="400" cy="470" r="108" fill="#203a63"/>
+  <path d="M280 760h240l-30 54H310Z" fill="#c38b29"/>
+  <text x="72" y="104" fill="#fff7e9" font-family="Georgia, serif" font-size="54">Graduation Celebration</text>
+</svg>

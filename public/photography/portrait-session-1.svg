@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Portrait session placeholder</title>
+  <desc id="desc">Portrait placeholder art for headshots and graduation sessions.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#ced9e5"/>
+      <stop offset="100%" stop-color="#45556b"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <rect x="360" y="120" width="480" height="560" rx="220" fill="#edf3f8" fill-opacity=".88"/>
+  <circle cx="600" cy="320" r="108" fill="#8aa0b8"/>
+  <path d="M430 585c70-90 150-135 240-135s170 45 240 135" fill="#7c91a6"/>
+  <text x="80" y="108" fill="#f7fbff" font-family="Georgia, serif" font-size="60">Portrait Session</text>
+  <text x="80" y="170" fill="#e3edf7" font-family="Arial, sans-serif" font-size="28" letter-spacing="4">HEADSHOT AND GRADUATION PLACEHOLDER</text>
+</svg>

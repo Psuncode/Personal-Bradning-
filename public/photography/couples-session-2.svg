@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1200" role="img" aria-labelledby="title desc">
+  <title id="title">Engagement portrait placeholder</title>
+  <desc id="desc">Vertical placeholder art for an outdoor engagement portrait.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#efe3d6"/>
+      <stop offset="100%" stop-color="#9c6b4f"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1200" fill="url(#bg)"/>
+  <rect x="120" y="190" width="560" height="760" rx="280" fill="#fbf2ea" fill-opacity=".78"/>
+  <circle cx="325" cy="480" r="92" fill="#d28f6c"/>
+  <circle cx="450" cy="520" r="104" fill="#b86752"/>
+  <text x="72" y="104" fill="#fff9f5" font-family="Georgia, serif" font-size="52">Engagement Portrait</text>
+  <text x="72" y="156" fill="#fff0e7" font-family="Arial, sans-serif" font-size="24" letter-spacing="3">COUPLES PLACEHOLDER</text>
+</svg>

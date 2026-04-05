@@ -35,17 +35,17 @@ export interface PhotographyFaq {
   answer: string;
 }
 
-// Placeholder Vercel Blob URLs — replace with real URLs after uploading to Vercel Blob dashboard
+// Local fallback assets keep the photography funnel rendering until real client galleries are wired in.
 export const galleryPhotos: GalleryPhoto[] = [
-  { id: 'p1', src: 'https://placeholder.public.blob.vercel-storage.com/portrait/photo1.jpg', alt: 'Relaxed couples session at golden hour', category: 'couples', width: 1200, height: 800 },
-  { id: 'p2', src: 'https://placeholder.public.blob.vercel-storage.com/portrait/photo2.jpg', alt: 'Outdoor engagement portraits in natural light', category: 'couples', width: 800, height: 1200 },
-  { id: 'p3', src: 'https://placeholder.public.blob.vercel-storage.com/portrait/photo3.jpg', alt: 'Professional headshot', category: 'portrait', width: 1200, height: 800 },
-  { id: 'l1', src: 'https://placeholder.public.blob.vercel-storage.com/landscape/photo1.jpg', alt: 'Utah mountain sunset', category: 'landscape', width: 1600, height: 900 },
-  { id: 'l2', src: 'https://placeholder.public.blob.vercel-storage.com/landscape/photo2.jpg', alt: 'Desert red rock formation', category: 'landscape', width: 1600, height: 900 },
-  { id: 'l3', src: 'https://placeholder.public.blob.vercel-storage.com/landscape/photo3.jpg', alt: 'Alpine lake reflection', category: 'landscape', width: 1600, height: 900 },
-  { id: 'e1', src: 'https://placeholder.public.blob.vercel-storage.com/event/photo1.jpg', alt: 'Corporate event keynote', category: 'event', width: 1200, height: 800 },
-  { id: 'e2', src: 'https://placeholder.public.blob.vercel-storage.com/event/photo2.jpg', alt: 'Wedding ceremony moment', category: 'event', width: 1200, height: 800 },
-  { id: 'e3', src: 'https://placeholder.public.blob.vercel-storage.com/event/photo3.jpg', alt: 'Graduation celebration', category: 'event', width: 800, height: 1200 },
+  { id: 'p1', src: '/photography/couples-session-1.svg', alt: 'Relaxed couples session at golden hour', category: 'couples', width: 1200, height: 800 },
+  { id: 'p2', src: '/photography/couples-session-2.svg', alt: 'Outdoor engagement portraits in natural light', category: 'couples', width: 800, height: 1200 },
+  { id: 'p3', src: '/photography/portrait-session-1.svg', alt: 'Professional headshot', category: 'portrait', width: 1200, height: 800 },
+  { id: 'l1', src: '/photography/landscape-1.svg', alt: 'Utah mountain sunset', category: 'landscape', width: 1600, height: 900 },
+  { id: 'l2', src: '/photography/landscape-2.svg', alt: 'Desert red rock formation', category: 'landscape', width: 1600, height: 900 },
+  { id: 'l3', src: '/photography/landscape-3.svg', alt: 'Alpine lake reflection', category: 'landscape', width: 1600, height: 900 },
+  { id: 'e1', src: '/photography/event-1.svg', alt: 'Corporate event keynote', category: 'event', width: 1200, height: 800 },
+  { id: 'e2', src: '/photography/event-2.svg', alt: 'Wedding ceremony moment', category: 'event', width: 1200, height: 800 },
+  { id: 'e3', src: '/photography/event-3.svg', alt: 'Graduation celebration', category: 'event', width: 800, height: 1200 },
 ];
 
 export const photoCategories: { value: PhotoCategory; label: string }[] = [

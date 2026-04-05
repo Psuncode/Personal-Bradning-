@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Wedding moment placeholder</title>
+  <desc id="desc">Placeholder art for a wedding ceremony moment.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#f4e6ea"/>
+      <stop offset="100%" stop-color="#a96772"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#bg)"/>
+  <circle cx="470" cy="360" r="118" fill="#fff7f8" fill-opacity=".9"/>
+  <circle cx="670" cy="360" r="118" fill="#f3d9df" fill-opacity=".9"/>
+  <path d="M340 620c75-95 165-145 260-145 98 0 183 47 260 145" fill="#fff0f3" fill-opacity=".72"/>
+  <text x="80" y="110" fill="#fff8fa" font-family="Georgia, serif" font-size="60">Ceremony Moment</text>
+</svg>

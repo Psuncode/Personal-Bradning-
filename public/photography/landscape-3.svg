@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Alpine lake placeholder</title>
+  <desc id="desc">Placeholder art for an alpine lake reflection photograph.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0%" x2="0%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#c7e6ef"/>
+      <stop offset="100%" stop-color="#5f8aa2"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <path d="M0 520 200 390 390 470 650 310 900 500 1140 360 1340 450 1600 320V900H0Z" fill="#4a6783"/>
+  <rect y="580" width="1600" height="320" fill="#3f617b" fill-opacity=".92"/>
+  <path d="M0 650 200 720 390 650 650 790 900 640 1140 760 1340 670 1600 790" fill="none" stroke="#87b8c8" stroke-opacity=".55" stroke-width="22"/>
+  <text x="90" y="120" fill="#f3fbff" font-family="Georgia, serif" font-size="62">Alpine Lake Reflection</text>
+</svg>

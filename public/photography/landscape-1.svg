@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Mountain landscape placeholder</title>
+  <desc id="desc">Placeholder art for a Utah mountain sunset photograph.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0%" x2="0%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#1f3459"/>
+      <stop offset="100%" stop-color="#f0a35e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <circle cx="1180" cy="210" r="90" fill="#ffd27a"/>
+  <path d="M0 670 240 430 490 620 710 360 980 650 1230 410 1600 700V900H0Z" fill="#223047"/>
+  <path d="M0 760 240 560 460 700 740 500 1000 760 1290 560 1600 790V900H0Z" fill="#344765"/>
+  <text x="90" y="120" fill="#fff3de" font-family="Georgia, serif" font-size="62">Utah Mountain Sunset</text>
+</svg>

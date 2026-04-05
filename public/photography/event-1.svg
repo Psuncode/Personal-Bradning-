@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">Event coverage placeholder</title>
+  <desc id="desc">Placeholder art for a keynote or corporate event photograph.</desc>
+  <rect width="1200" height="800" fill="#1f2430"/>
+  <rect x="150" y="120" width="900" height="500" rx="36" fill="#2f3a4a"/>
+  <rect x="220" y="200" width="760" height="260" rx="20" fill="#3d4c63"/>
+  <circle cx="300" cy="660" r="46" fill="#d6dde9"/>
+  <circle cx="430" cy="660" r="46" fill="#adb8ca"/>
+  <circle cx="560" cy="660" r="46" fill="#d6dde9"/>
+  <circle cx="690" cy="660" r="46" fill="#adb8ca"/>
+  <circle cx="820" cy="660" r="46" fill="#d6dde9"/>
+  <text x="100" y="95" fill="#f4f7fb" font-family="Georgia, serif" font-size="58">Corporate Event</text>
+</svg>
