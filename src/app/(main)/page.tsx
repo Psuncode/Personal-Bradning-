@@ -18,13 +18,19 @@ export default function HomePage() {
       <CaseStudies />
       <ContentGrid />
       {recentPosts.length > 0 && (
-        <section className="bg-white py-24 px-6 md:px-12 border-t border-gray-100">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex items-center justify-between mb-10">
-              <h2 className="font-[family-name:var(--font-playfair)] text-4xl text-gray-900">
-                Latest Writing
-              </h2>
-              <Link href="/blog" className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">
+        <section className="px-6 py-24 md:px-12">
+          <div className="editorial-shell editorial-rule pt-10">
+            <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+              <div>
+                <p className="editorial-kicker mb-3">Latest Writing</p>
+                <h2 className="font-[family-name:var(--font-playfair)] text-4xl text-[color:var(--color-ink)] md:text-5xl">
+                  Latest Writing
+                </h2>
+                <p className="mt-3 max-w-2xl text-base leading-7 text-[color:var(--color-ink-soft)]">
+                  Notes, essays, and field reports on product, systems, and building well.
+                </p>
+              </div>
+              <Link href="/blog" className="text-sm font-medium uppercase tracking-[0.18em] text-[color:var(--color-accent)] transition-colors hover:text-[color:var(--color-ink)]">
                 All posts →
               </Link>
             </div>
@@ -33,22 +39,22 @@ export default function HomePage() {
                 <Link
                   key={post.slug}
                   href={`/blog/${post.slug}`}
-                  className="group block bg-[#faf9f7] border-2 border-gray-200 rounded-2xl p-8 hover:border-gray-900 hover:shadow-lg transition-all"
+                  className="editorial-card group block rounded-[1.75rem] p-8 transition-all hover:-translate-y-0.5"
                 >
                   <div className="flex flex-wrap gap-2 mb-4">
                     {post.frontmatter.tags.slice(0, 2).map((tag) => (
-                      <span key={tag} className="px-3 py-1 bg-white text-gray-600 rounded-full text-xs border border-gray-200">
+                      <span key={tag} className="rounded-full border border-[color:var(--color-rule)] bg-[rgba(251,247,241,0.6)] px-3 py-1 text-xs uppercase tracking-[0.15em] text-[color:var(--color-ink-soft)]">
                         {tag}
                       </span>
                     ))}
                   </div>
-                  <h3 className="font-[family-name:var(--font-playfair)] text-2xl text-gray-900 mb-3 group-hover:underline">
+                  <h3 className="mb-3 font-[family-name:var(--font-playfair)] text-2xl text-[color:var(--color-ink)] group-hover:underline">
                     {post.frontmatter.title}
                   </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-2">
+                  <p className="mb-4 line-clamp-2 text-sm leading-7 text-[color:var(--color-ink-soft)]">
                     {post.frontmatter.excerpt}
                   </p>
-                  <span className="text-xs text-gray-400">{formatDate(post.frontmatter.date)} · {post.readingTime}</span>
+                  <span className="text-xs uppercase tracking-[0.18em] text-[color:var(--color-accent)]">{formatDate(post.frontmatter.date)} · {post.readingTime}</span>
                 </Link>
               ))}
             </div>

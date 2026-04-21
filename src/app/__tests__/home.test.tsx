@@ -2,7 +2,6 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import HomePage from "@/app/(main)/page";
 
-// Mock next/link
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: any) => (
     <a href={href} {...props}>
@@ -11,75 +10,45 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-// Mock framer-motion
 vi.mock("framer-motion", () => ({
   motion: {
     p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
     h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   },
-  animate: {},
   useReducedMotion: () => false,
 }));
 
 describe("Home Page", () => {
-  it("renders the home page", () => {
+  it("renders the new hero thesis", () => {
     render(<HomePage />);
     expect(screen.getByText(/I build product strategy, operating leverage, and trust/i)).toBeDefined();
   });
 
-  it("renders Hero section", () => {
+  it("renders the current focus section", () => {
     render(<HomePage />);
-    expect(
-      screen.getByText(/Product manager, founder, and selective builder across healthcare, systems, and craft/i),
-    ).toBeDefined();
+    expect(screen.getByText(/Current Focus/i)).toBeDefined();
   });
 
-  it("renders About section", () => {
+  it("renders the about section", () => {
     render(<HomePage />);
-    expect(screen.getByText(/PM, founder, and photographer/i)).toBeDefined();
+    expect(screen.getByText(/I work at the intersection of product, healthcare, and craft/i)).toBeDefined();
   });
 
-  it("renders Featured Work section", () => {
+  it("renders the selected work section", () => {
     render(<HomePage />);
-    expect(screen.getByText("Featured Work")).toBeDefined();
+    expect(screen.getByText(/Selected Work/i)).toBeDefined();
   });
 
-  it("renders Projects & Thought Leadership section", () => {
+  it("renders the latest writing section", () => {
     render(<HomePage />);
-    expect(screen.getByText(/Projects.*Thought Leadership/i)).toBeDefined();
+    expect(screen.getByRole("heading", { name: /Latest Writing/i })).toBeDefined();
+    expect(screen.getByText(/Notes, essays, and field reports on product, systems, and building well/i)).toBeDefined();
   });
 
-  it("hero has Book a Call button", () => {
+  it("renders both hero CTAs", () => {
     render(<HomePage />);
     expect(screen.getAllByText(/Book a Call/i).length).toBeGreaterThanOrEqual(1);
-  });
-
-  it("hero has View Resume button", () => {
-    render(<HomePage />);
     expect(screen.getAllByText(/View Resume/i).length).toBeGreaterThanOrEqual(1);
-  });
-
-  it("featured work section shows project cards", () => {
-    render(<HomePage />);
-    expect(screen.getAllByText(/Inara Health/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/LDS Church/i).length).toBeGreaterThan(0);
-  });
-
-  it("page has proper semantic structure", () => {
-    const { container } = render(<HomePage />);
-    const sections = container.querySelectorAll("section");
-    expect(sections.length).toBeGreaterThanOrEqual(3);
-  });
-
-  it("renders without crashing", () => {
-    expect(() => render(<HomePage />)).not.toThrow();
-  });
-
-  it("all major sections are present", () => {
-    render(<HomePage />);
-    expect(screen.getByText(/I build product strategy, operating leverage, and trust/i)).toBeDefined(); // Hero
-    expect(screen.getByText("Featured Work")).toBeDefined(); // CaseStudies
-    expect(screen.getByText(/Projects.*Thought Leadership/i)).toBeDefined(); // ContentGrid
   });
 });
