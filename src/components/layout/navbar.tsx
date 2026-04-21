@@ -51,11 +51,11 @@ export function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200">
+    <header className="sticky top-0 z-50 border-b border-[color:var(--color-rule)] bg-[rgba(251,247,241,0.86)] backdrop-blur-md">
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 lg:px-8">
         <Link
           href="/"
-          className="font-[family-name:var(--font-playfair)] text-2xl hover:text-gray-600 transition-colors"
+          className="font-[family-name:var(--font-playfair)] text-2xl text-[color:var(--color-ink)] transition-colors hover:text-[color:var(--color-accent)]"
         >
           Philip Sun
         </Link>
@@ -86,17 +86,17 @@ export function Navbar() {
               className={cn(
                 "flex items-center gap-1 text-sm transition-colors",
                 isBusinessActive
-                  ? "text-black font-medium"
-                  : "text-gray-600 hover:text-black"
+                  ? "text-[color:var(--color-ink)] font-medium"
+                  : "text-[color:var(--color-ink-soft)] hover:text-[color:var(--color-ink)]"
               )}
               aria-expanded={businessOpen}
               aria-haspopup="true"
             >
-              Business
+              Ventures
               <ChevronDown className="size-3.5" />
             </button>
             {businessOpen && (
-              <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-md shadow-md py-1 min-w-[160px] z-50">
+              <div className="absolute left-0 top-full z-50 mt-2 min-w-[180px] rounded-2xl border border-[color:var(--color-rule)] bg-[rgba(251,247,241,0.95)] py-2 shadow-[0_18px_40px_rgba(32,28,26,0.08)]">
                 {businessLinks.map((link) => (
                   <Link
                     key={link.href}
@@ -106,8 +106,8 @@ export function Navbar() {
                     className={cn(
                       "block px-4 py-2 text-sm transition-colors",
                       pathname === link.href
-                        ? "text-black font-medium bg-gray-50"
-                        : "text-gray-600 hover:text-black hover:bg-gray-50"
+                        ? "bg-[rgba(95,47,42,0.08)] font-medium text-[color:var(--color-ink)]"
+                        : "text-[color:var(--color-ink-soft)] hover:bg-[rgba(95,47,42,0.04)] hover:text-[color:var(--color-ink)]"
                     )}
                   >
                     {link.label}
@@ -120,14 +120,14 @@ export function Navbar() {
           {/* Remaining flat links */}
           {navLinks.slice(1).map((link) => (
             <li key={link.href}>
-              {link.href === "/meet" ? (
-                <Link
-                  href={link.href}
-                  aria-current={pathname === link.href ? "page" : undefined}
-                  className="inline-flex items-center px-4 py-1.5 text-sm font-medium bg-gray-900 text-white rounded-full hover:bg-gray-700 transition-colors"
-                >
-                  Book a Call
-                </Link>
+                {link.href === "/meet" ? (
+                  <Link
+                    href={link.href}
+                    aria-current={pathname === link.href ? "page" : undefined}
+                    className="inline-flex items-center rounded-full bg-[color:var(--color-ink)] px-4 py-1.5 text-sm font-medium text-[color:var(--color-paper-elevated)] transition-colors hover:bg-[color:var(--color-accent)]"
+                  >
+                    Book a Call
+                  </Link>
               ) : (
                 <Link
                   href={link.href}
@@ -238,8 +238,8 @@ export function Navbar() {
                     className={cn(
                       "rounded-md px-3 py-2 text-sm font-medium transition-colors",
                       pathname === link.href
-                        ? "text-black bg-gray-100"
-                        : "text-gray-600 hover:text-black hover:bg-gray-50"
+                        ? "bg-[rgba(95,47,42,0.08)] text-[color:var(--color-ink)]"
+                        : "text-[color:var(--color-ink-soft)] hover:bg-[rgba(95,47,42,0.04)] hover:text-[color:var(--color-ink)]"
                     )}
                   >
                     {link.label}
