@@ -1,6 +1,8 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import HomePage from "@/app/(main)/page";
+import { getAllPosts } from "@/lib/blog";
+import { formatDate } from "@/lib/utils";
 
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: any) => (
@@ -20,6 +22,8 @@ vi.mock("framer-motion", () => ({
 }));
 
 describe("Home Page", () => {
+  const [recentPost] = getAllPosts();
+
   it("renders the new hero thesis", () => {
     render(<HomePage />);
     expect(screen.getByText(/I build product strategy, operating leverage, and trust/i)).toBeDefined();
@@ -44,6 +48,15 @@ describe("Home Page", () => {
     render(<HomePage />);
     expect(screen.getByRole("heading", { name: /Latest Writing/i })).toBeDefined();
     expect(screen.getByText(/Notes, essays, and field reports on product, systems, and building well/i)).toBeDefined();
+    expect(screen.getByRole("link", { name: /All posts/i })).toHaveAttribute("href", "/blog");
+
+    const postLink = screen.getByRole("link", {
+      name: new RegExp(recentPost.frontmatter.title, "i"),
+    });
+
+    expect(postLink).toHaveAttribute("href", `/blog/${recentPost.slug}`);
+    expect(postLink).toHaveTextContent(formatDate(recentPost.frontmatter.date));
+    expect(postLink).toHaveTextContent(recentPost.readingTime);
   });
 
   it("renders both hero CTAs", () => {
