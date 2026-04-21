@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useActionState } from 'react';
+import { useState, useActionState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
 import { Mail, MapPin, Github, Linkedin } from 'lucide-react';
@@ -11,20 +11,22 @@ import type { ContactFormState } from '@/app/actions/contact';
 export function ContactSection() {
   const shouldReduceMotion = useReducedMotion();
 
-  const [utmParams, setUtmParams] = useState({
-    utm_source: '',
-    utm_medium: '',
-    utm_campaign: '',
-  });
+  const [utmParams] = useState(() => {
+    if (typeof window === 'undefined') {
+      return {
+        utm_source: '',
+        utm_medium: '',
+        utm_campaign: '',
+      };
+    }
 
-  useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    setUtmParams({
+    return {
       utm_source: params.get('utm_source') ?? '',
       utm_medium: params.get('utm_medium') ?? '',
       utm_campaign: params.get('utm_campaign') ?? '',
-    });
-  }, []);
+    };
+  });
 
   const [state, formAction, isPending] = useActionState<ContactFormState, FormData>(
     saveContact,

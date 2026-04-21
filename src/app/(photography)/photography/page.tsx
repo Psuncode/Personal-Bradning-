@@ -328,7 +328,7 @@ export default function PhotographyHome() {
                 className="rounded-3xl border border-gray-200 bg-white px-6 py-6 shadow-sm"
               >
                 <blockquote className="text-base leading-7 text-gray-700">
-                  "{testimonial.quote}"
+                  &ldquo;{testimonial.quote}&rdquo;
                 </blockquote>
                 <figcaption className="mt-4 text-sm font-semibold text-gray-900">
                   {testimonial.name}

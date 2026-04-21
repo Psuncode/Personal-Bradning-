@@ -1,10 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
+import type { AnchorHTMLAttributes, PropsWithChildren } from "react";
 import { Navbar } from "./navbar";
+
+type LinkProps = PropsWithChildren<
+  { href: string } & AnchorHTMLAttributes<HTMLAnchorElement>
+>;
 
 // Mock next/link
 vi.mock("next/link", () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: LinkProps) => (
     <a href={href} {...props}>
       {children}
     </a>

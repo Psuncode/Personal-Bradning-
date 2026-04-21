@@ -3,9 +3,9 @@
 import { useState, useEffect, useMemo } from 'react';
 import { siteConfig } from '@/data/site-config';
 import { Button } from '@/components/ui/button';
-import { getAvailableSlots } from '@/lib/availabilityService';
+import { getAvailableSlots, type TimeSlot } from '@/lib/availabilityService';
 import { generateICSContent, downloadICS } from '@/lib/icsService';
-import { fetchICloudEvents, CalendarEvent } from '@/lib/icalendarService';
+import { fetchICloudEvents, type CalendarEvent } from '@/lib/icalendarService';
 import { format } from 'date-fns-tz';
 import type { ServerAvailabilityResult } from '@/lib/serverCalendar';
 import {
@@ -37,13 +37,13 @@ type FormStep = 'date' | 'time' | 'details' | 'confirmation';
 export function BookingForm({ onBooking, initialData }: BookingFormProps) {
   const [step, setStep] = useState<FormStep>('date');
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [selectedSlot, setSelectedSlot] = useState<any>(null);
+  const [selectedSlot, setSelectedSlot] = useState<TimeSlot | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     description: '',
   });
-  const [availableSlots, setAvailableSlots] = useState<any[]>([]);
+  const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
   const [icsContent, setIcsContent] = useState<string>('');
 
   // Initialize events from server-pre-loaded data immediately — no fetch needed on first render
@@ -148,7 +148,7 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
     setStep('time');
   };
 
-  const handleTimeSelect = (slot: any) => {
+  const handleTimeSelect = (slot: TimeSlot) => {
     setSelectedSlot(slot);
     setStep('details');
   };

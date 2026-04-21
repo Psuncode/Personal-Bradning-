@@ -1,5 +1,4 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
 
 // Mock next/navigation (BookingForm likely uses it)
 vi.mock('next/navigation', () => ({

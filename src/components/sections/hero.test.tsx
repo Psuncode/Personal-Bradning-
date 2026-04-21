@@ -1,22 +1,30 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import type { AnchorHTMLAttributes, HTMLAttributes, PropsWithChildren } from "react";
 import { Hero } from "./hero";
+
+type LinkProps = PropsWithChildren<
+  { href: string } & AnchorHTMLAttributes<HTMLAnchorElement>
+>;
+type MotionProps<T extends HTMLElement> = PropsWithChildren<
+  HTMLAttributes<T> & { initial?: unknown }
+>;
 
 const motionState = vi.hoisted(() => ({ reduceMotion: false }));
 
 vi.mock("framer-motion", () => ({
   motion: {
-    p: ({ children, initial, ...props }: any) => (
+    p: ({ children, initial, ...props }: MotionProps<HTMLParagraphElement>) => (
       <p data-initial={String(initial)} {...props}>
         {children}
       </p>
     ),
-    h1: ({ children, initial, ...props }: any) => (
+    h1: ({ children, initial, ...props }: MotionProps<HTMLHeadingElement>) => (
       <h1 data-initial={String(initial)} {...props}>
         {children}
       </h1>
     ),
-    div: ({ children, initial, ...props }: any) => (
+    div: ({ children, initial, ...props }: MotionProps<HTMLDivElement>) => (
       <div data-initial={String(initial)} {...props}>
         {children}
       </div>
@@ -26,7 +34,11 @@ vi.mock("framer-motion", () => ({
 }));
 
 vi.mock("next/link", () => ({
-  default: ({ children, href }: any) => <a href={href}>{children}</a>,
+  default: ({ children, href, ...props }: LinkProps) => (
+    <a href={href} {...props}>
+      {children}
+    </a>
+  ),
 }));
 
 afterEach(() => {

@@ -1,10 +1,16 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import type { AnchorHTMLAttributes, HTMLAttributes, PropsWithChildren } from "react";
 import ContactPage from "@/app/(main)/contact/page";
+
+type LinkProps = PropsWithChildren<
+  { href: string } & AnchorHTMLAttributes<HTMLAnchorElement>
+>;
+type DivProps = PropsWithChildren<HTMLAttributes<HTMLDivElement>>;
 
 // Mock next/link
 vi.mock("next/link", () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: LinkProps) => (
     <a href={href} {...props}>
       {children}
     </a>
@@ -14,7 +20,7 @@ vi.mock("next/link", () => ({
 // Mock framer-motion
 vi.mock("framer-motion", () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    div: ({ children, ...props }: DivProps) => <div {...props}>{children}</div>,
   },
   useReducedMotion: () => false,
 }));

@@ -1,6 +1,11 @@
 import { beforeEach, describe, it, expect, vi } from 'vitest';
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import type { HTMLAttributes, PropsWithChildren } from 'react';
+
+type DivProps = PropsWithChildren<HTMLAttributes<HTMLDivElement>>;
+type ParagraphProps = PropsWithChildren<HTMLAttributes<HTMLParagraphElement>>;
+type HeadingProps = PropsWithChildren<HTMLAttributes<HTMLHeadingElement>>;
 
 // Mock next/navigation
 vi.mock('next/navigation', () => ({
@@ -70,16 +75,17 @@ vi.mock('@/lib/icalendarService', () => ({
 // Mock framer-motion — include all exports used across the test suite
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    span: ({ children, ...props }: any) => <span {...props}>{children}</span>,
-    p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
-    h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
+    div: ({ children, ...props }: DivProps) => <div {...props}>{children}</div>,
+    span: ({ children, ...props }: DivProps) => <span {...props}>{children}</span>,
+    p: ({ children, ...props }: ParagraphProps) => <p {...props}>{children}</p>,
+    h1: ({ children, ...props }: HeadingProps) => <h1 {...props}>{children}</h1>,
   },
   useReducedMotion: () => false,
   animate: {},
 }));
 
 import { PhotographyBookingForm } from '@/components/booking/PhotographyBookingForm';
+import type { ServerAvailabilityResult } from '@/lib/serverCalendar';
 
 // Helper: navigate to step 2
 function goToStep2() {
@@ -124,9 +130,8 @@ describe('PhotographyBookingForm — PHOTO-03: multi-step booking flow', () => {
   it('pre-selects package when ?pkg=portrait-session is in URL', async () => {
     // Update the useSearchParams mock for this test
     const navMod = await import('next/navigation');
-    (navMod.useSearchParams as ReturnType<typeof vi.fn>).mockReturnValueOnce(
-      new URLSearchParams('pkg=portrait-session') as any
-    );
+    const useSearchParamsMock = navMod.useSearchParams as ReturnType<typeof vi.fn>;
+    useSearchParamsMock.mockReturnValueOnce(new URLSearchParams('pkg=portrait-session'));
 
     await renderSettledBookingForm();
 
@@ -200,8 +205,14 @@ describe('PhotographyBookingForm — PHOTO-03: multi-step booking flow', () => {
   });
 
   it('clears the fallback warning after a successful availability refresh', async () => {
+    const initialData: ServerAvailabilityResult = {
+      events: [],
+      busyDates: [],
+      error: 'calendar failed',
+    };
+
     render(
-      <PhotographyBookingForm initialData={{ events: [], error: 'calendar failed' } as any} />
+      <PhotographyBookingForm initialData={initialData} />
     );
 
     expect(screen.getByText('Couples Session')).toBeDefined();

@@ -1,10 +1,16 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import type { AnchorHTMLAttributes, PropsWithChildren } from "react";
 import { projects } from "@/data/projects";
 import { CaseStudies } from "./case-studies";
 
+type LinkProps = PropsWithChildren<
+  { href: string } & AnchorHTMLAttributes<HTMLAnchorElement>
+>;
+type ImageProps = { alt?: string };
+
 vi.mock("next/link", () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: LinkProps) => (
     <a href={href} {...props}>
       {children}
     </a>
@@ -12,7 +18,7 @@ vi.mock("next/link", () => ({
 }));
 
 vi.mock("next/image", () => ({
-  default: ({ alt }: any) => <img alt={alt} />,
+  default: ({ alt = "" }: ImageProps) => <div data-alt={alt} role="img" />,
 }));
 
 describe("CaseStudies", () => {
@@ -40,7 +46,7 @@ describe("CaseStudies", () => {
   it("renders decorative gallery images with empty alt text", () => {
     const { container } = render(<CaseStudies />);
 
-    expect(container.querySelectorAll('img[alt=""]')).toHaveLength(6);
-    expect(screen.queryByAltText(/visual \d/i)).toBeNull();
+    expect(container.querySelectorAll('[data-alt=""]')).toHaveLength(6);
+    expect(screen.queryByRole("img", { name: /visual \d/i })).toBeNull();
   });
 });

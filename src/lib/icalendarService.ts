@@ -7,6 +7,23 @@ export interface CalendarEvent {
   summary?: string;
 }
 
+interface SerializedCalendarEvent {
+  title: string;
+  startTime: string;
+  endTime: string;
+  summary?: string;
+}
+
+interface ICalendarPropertyValue {
+  value?: string | Date;
+}
+
+interface ParsedICSEvent {
+  summary?: ICalendarPropertyValue;
+  dtstart?: ICalendarPropertyValue;
+  dtend?: ICalendarPropertyValue;
+}
+
 /**
  * Fetches calendar events from iCloud via the backend API
  */
@@ -30,10 +47,10 @@ export async function fetchICloudEvents(
       throw new Error(`Failed to fetch calendar events: ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as { events?: SerializedCalendarEvent[] };
     
     // Convert string dates back to Date objects
-    return (data.events || []).map((event: any) => ({
+    return (data.events || []).map((event) => ({
       ...event,
       startTime: new Date(event.startTime),
       endTime: new Date(event.endTime),
@@ -71,9 +88,10 @@ export function hasConflict(
 /**
  * Parses ICS event data into CalendarEvent
  */
-export function parseICSEvent(vevent: any): CalendarEvent | null {
+export function parseICSEvent(vevent: ParsedICSEvent): CalendarEvent | null {
   try {
-    const summary = vevent.summary?.value || '';
+    const summaryValue = vevent.summary?.value;
+    const summary = typeof summaryValue === 'string' ? summaryValue : '';
     const dtstart = vevent.dtstart?.value;
     const dtend = vevent.dtend?.value;
 

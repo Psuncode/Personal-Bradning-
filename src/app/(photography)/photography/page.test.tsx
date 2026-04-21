@@ -1,9 +1,21 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import type { AnchorHTMLAttributes, PropsWithChildren } from "react";
 import PhotographyPage from "@/app/(photography)/photography/page";
 
+type LinkProps = PropsWithChildren<
+  { href: string } & AnchorHTMLAttributes<HTMLAnchorElement>
+>;
+type ImageProps = {
+  alt?: string;
+  className?: string;
+  fill?: boolean;
+  sizes?: string;
+  src?: string | { src?: string };
+};
+
 vi.mock("next/link", () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: LinkProps) => (
     <a href={href} {...props}>
       {children}
     </a>
@@ -11,8 +23,16 @@ vi.mock("next/link", () => ({
 }));
 
 vi.mock("next/image", () => ({
-  default: ({ alt, fill: _fill, priority: _priority, src, ...props }: any) => (
-    <img alt={alt} src={src} {...props} />
+  default: ({ alt = "", className, fill, sizes, src }: ImageProps) => (
+    <div
+      aria-label={alt || undefined}
+      className={className}
+      data-alt={alt}
+      data-fill={fill ? "true" : "false"}
+      data-sizes={sizes}
+      data-src={typeof src === "string" ? src : src?.src}
+      role="img"
+    />
   ),
 }));
 

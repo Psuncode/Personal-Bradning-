@@ -1,11 +1,17 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import type { AnchorHTMLAttributes, HTMLAttributes, PropsWithChildren } from "react";
 import HomePage from "@/app/(main)/page";
 import { getAllPosts } from "@/lib/blog";
 import { formatDate } from "@/lib/utils";
 
+type LinkProps = PropsWithChildren<
+  { href: string } & AnchorHTMLAttributes<HTMLAnchorElement>
+>;
+type MotionProps<T extends HTMLElement> = PropsWithChildren<HTMLAttributes<T>>;
+
 vi.mock("next/link", () => ({
-  default: ({ children, href, ...props }: any) => (
+  default: ({ children, href, ...props }: LinkProps) => (
     <a href={href} {...props}>
       {children}
     </a>
@@ -14,9 +20,9 @@ vi.mock("next/link", () => ({
 
 vi.mock("framer-motion", () => ({
   motion: {
-    p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
-    h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    p: ({ children, ...props }: MotionProps<HTMLParagraphElement>) => <p {...props}>{children}</p>,
+    h1: ({ children, ...props }: MotionProps<HTMLHeadingElement>) => <h1 {...props}>{children}</h1>,
+    div: ({ children, ...props }: MotionProps<HTMLDivElement>) => <div {...props}>{children}</div>,
   },
   useReducedMotion: () => false,
 }));

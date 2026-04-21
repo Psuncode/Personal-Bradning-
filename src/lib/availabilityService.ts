@@ -1,18 +1,18 @@
 import { toZonedTime, fromZonedTime, format } from 'date-fns-tz';
-import { startOfDay, endOfDay, addMinutes, isBefore, isAfter, differenceInMinutes } from 'date-fns';
+import { addMinutes, isBefore } from 'date-fns';
 
 const TIMEZONE = 'America/Denver';
 const WORK_START_HOUR = 9;
 const WORK_END_HOUR = 17; // 5 PM
 const SLOT_DURATION_MINUTES = 30;
 
-interface TimeSlot {
+export interface TimeSlot {
   startTime: Date;
   endTime: Date;
   display: string;
 }
 
-interface BookedEvent {
+export interface BookedEvent {
   startTime: Date;
   endTime: Date;
 }

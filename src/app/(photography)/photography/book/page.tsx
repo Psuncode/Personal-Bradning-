@@ -28,7 +28,7 @@ export default async function BookingPage() {
           {/* Left: context panel */}
           <div className="lg:sticky lg:top-24">
             <p className="text-xs font-medium tracking-widest text-gray-400 uppercase mb-3">
-              Let's shoot
+              Let&apos;s shoot
             </p>
             <h1 className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Book a Couples or Portrait Session

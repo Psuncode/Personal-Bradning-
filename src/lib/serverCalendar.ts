@@ -17,6 +17,17 @@ export interface ServerAvailabilityResult {
   error?: string;
 }
 
+interface CalendarSummary {
+  url?: unknown;
+  displayName?: unknown;
+}
+
+function getCalendarLabel(cal: CalendarSummary) {
+  return typeof cal.displayName === 'string' && cal.displayName.length > 0
+    ? cal.displayName
+    : String(cal.url ?? '');
+}
+
 /**
  * Fetches raw calendar events from iCloud CalDAV for the given date range.
  * Used by both the API route and getServerAvailability.
@@ -60,21 +71,19 @@ export async function fetchCalendarEventsForRange(
     return [];
   }
 
-  calendars.forEach((cal: any, i: number) => {
-    console.log(`  [${i}] ${cal.displayName || cal.url}`);
+  calendars.forEach((cal, i) => {
+    console.log(`  [${i}] ${getCalendarLabel(cal)}`);
   });
 
   // Find target calendar by ID match, fall back to first
   const targetCalendar =
-    (calendars as any[]).find((cal) => {
+    calendars.find((cal) => {
       const url = String(cal.url || '');
-      const name = String(cal.displayName || '');
+      const name = typeof cal.displayName === 'string' ? cal.displayName : '';
       return url.includes(calendarId) || name.includes(calendarId);
     }) ?? calendars[0];
 
-  console.log(
-    `[calendar] Using: ${(targetCalendar as any).displayName || (targetCalendar as any).url}`
-  );
+  console.log(`[calendar] Using: ${getCalendarLabel(targetCalendar)}`);
 
   const calendarObjects = await client.fetchCalendarObjects({
     calendar: targetCalendar,
