@@ -46,7 +46,7 @@ export function Hero() {
             <div className="space-y-3 text-sm leading-7 text-[color:var(--color-ink-soft)]">
               <p>16M+ users influenced across enterprise and healthcare systems.</p>
               <p>3+ years in product across startup and scaled environments.</p>
-              <p>Open to full-time PM roles starting April 2026.</p>
+              <p>Open to the right full-time PM role where product judgment matters.</p>
             </div>
           </motion.div>
         </div>

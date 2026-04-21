@@ -25,12 +25,14 @@ vi.mock("framer-motion", () => ({
 describe("Home Page", () => {
   it("renders the home page", () => {
     render(<HomePage />);
-    expect(screen.getByText(/Creative Thinker/i)).toBeDefined();
+    expect(screen.getByText(/I build product strategy, operating leverage, and trust/i)).toBeDefined();
   });
 
   it("renders Hero section", () => {
     render(<HomePage />);
-    expect(screen.getByText(/Product Manager · Healthcare Founder · Photographer/i)).toBeDefined();
+    expect(
+      screen.getByText(/Product manager, founder, and selective builder across healthcare, systems, and craft/i),
+    ).toBeDefined();
   });
 
   it("renders About section", () => {
@@ -76,7 +78,7 @@ describe("Home Page", () => {
 
   it("all major sections are present", () => {
     render(<HomePage />);
-    expect(screen.getByText(/Creative Thinker/i)).toBeDefined(); // Hero
+    expect(screen.getByText(/I build product strategy, operating leverage, and trust/i)).toBeDefined(); // Hero
     expect(screen.getByText("Featured Work")).toBeDefined(); // CaseStudies
     expect(screen.getByText(/Projects.*Thought Leadership/i)).toBeDefined(); // ContentGrid
   });
