@@ -18,7 +18,7 @@ const competencies = [
 
 export function About() {
   return (
-    <section id="about" className="px-6 py-24 md:px-12">
+    <section id="about" className="py-24">
       <div className="editorial-shell grid gap-12 md:grid-cols-12">
         <div className="md:col-span-7">
           <p className="editorial-kicker mb-4">Profile</p>
@@ -52,9 +52,9 @@ export function About() {
             <h3 className="font-[family-name:var(--font-playfair)] text-2xl text-[color:var(--color-ink)]">
               Core Competencies
             </h3>
-            <div className="mt-6 space-y-6">
+            <ul className="mt-6 space-y-6">
               {competencies.map((item) => (
-                <div
+                <li
                   key={item.title}
                   className="grid gap-2 md:grid-cols-[220px_minmax(0,1fr)]"
                 >
@@ -64,9 +64,9 @@ export function About() {
                   <p className="text-sm leading-7 text-[color:var(--color-ink-soft)]">
                     {item.body}
                   </p>
-                </div>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
         </div>
 
