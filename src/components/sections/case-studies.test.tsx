@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { projects } from "@/data/projects";
 import { CaseStudies } from "./case-studies";
 
 vi.mock("next/link", () => ({
@@ -27,6 +28,19 @@ describe("CaseStudies", () => {
   it("renders case study links", () => {
     render(<CaseStudies />);
 
-    expect(screen.getAllByText(/View Full Case Study/i).length).toBeGreaterThan(0);
+    const featuredProjects = projects.filter((project) => project.featured);
+    const links = screen.getAllByRole("link", { name: /View Full Case Study/i });
+
+    expect(links).toHaveLength(featuredProjects.length);
+    expect(links.map((link) => link.getAttribute("href"))).toEqual(
+      featuredProjects.map((project) => `/projects/${project.slug}`),
+    );
+  });
+
+  it("renders decorative gallery images with empty alt text", () => {
+    const { container } = render(<CaseStudies />);
+
+    expect(container.querySelectorAll('img[alt=""]')).toHaveLength(6);
+    expect(screen.queryByAltText(/visual \d/i)).toBeNull();
   });
 });

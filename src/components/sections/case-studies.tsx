@@ -124,10 +124,10 @@ export function CaseStudies() {
                 {/* Scrolling right column */}
                 <div className="md:col-span-7 space-y-6">
                   {images.map((image, imgIndex) => (
-                    <div key={imgIndex} className="editorial-card relative h-[500px] overflow-hidden rounded-[2rem] p-3">
+                    <div key={imgIndex} className="group editorial-card relative h-[500px] overflow-hidden rounded-[2rem] p-3">
                       <Image
                         src={image}
-                        alt={`${project.title} visual ${imgIndex + 1}`}
+                        alt=""
                         fill
                         className="rounded-[1.35rem] object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                         sizes="(max-width: 768px) 100vw, 58vw"
@@ -144,7 +144,7 @@ export function CaseStudies() {
         <div className="mt-16 text-center">
           <Link
             href="/projects"
-            className="inline-flex items-center gap-2 px-8 py-4 border-2 border-gray-900 text-gray-900 rounded-full hover:bg-gray-900 hover:text-white transition-colors font-medium"
+            className="inline-flex items-center gap-2 rounded-full bg-[color:var(--color-ink)] px-6 py-3 text-sm font-medium text-[color:var(--color-paper-elevated)] transition-colors hover:bg-[color:var(--color-accent)]"
           >
             See All Projects
           </Link>
