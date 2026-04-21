@@ -172,7 +172,7 @@ export function Navbar() {
                 Projects
               </Link>
 
-              {/* Business expandable section */}
+              {/* Ventures expandable section */}
               <div>
                 <button
                   type="button"
@@ -185,7 +185,7 @@ export function Navbar() {
                   )}
                   aria-expanded={businessMobileOpen}
                 >
-                  Business
+                  Ventures
                   {businessMobileOpen ? (
                     <ChevronUp className="size-3.5" />
                   ) : (
