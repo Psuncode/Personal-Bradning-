@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { CurrentFocus } from "./current-focus";
+import { currentFocus } from "@/data/current-focus";
 
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: any) => (
@@ -19,7 +20,10 @@ describe("CurrentFocus", () => {
 
   it("renders the focus items from data", () => {
     render(<CurrentFocus />);
-    expect(screen.getAllByText(/Building|Reading|Open To/i).length).toBeGreaterThan(0);
+    currentFocus.forEach((item) => {
+      expect(screen.getByText(item.heading)).toBeDefined();
+      expect(screen.getByText(item.body)).toBeDefined();
+    });
   });
 
   it("uses the revised CTA wording for linked items", () => {
