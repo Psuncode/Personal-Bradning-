@@ -39,14 +39,14 @@ export function CurrentFocus() {
 
             return item.href ? (
               <Link
-                key={item.label}
+                key={item.heading}
                 href={item.href}
-                className="editorial-card rounded-[1.5rem] p-6 transition-transform duration-300 hover:-translate-y-0.5"
+                className="editorial-card rounded-[1.5rem] p-6 transition-transform duration-300 hover:-translate-y-0.5 focus-visible:-translate-y-0.5 focus-visible:border-[color:var(--color-accent)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--color-paper)]"
               >
                 {card}
               </Link>
             ) : (
-              <div key={item.label} className="editorial-card rounded-[1.5rem] p-6">
+              <div key={item.heading} className="editorial-card rounded-[1.5rem] p-6">
                 {card}
               </div>
             );

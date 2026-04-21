@@ -28,6 +28,12 @@ describe("CurrentFocus", () => {
 
   it("uses the revised CTA wording for linked items", () => {
     render(<CurrentFocus />);
+    const linkedItem = currentFocus.find((item) => item.href);
+    expect(linkedItem).toBeDefined();
+
+    const link = screen.getByRole("link", { name: new RegExp(linkedItem!.heading) });
+    expect(link.tagName).toBe("A");
+    expect(link.getAttribute("href")).toBe(linkedItem!.href);
     expect(screen.getByText(/Open the conversation/i)).toBeDefined();
   });
 });
