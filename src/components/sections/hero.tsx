@@ -7,79 +7,70 @@ export function Hero() {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <section className="bg-[#0a0a0a] text-white min-h-screen flex items-center px-6 md:px-12 relative overflow-hidden">
-      {/* Subtle white blur circles */}
-      <div className="absolute inset-0 opacity-5 pointer-events-none">
-        <div className="absolute top-20 left-20 w-96 h-96 bg-white rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-20 w-96 h-96 bg-white rounded-full blur-3xl" />
-      </div>
+    <section className="relative overflow-hidden px-6 pb-20 pt-28 md:px-12 md:pb-28 md:pt-36">
+      <div className="editorial-shell relative">
+        <div className="editorial-rule mb-8 pt-6">
+          <p className="editorial-kicker">Philip Sun</p>
+        </div>
 
-      <div className="max-w-6xl w-full relative z-10 space-y-8">
-        <motion.h1
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          className="text-5xl md:text-7xl lg:text-8xl font-[family-name:var(--font-playfair)] leading-[1.1] max-w-5xl"
-        >
-          Creative Thinker. Modern Builder.
-        </motion.h1>
+        <div className="grid gap-12 md:grid-cols-12 md:items-end">
+          <div className="md:col-span-8">
+            <motion.h1
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.1 }}
+              className="font-[family-name:var(--font-playfair)] text-5xl leading-[1.04] tracking-[-0.03em] text-[color:var(--color-ink)] md:text-7xl"
+            >
+              I build product strategy, operating leverage, and trust.
+            </motion.h1>
 
-        <motion.p
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-          className="text-xl md:text-2xl text-gray-300 max-w-3xl"
-        >
-          Product Manager · Healthcare Founder · Photographer. Building at the intersection of health, product, and craft.
-        </motion.p>
+            <motion.p
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.18 }}
+              className="mt-6 max-w-2xl text-lg leading-8 text-[color:var(--color-ink-soft)] md:text-xl"
+            >
+              Product manager, founder, and selective builder across healthcare,
+              systems, and craft. I care about clear decisions, thoughtful
+              execution, and work that holds up under scrutiny.
+            </motion.p>
+          </div>
+
+          <motion.div
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.28 }}
+            className="editorial-card md:col-span-4 rounded-[1.75rem] p-6"
+          >
+            <p className="editorial-kicker mb-4">Current Positioning</p>
+            <div className="space-y-3 text-sm leading-7 text-[color:var(--color-ink-soft)]">
+              <p>16M+ users influenced across enterprise and healthcare systems.</p>
+              <p>3+ years in product across startup and scaled environments.</p>
+              <p>Open to full-time PM roles starting April 2026.</p>
+            </div>
+          </motion.div>
+        </div>
 
         <motion.div
           initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.3 }}
-          className="pt-4 flex flex-wrap gap-4"
+          transition={{ duration: 0.45, delay: 0.34 }}
+          className="mt-10 flex flex-wrap gap-4"
         >
           <Link
             href="/meet"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-black rounded-full hover:bg-gray-100 transition-colors font-medium"
+            className="inline-flex items-center gap-2 rounded-full bg-[color:var(--color-ink)] px-6 py-3 text-sm font-medium text-[color:var(--color-paper-elevated)] transition-colors hover:bg-[color:var(--color-accent)]"
           >
             Book a Call
           </Link>
           <Link
             href="/resume"
-            className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white rounded-full hover:bg-white hover:text-black transition-colors font-medium"
+            className="inline-flex items-center gap-2 rounded-full border border-[color:var(--color-rule)] bg-[rgba(251,247,241,0.6)] px-6 py-3 text-sm font-medium text-[color:var(--color-ink)] transition-colors hover:border-[color:var(--color-ink)]"
           >
             View Resume
           </Link>
         </motion.div>
-
-        <motion.div
-          initial={shouldReduceMotion ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.5 }}
-          className="flex flex-wrap gap-6 pt-2 text-sm text-gray-500"
-        >
-          <span>16M+ users impacted</span>
-          <span className="text-gray-700">·</span>
-          <span>3+ years PM experience</span>
-          <span className="text-gray-700">·</span>
-          <span>Graduating Apr 2026</span>
-        </motion.div>
       </div>
-
-      {/* Animated bounce arrow — hidden when reduced motion is preferred */}
-      {!shouldReduceMotion && (
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2" aria-hidden="true">
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 5V19M12 19L6 13M12 19L18 13" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </motion.div>
-        </div>
-      )}
     </section>
   );
 }

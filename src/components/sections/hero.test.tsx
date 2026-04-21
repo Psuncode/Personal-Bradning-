@@ -2,85 +2,57 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { Hero } from "./hero";
 
-// Mock framer-motion to avoid animation issues in tests
 vi.mock("framer-motion", () => ({
   motion: {
     p: ({ children, ...props }: any) => <p {...props}>{children}</p>,
     h1: ({ children, ...props }: any) => <h1 {...props}>{children}</h1>,
     div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
   },
-  animate: {},
   useReducedMotion: () => false,
 }));
 
-// Mock next/link
 vi.mock("next/link", () => ({
   default: ({ children, href }: any) => <a href={href}>{children}</a>,
 }));
 
 describe("Hero Component", () => {
-  it("renders the hero section", () => {
+  it("renders the editorial kicker", () => {
     render(<Hero />);
-    expect(screen.getByText(/Creative Thinker/i)).toBeDefined();
+    expect(screen.getByText("Philip Sun")).toBeDefined();
   });
 
-  it("renders the main heading", () => {
+  it("renders the new thesis-led headline", () => {
     render(<Hero />);
-    expect(screen.getByText(/Creative Thinker\. Modern Builder\./i)).toBeDefined();
+    expect(
+      screen.getByText(/I build product strategy, operating leverage, and trust/i),
+    ).toBeDefined();
   });
 
-  it("renders the subtitle description", () => {
+  it("renders supporting positioning copy", () => {
     render(<Hero />);
-    expect(screen.getByText(/Product Manager · Healthcare Founder · Photographer/i)).toBeDefined();
+    expect(
+      screen.getByText(/Product manager, founder, and selective builder across healthcare, systems, and craft/i),
+    ).toBeDefined();
   });
 
-  it("renders Book a Call button", () => {
+  it("renders the primary and secondary CTAs", () => {
     render(<Hero />);
     expect(screen.getByText(/Book a Call/i)).toBeDefined();
-  });
-
-  it("renders View Resume button", () => {
-    render(<Hero />);
     expect(screen.getByText(/View Resume/i)).toBeDefined();
   });
 
-  it("has correct link for Book a Call", () => {
+  it("links Book a Call to /meet", () => {
     render(<Hero />);
-    const link = screen.getByText(/Book a Call/i).closest("a");
-    expect(link?.getAttribute("href")).toBe("/meet");
+    expect(screen.getByText(/Book a Call/i).closest("a")?.getAttribute("href")).toBe("/meet");
   });
 
-  it("has correct link for View Resume", () => {
+  it("links View Resume to /resume", () => {
     render(<Hero />);
-    const link = screen.getByText(/View Resume/i).closest("a");
-    expect(link?.getAttribute("href")).toBe("/resume");
+    expect(screen.getByText(/View Resume/i).closest("a")?.getAttribute("href")).toBe("/resume");
   });
 
-  it("renders all CTA buttons as interactive elements", () => {
-    render(<Hero />);
-    const buttons = screen.getAllByRole("link");
-    expect(buttons.length).toBeGreaterThanOrEqual(2);
-  });
-
-  it("renders with dark background", () => {
+  it("does not use the old dark hero treatment", () => {
     const { container } = render(<Hero />);
-    const section = container.querySelector("section");
-    expect(section?.className).toContain("bg-[#0a0a0a]");
-  });
-
-  it("applies min-height for responsive layout", () => {
-    const { container } = render(<Hero />);
-    const section = container.querySelector("section");
-    expect(section?.className).toContain("min-h-screen");
-  });
-
-  it("contains heading text in h1", () => {
-    const { container } = render(<Hero />);
-    const heading = container.querySelector("h1");
-    expect(heading?.textContent).toContain("Creative Thinker");
-  });
-
-  it("renders without crashing with animations", () => {
-    expect(() => render(<Hero />)).not.toThrow();
+    expect(container.querySelector("section")?.className).not.toContain("bg-[#0a0a0a]");
   });
 });
