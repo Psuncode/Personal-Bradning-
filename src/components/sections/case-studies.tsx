@@ -22,14 +22,15 @@ const featuredProjects = projects.filter((p) => p.featured);
 
 export function CaseStudies() {
   return (
-    <section id="work" className="bg-white py-24 px-6 md:px-12">
+    <section id="work" className="px-6 py-24 md:px-12">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16">
-          <h2 className="font-[family-name:var(--font-playfair)] text-5xl md:text-6xl text-gray-900 mb-4">
-            Featured Work
+          <p className="editorial-kicker mb-4">Selected Work</p>
+          <h2 className="font-[family-name:var(--font-playfair)] text-5xl text-[color:var(--color-ink)] md:text-6xl">
+            Proof, presented with restraint.
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl">
-            Impact-driven case studies in healthcare product strategy and AI innovation.
+          <p className="mt-4 max-w-2xl text-lg leading-8 text-[color:var(--color-ink-soft)]">
+            A few cases where strategy met measurable execution across healthcare, AI, and enterprise systems.
           </p>
         </div>
 
@@ -44,24 +45,24 @@ export function CaseStudies() {
               .filter(Boolean);
 
             return (
-              <article key={project.id} className="grid md:grid-cols-12 gap-8">
+              <article key={project.id} className="editorial-rule grid gap-8 pt-10 md:grid-cols-12">
                 {/* Sticky left column */}
                 <div className="md:col-span-5 space-y-8 md:sticky md:top-32 md:self-start">
                   <div>
                     <div className="flex items-center gap-3 mb-4">
-                      <span className="px-3 py-1 bg-gray-900 text-white rounded-full text-sm">
+                      <span className="rounded-full bg-[color:var(--color-ink)] px-3 py-1 text-sm text-[color:var(--color-paper-elevated)]">
                         {subtitle}
                       </span>
                     </div>
-                    <h3 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl text-gray-900 mb-8">
+                    <h3 className="font-[family-name:var(--font-playfair)] text-4xl text-[color:var(--color-ink)] md:text-5xl md:leading-tight">
                       {project.title}
                     </h3>
 
                     {/* Impact metrics */}
-                    <div className="grid grid-cols-3 gap-4 mb-8 p-6 bg-gray-50 rounded-2xl">
+                    <div className="editorial-card mb-8 grid grid-cols-3 gap-4 rounded-[1.75rem] p-6">
                       {(project.metrics ?? []).map((metric, idx) => (
                         <div key={idx} className="text-center">
-                          <div className="font-[family-name:var(--font-playfair)] text-2xl text-gray-900 mb-1 leading-tight">
+                          <div className="font-[family-name:var(--font-playfair)] text-2xl leading-tight text-[color:var(--color-ink)]">
                             {metric}
                           </div>
                         </div>
@@ -71,27 +72,27 @@ export function CaseStudies() {
 
                   <div className="space-y-6">
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 uppercase tracking-wider text-sm">
+                      <h4 className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-[color:var(--color-accent)]">
                         Challenge
                       </h4>
-                      <p className="text-gray-600 leading-relaxed">{project.problem}</p>
+                      <p className="leading-8 text-[color:var(--color-ink-soft)]">{project.problem}</p>
                     </div>
 
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 uppercase tracking-wider text-sm">
+                      <h4 className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-[color:var(--color-accent)]">
                         Approach
                       </h4>
-                      <p className="text-gray-600 leading-relaxed">{project.solution}</p>
+                      <p className="leading-8 text-[color:var(--color-ink-soft)]">{project.solution}</p>
                     </div>
 
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2 uppercase tracking-wider text-sm">
+                      <h4 className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-[color:var(--color-accent)]">
                         Outcomes
                       </h4>
                       <ul className="space-y-2">
                         {outcomes.map((outcome, idx) => (
-                          <li key={idx} className="text-gray-600 leading-relaxed flex items-start gap-2">
-                            <svg className="w-5 h-5 text-gray-900 mt-0.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                          <li key={idx} className="flex items-start gap-2 leading-8 text-[color:var(--color-ink-soft)]">
+                            <svg className="mt-1 h-5 w-5 shrink-0 text-[color:var(--color-accent)]" viewBox="0 0 20 20" fill="currentColor">
                               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
                             </svg>
                             {outcome}
@@ -105,7 +106,7 @@ export function CaseStudies() {
                     {project.techStack.map((tag) => (
                       <span
                         key={tag}
-                        className="px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm"
+                        className="rounded-full border border-[color:var(--color-rule)] bg-[rgba(251,247,241,0.7)] px-4 py-2 text-sm text-[color:var(--color-ink-soft)]"
                       >
                         {tag}
                       </span>
@@ -114,7 +115,7 @@ export function CaseStudies() {
 
                   <Link
                     href={`/projects/${project.slug}`}
-                    className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:underline pt-2"
+                    className="inline-flex items-center gap-2 pt-2 text-sm font-medium uppercase tracking-[0.18em] text-[color:var(--color-accent)] hover:underline"
                   >
                     View Full Case Study →
                   </Link>
@@ -123,15 +124,15 @@ export function CaseStudies() {
                 {/* Scrolling right column */}
                 <div className="md:col-span-7 space-y-6">
                   {images.map((image, imgIndex) => (
-                    <div key={imgIndex} className="relative group overflow-hidden rounded-2xl h-[500px]">
+                    <div key={imgIndex} className="editorial-card relative h-[500px] overflow-hidden rounded-[2rem] p-3">
                       <Image
                         src={image}
                         alt={`${project.title} visual ${imgIndex + 1}`}
                         fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="rounded-[1.35rem] object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                         sizes="(max-width: 768px) 100vw, 58vw"
                       />
-                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
+                      <div className="absolute inset-3 rounded-[1.35rem] bg-gradient-to-t from-black/15 to-transparent" />
                     </div>
                   ))}
                 </div>
