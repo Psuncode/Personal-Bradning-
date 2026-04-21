@@ -13,6 +13,10 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
+const venturesLabel = "Ventures";
+const venturesMenuId = "ventures-menu";
+const venturesTriggerId = "ventures-trigger";
+
 const navLinks = [
   { href: "/projects", label: "Projects" },
   { href: "/blog", label: "Writing" },
@@ -31,12 +35,16 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
   const [businessOpen, setBusinessOpen] = useState(false);
   const [businessMobileOpen, setBusinessMobileOpen] = useState(false);
+  const businessButtonRef = useRef<HTMLButtonElement>(null);
   const businessRef = useRef<HTMLLIElement>(null);
 
-  const isBusinessActive =
-    pathname.startsWith("/photography") || pathname.startsWith("/ecommerce");
+  const isBusinessRouteActive = (href: string) =>
+    pathname === href || pathname.startsWith(`${href}/`);
 
-  // Close desktop dropdown on outside click
+  const isBusinessActive = businessLinks.some(({ href }) =>
+    isBusinessRouteActive(href),
+  );
+
   useEffect(() => {
     function handleMouseDown(e: MouseEvent) {
       if (
@@ -46,9 +54,33 @@ export function Navbar() {
         setBusinessOpen(false);
       }
     }
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setBusinessOpen(false);
+        businessButtonRef.current?.focus();
+      }
+    }
+
+    if (!businessOpen) {
+      return;
+    }
+
     document.addEventListener("mousedown", handleMouseDown);
-    return () => document.removeEventListener("mousedown", handleMouseDown);
-  }, []);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [businessOpen]);
+
+  const linkBase =
+    "text-sm transition-colors";
+  const linkMuted =
+    "text-[color:var(--color-ink-soft)] hover:text-[color:var(--color-ink)]";
+  const linkActive = "text-[color:var(--color-ink)] font-medium";
+  const surfacePanel =
+    "border border-[color:var(--color-rule)] bg-[color:var(--color-paper-elevated)]";
 
   return (
     <header className="sticky top-0 z-50 border-b border-[color:var(--color-rule)] bg-[rgba(251,247,241,0.86)] backdrop-blur-md">
@@ -68,17 +100,15 @@ export function Navbar() {
               href="/projects"
               aria-current={pathname === "/projects" ? "page" : undefined}
               className={cn(
-                "text-sm transition-colors",
-                pathname === "/projects"
-                  ? "text-black font-medium"
-                  : "text-gray-600 hover:text-black"
+                linkBase,
+                pathname === "/projects" ? linkActive : linkMuted,
               )}
             >
               Projects
             </Link>
           </li>
 
-          {/* Business dropdown */}
+          {/* Ventures dropdown */}
           <li className="relative" ref={businessRef}>
             <button
               type="button"
@@ -86,28 +116,40 @@ export function Navbar() {
               className={cn(
                 "flex items-center gap-1 text-sm transition-colors",
                 isBusinessActive
-                  ? "text-[color:var(--color-ink)] font-medium"
-                  : "text-[color:var(--color-ink-soft)] hover:text-[color:var(--color-ink)]"
+                  ? linkActive
+                  : linkMuted,
               )}
               aria-expanded={businessOpen}
-              aria-haspopup="true"
+              aria-haspopup="menu"
+              aria-controls={venturesMenuId}
+              id={venturesTriggerId}
+              ref={businessButtonRef}
             >
-              Ventures
+              {venturesLabel}
               <ChevronDown className="size-3.5" />
             </button>
             {businessOpen && (
-              <div className="absolute left-0 top-full z-50 mt-2 min-w-[180px] rounded-2xl border border-[color:var(--color-rule)] bg-[rgba(251,247,241,0.95)] py-2 shadow-[0_18px_40px_rgba(32,28,26,0.08)]">
+              <div
+                className={cn(
+                  "absolute left-0 top-full z-50 mt-2 min-w-[180px] rounded-2xl py-2 shadow-[0_18px_40px_rgba(32,28,26,0.08)]",
+                  surfacePanel,
+                )}
+                id={venturesMenuId}
+                role="menu"
+                aria-labelledby={venturesTriggerId}
+              >
                 {businessLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={() => setBusinessOpen(false)}
-                    aria-current={pathname === link.href ? "page" : undefined}
+                    aria-current={isBusinessRouteActive(link.href) ? "page" : undefined}
+                    role="menuitem"
                     className={cn(
                       "block px-4 py-2 text-sm transition-colors",
-                      pathname === link.href
+                      isBusinessRouteActive(link.href)
                         ? "bg-[rgba(95,47,42,0.08)] font-medium text-[color:var(--color-ink)]"
-                        : "text-[color:var(--color-ink-soft)] hover:bg-[rgba(95,47,42,0.04)] hover:text-[color:var(--color-ink)]"
+                        : "text-[color:var(--color-ink-soft)] hover:bg-[rgba(95,47,42,0.04)] hover:text-[color:var(--color-ink)]",
                     )}
                   >
                     {link.label}
@@ -120,23 +162,21 @@ export function Navbar() {
           {/* Remaining flat links */}
           {navLinks.slice(1).map((link) => (
             <li key={link.href}>
-                {link.href === "/meet" ? (
-                  <Link
-                    href={link.href}
-                    aria-current={pathname === link.href ? "page" : undefined}
-                    className="inline-flex items-center rounded-full bg-[color:var(--color-ink)] px-4 py-1.5 text-sm font-medium text-[color:var(--color-paper-elevated)] transition-colors hover:bg-[color:var(--color-accent)]"
-                  >
-                    Book a Call
-                  </Link>
+              {link.href === "/meet" ? (
+                <Link
+                  href={link.href}
+                  aria-current={pathname === link.href ? "page" : undefined}
+                  className="inline-flex items-center rounded-full bg-[color:var(--color-ink)] px-4 py-1.5 text-sm font-medium text-[color:var(--color-paper-elevated)] transition-colors hover:bg-[color:var(--color-accent)]"
+                >
+                  Book a Call
+                </Link>
               ) : (
                 <Link
                   href={link.href}
                   aria-current={pathname === link.href ? "page" : undefined}
                   className={cn(
-                    "text-sm transition-colors",
-                    pathname === link.href
-                      ? "text-black font-medium"
-                      : "text-gray-600 hover:text-black"
+                    linkBase,
+                    pathname === link.href ? linkActive : linkMuted,
                   )}
                 >
                   {link.label}
@@ -149,13 +189,22 @@ export function Navbar() {
         {/* Mobile navigation */}
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="icon" className="text-gray-700 hover:bg-gray-100">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="text-[color:var(--color-ink-soft)] hover:bg-[rgba(95,47,42,0.04)] hover:text-[color:var(--color-ink)]"
+            >
               <Menu className="size-5" />
               <span className="sr-only">Open menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="w-64 bg-white border-gray-200">
-            <SheetTitle className="text-gray-900">Navigation</SheetTitle>
+          <SheetContent
+            side="right"
+            className="w-64 border-[color:var(--color-rule)] bg-[color:var(--color-paper-elevated)]"
+          >
+            <SheetTitle className="text-[color:var(--color-ink)]">
+              Navigation
+            </SheetTitle>
             <nav className="mt-8 flex flex-col gap-2">
               {/* Projects */}
               <Link
@@ -165,8 +214,8 @@ export function Navbar() {
                 className={cn(
                   "rounded-md px-3 py-2 text-sm font-medium transition-colors",
                   pathname === "/projects"
-                    ? "text-black bg-gray-100"
-                    : "text-gray-600 hover:text-black hover:bg-gray-50"
+                    ? "bg-[rgba(95,47,42,0.08)] text-[color:var(--color-ink)]"
+                    : "text-[color:var(--color-ink-soft)] hover:bg-[rgba(95,47,42,0.04)] hover:text-[color:var(--color-ink)]",
                 )}
               >
                 Projects
@@ -180,12 +229,12 @@ export function Navbar() {
                   className={cn(
                     "flex w-full items-center justify-between rounded-md px-3 py-2 text-sm font-medium transition-colors",
                     isBusinessActive
-                      ? "text-black bg-gray-100"
-                      : "text-gray-600 hover:text-black hover:bg-gray-50"
+                      ? "bg-[rgba(95,47,42,0.08)] text-[color:var(--color-ink)]"
+                      : "text-[color:var(--color-ink-soft)] hover:bg-[rgba(95,47,42,0.04)] hover:text-[color:var(--color-ink)]",
                   )}
                   aria-expanded={businessMobileOpen}
                 >
-                  Ventures
+                  {venturesLabel}
                   {businessMobileOpen ? (
                     <ChevronUp className="size-3.5" />
                   ) : (
@@ -202,12 +251,12 @@ export function Navbar() {
                           setOpen(false);
                           setBusinessMobileOpen(false);
                         }}
-                        aria-current={pathname === link.href ? "page" : undefined}
+                        aria-current={isBusinessRouteActive(link.href) ? "page" : undefined}
                         className={cn(
                           "rounded-md pl-6 pr-3 py-2 text-sm font-medium transition-colors",
-                          pathname === link.href
-                            ? "text-black bg-gray-100"
-                            : "text-gray-600 hover:text-black hover:bg-gray-50"
+                          isBusinessRouteActive(link.href)
+                            ? "bg-[rgba(95,47,42,0.08)] text-[color:var(--color-ink)]"
+                            : "text-[color:var(--color-ink-soft)] hover:bg-[rgba(95,47,42,0.04)] hover:text-[color:var(--color-ink)]",
                         )}
                       >
                         {link.label}
@@ -225,7 +274,7 @@ export function Navbar() {
                     href={link.href}
                     onClick={() => setOpen(false)}
                     aria-current={pathname === link.href ? "page" : undefined}
-                    className="rounded-full px-4 py-2 text-sm font-medium bg-gray-900 text-white text-center hover:bg-gray-700 transition-colors"
+                    className="rounded-full bg-[color:var(--color-ink)] px-4 py-2 text-center text-sm font-medium text-[color:var(--color-paper-elevated)] transition-colors hover:bg-[color:var(--color-accent)]"
                   >
                     Book a Call
                   </Link>
@@ -234,12 +283,12 @@ export function Navbar() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setOpen(false)}
-                    aria-current={pathname === link.href ? "page" : undefined}
+                    aria-current={isBusinessRouteActive(link.href) ? "page" : undefined}
                     className={cn(
                       "rounded-md px-3 py-2 text-sm font-medium transition-colors",
                       pathname === link.href
                         ? "bg-[rgba(95,47,42,0.08)] text-[color:var(--color-ink)]"
-                        : "text-[color:var(--color-ink-soft)] hover:bg-[rgba(95,47,42,0.04)] hover:text-[color:var(--color-ink)]"
+                        : "text-[color:var(--color-ink-soft)] hover:bg-[rgba(95,47,42,0.04)] hover:text-[color:var(--color-ink)]",
                     )}
                   >
                     {link.label}
