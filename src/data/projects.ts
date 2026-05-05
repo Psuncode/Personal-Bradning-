@@ -70,7 +70,8 @@ export const projects: Project[] = [
     metrics: ["7,000+ CPT codes analyzed", "$10M+ portfolio", "2,500+ billing codes"],
     lessonsLearned:
       "Healthcare finance is deeply fragmented — each payer has different fee schedules, and RVU values shift with each code update. Building a maintainable data model that survives code changes is as important as the analysis itself.",
-    techStack: ["Web Development", "Healthcare Finance", "Data Analysis", "SQL"],
+    techStack: ["JavaScript", "Python", "CMS Data", "Healthcare Finance", "Data Analysis"],
+    liveUrl: "/rvu-calculator/index.html",
     featured: false,
   },
   {

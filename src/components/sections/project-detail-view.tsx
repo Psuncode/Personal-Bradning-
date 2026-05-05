@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ExternalLink } from "lucide-react";
 import type { Project } from "@/types";
 
 interface ProjectDetailViewProps {
@@ -55,12 +55,23 @@ export function ProjectDetailView({ project }: ProjectDetailViewProps) {
               </div>
             )}
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 items-center">
               {project.techStack.map((tech) => (
                 <span key={tech} className="px-3 py-1 bg-white/20 text-white rounded-full text-sm">
                   {tech}
                 </span>
               ))}
+              {project.liveUrl && (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 ml-2 px-5 py-2 bg-white text-gray-900 rounded-full text-sm font-semibold hover:bg-gray-100 transition-colors"
+                >
+                  <ExternalLink className="size-3.5" />
+                  Launch Tool
+                </a>
+              )}
             </div>
           </motion.div>
         </div>
