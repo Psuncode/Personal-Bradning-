@@ -3,15 +3,25 @@ import { getPostBySlug } from "@/lib/blog";
 
 export const runtime = "nodejs";
 
+const MAX_TITLE_LEN = 90;
+
+function truncate(s: string, max: number) {
+  if (s.length <= max) return s;
+  return s.slice(0, max - 1).trimEnd() + "…";
+}
+
 export async function GET(
   _req: Request,
   { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
   const post = getPostBySlug(slug);
+  if (!post) {
+    return new Response("Not found", { status: 404 });
+  }
 
-  const title = post?.frontmatter.title ?? "Writing";
-  const date = post?.frontmatter.date ?? "";
+  const title = truncate(post.frontmatter.title, MAX_TITLE_LEN);
+  const date = post.frontmatter.date;
 
   return new ImageResponse(
     (
