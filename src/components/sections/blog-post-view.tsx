@@ -7,6 +7,7 @@ import type { MDXComponents } from "mdx/types";
 import { formatDate } from "@/lib/utils";
 import { RelatedPosts } from "@/components/editorial/related-posts";
 import { BlogCover } from "@/components/editorial/blog-cover";
+import { SeriesHeader } from "@/components/editorial/series-header";
 import { Figure } from "@/components/mdx/figure";
 import { FullBleed } from "@/components/mdx/full-bleed";
 import { Gallery } from "@/components/mdx/gallery";
@@ -97,6 +98,7 @@ export function BlogPostView({ post, Content, allPosts }: BlogPostViewProps) {
   return (
     <>
       {post.cover && <BlogCover post={post} />}
+      {allPosts && <SeriesHeader current={post} all={allPosts} />}
       <Container>
         <div className="mb-8 pt-8">
           <Link
