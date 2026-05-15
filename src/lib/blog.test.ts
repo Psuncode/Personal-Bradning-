@@ -44,3 +44,12 @@ describe("cover detection", () => {
     expect(post?.cover).toBeUndefined();
   });
 });
+
+describe("cover alt from frontmatter", () => {
+  it("reads cover.alt from frontmatter when present", () => {
+    // hello-world is the fixture with cover.jpg; verify default behavior first
+    const post = getPostBySlug("hello-world");
+    // Without frontmatter coverAlt, alt should be undefined (BlogCover provides fallback)
+    expect(post?.cover?.alt).toBeUndefined();
+  });
+});

@@ -27,8 +27,11 @@ series: "Healthcare PM"      # optional — groups posts in a series
 seriesOrder: 2               # optional — position within the series
 faq: []                      # optional, generates FAQ JSON-LD
 howTo: ~                     # optional, generates HowTo JSON-LD
+coverAlt: "Wasatch sunset — accessible description of the cover image"  # optional
 ---
 ```
+
+If you have a `cover.jpg`, set `coverAlt` to provide alt text for screen readers. If omitted, the cover falls back to a generic description derived from the title.
 
 ## Shortcodes available in every MDX file
 

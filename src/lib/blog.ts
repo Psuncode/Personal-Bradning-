@@ -69,12 +69,17 @@ function readPost(entry: DiscoveredEntry): BlogPost {
   const raw = fs.readFileSync(entry.filePath, "utf-8");
   const { data, content } = matter(raw);
   const stats = readingTime(content);
+  const frontmatter = data as BlogPost["frontmatter"] & { coverAlt?: string };
+  let cover = detectCover(entry.folder, entry.slug);
+  if (cover && typeof frontmatter.coverAlt === "string") {
+    cover = { ...cover, alt: frontmatter.coverAlt };
+  }
   return {
     slug: entry.slug,
-    frontmatter: data as BlogPost["frontmatter"],
+    frontmatter,
     readingTime: stats.text,
     content,
-    cover: detectCover(entry.folder, entry.slug),
+    cover,
   };
 }
 
