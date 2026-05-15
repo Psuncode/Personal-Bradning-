@@ -9,9 +9,10 @@ interface Props {
   href: string;
   kicker?: string;
   cover?: { src: string; alt: string };
+  transitionName?: string;
 }
 
-export function EditorialEntry({ index, title, description, href, kicker, cover }: Props) {
+export function EditorialEntry({ index, title, description, href, kicker, cover, transitionName }: Props) {
   const orientation = index % 2 === 0 ? "editorial-asym-left" : "editorial-asym-right";
 
   return (
@@ -30,6 +31,7 @@ export function EditorialEntry({ index, title, description, href, kicker, cover 
                 alt={cover.alt}
                 fill
                 sizes="(max-width: 768px) 100vw, 66vw"
+                style={transitionName ? { viewTransitionName: transitionName } : undefined}
                 className="object-cover transition-transform duration-700 group-hover:scale-[1.02]"
               />
             </div>

@@ -51,4 +51,19 @@ describe("EditorialEntry", () => {
     );
     expect(screen.getByText("01")).toBeInTheDocument();
   });
+
+  it("applies the viewTransitionName when transitionName is provided", () => {
+    const { container } = render(
+      <EditorialEntry
+        index={0}
+        title="A"
+        description="x"
+        href="/a"
+        cover={{ src: "/photography/landscape-1.svg", alt: "cover" }}
+        transitionName="cover-a"
+      />,
+    );
+    const img = container.querySelector("img");
+    expect(img?.getAttribute("style") || "").toContain("view-transition-name");
+  });
 });

@@ -23,6 +23,7 @@ export function ProjectsGrid() {
               description={p.description}
               href={`/projects/${p.slug ?? p.id}`}
               cover={{ src: p.coverImage.src, alt: p.coverImage.alt }}
+              transitionName={`cover-${p.slug ?? p.id}`}
             />
             {i === midpoint - 1 && (
               <div className="relative aspect-[21/9] w-full overflow-hidden my-12">
