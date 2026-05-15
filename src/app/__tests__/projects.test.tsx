@@ -1,6 +1,11 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
-import type { AnchorHTMLAttributes, HTMLAttributes, PropsWithChildren } from "react";
+import type {
+  AnchorHTMLAttributes,
+  HTMLAttributes,
+  ImgHTMLAttributes,
+  PropsWithChildren,
+} from "react";
 import ProjectsPage from "@/app/(main)/projects/page";
 
 type LinkProps = PropsWithChildren<
@@ -8,7 +13,6 @@ type LinkProps = PropsWithChildren<
 >;
 type DivProps = PropsWithChildren<HTMLAttributes<HTMLDivElement>>;
 
-// Mock next/link
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: LinkProps) => (
     <a href={href} {...props}>
@@ -17,7 +21,17 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-// Mock framer-motion
+vi.mock("next/image", () => ({
+  default: ({
+    src,
+    alt,
+    ...rest
+  }: ImgHTMLAttributes<HTMLImageElement> & { src: string; alt: string }) => (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt={alt} {...rest} />
+  ),
+}));
+
 vi.mock("framer-motion", () => ({
   motion: {
     div: ({ children, ...props }: DivProps) => <div {...props}>{children}</div>,
@@ -27,13 +41,12 @@ vi.mock("framer-motion", () => ({
 describe("Projects Page", () => {
   it("renders the projects page", () => {
     render(<ProjectsPage />);
-    expect(screen.getByText("All Projects")).toBeDefined();
+    expect(screen.getByRole("heading", { level: 1, name: "Projects" })).toBeDefined();
   });
 
   it("renders page heading", () => {
     render(<ProjectsPage />);
-    const heading = screen.getByText("All Projects");
-    expect(heading).toBeDefined();
+    expect(screen.getByText("Projects")).toBeDefined();
   });
 
   it("renders all projects", () => {
@@ -52,20 +65,13 @@ describe("Projects Page", () => {
   it("renders project descriptions", () => {
     render(<ProjectsPage />);
     expect(
-      screen.getByText(/Founding a continuous progesterone monitoring device/i)
+      screen.getByText(/Founding a continuous progesterone monitoring device/i),
     ).toBeDefined();
-  });
-
-  it("displays tech stack for all projects", () => {
-    render(<ProjectsPage />);
-    expect(screen.getByText("Python")).toBeDefined();
-    expect(screen.getByText("Power BI")).toBeDefined();
   });
 
   it("renders project links", () => {
     render(<ProjectsPage />);
     const links = screen.getAllByRole("link");
-    // Should have multiple project links (Code, Live Demo links)
     expect(links.length).toBeGreaterThan(0);
   });
 
@@ -75,22 +81,15 @@ describe("Projects Page", () => {
     expect(viewAllButton).toBeNull();
   });
 
-  it("renders with proper padding", () => {
-    const { container } = render(<ProjectsPage />);
-    const wrapper = container.firstChild;
-    expect(wrapper?.className).toContain("pt-8");
-  });
-
-  it("displays grid layout for projects", () => {
-    const { container } = render(<ProjectsPage />);
-    const grid = container.querySelector(".grid");
-    expect(grid?.className).toContain("sm:grid-cols-2");
-    expect(grid?.className).toContain("lg:grid-cols-3");
-  });
-
-  it("renders section with subtitle", () => {
+  it("renders editorial numeral kickers", () => {
     render(<ProjectsPage />);
-    expect(screen.getByText("A selection of things I've built")).toBeDefined();
+    expect(screen.getByText("01")).toBeDefined();
+    expect(screen.getByText("02")).toBeDefined();
+  });
+
+  it("renders the editorial sub-line", () => {
+    render(<ProjectsPage />);
+    expect(screen.getByText(/A magazine of recent work/i)).toBeDefined();
   });
 
   it("renders without crashing", () => {
@@ -99,20 +98,7 @@ describe("Projects Page", () => {
 
   it("displays both featured and non-featured projects", () => {
     render(<ProjectsPage />);
-    // Non-featured projects
     expect(screen.getByText("Granger Medical: RVU Analytics Platform")).toBeDefined();
     expect(screen.getByText("Cocker Innovation Fellowship")).toBeDefined();
-  });
-
-  it("shows all projects with their descriptions", () => {
-    render(<ProjectsPage />);
-    expect(screen.queryAllByText(/7,000\+ CPT codes/i).length).toBeGreaterThan(0);
-    expect(screen.queryAllByText(/synthetic biology/i).length).toBeGreaterThan(0);
-  });
-
-  it("renders projects in grid with proper gap", () => {
-    const { container } = render(<ProjectsPage />);
-    const grid = container.querySelector(".grid.gap-8");
-    expect(grid).toBeDefined();
   });
 });
