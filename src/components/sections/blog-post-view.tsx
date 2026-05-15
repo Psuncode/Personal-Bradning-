@@ -90,10 +90,6 @@ export function buildMdxComponents(slug: string): MDXComponents {
   };
 }
 
-// Backwards-compat re-export for legacy callers. Bound to empty slug — runtime
-// rendering must go through buildMdxComponents(slug).
-export const mdxComponents: MDXComponents = buildMdxComponents("");
-
 export function BlogPostView({ post, Content, allPosts }: BlogPostViewProps) {
   return (
     <>
