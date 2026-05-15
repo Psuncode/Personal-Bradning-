@@ -9,6 +9,9 @@ export function BlogCover({ post }: Props) {
   if (!post.cover) return null;
   const transitionName = `blog-cover-${post.slug}`;
   const alt = post.cover.alt ?? `${post.frontmatter.title} — cover image`;
+  const blurProps = post.cover.blurDataURL
+    ? { placeholder: "blur" as const, blurDataURL: post.cover.blurDataURL }
+    : {};
 
   return (
     <header className="relative w-full aspect-[16/9] overflow-hidden">
@@ -18,8 +21,7 @@ export function BlogCover({ post }: Props) {
         fill
         priority
         sizes="100vw"
-        placeholder={post.cover.blurDataURL ? "blur" : undefined}
-        blurDataURL={post.cover.blurDataURL}
+        {...blurProps}
         style={{ objectFit: "cover", viewTransitionName: transitionName }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent" />

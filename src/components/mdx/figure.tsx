@@ -20,6 +20,9 @@ export function Figure({
 }: FigureProps) {
   const resolved = resolveBlogAsset(slug, src);
   const effectiveAlt = alt ?? "";
+  const blurProps = resolved.blurDataURL
+    ? { placeholder: "blur" as const, blurDataURL: resolved.blurDataURL }
+    : {};
 
   return (
     <figure className="my-10">
@@ -33,8 +36,7 @@ export function Figure({
           fill
           sizes="(max-width: 768px) 100vw, 720px"
           priority={priority}
-          placeholder={resolved.blurDataURL ? "blur" : undefined}
-          blurDataURL={resolved.blurDataURL}
+          {...blurProps}
           className="object-cover"
         />
       </div>

@@ -17,6 +17,9 @@ export function FullBleed({
   aspectRatio = "21/9",
 }: FullBleedProps) {
   const resolved = resolveBlogAsset(slug, src);
+  const blurProps = resolved.blurDataURL
+    ? { placeholder: "blur" as const, blurDataURL: resolved.blurDataURL }
+    : {};
   return (
     <div className="my-14 not-prose">
       <div
@@ -28,8 +31,7 @@ export function FullBleed({
           alt={alt}
           fill
           sizes="100vw"
-          placeholder={resolved.blurDataURL ? "blur" : undefined}
-          blurDataURL={resolved.blurDataURL}
+          {...blurProps}
           className="object-cover"
         />
       </div>

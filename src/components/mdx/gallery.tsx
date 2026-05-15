@@ -19,6 +19,9 @@ export function Gallery({ slug, images, columns = 2 }: GalleryProps) {
     <div className={`my-10 grid grid-cols-1 gap-4 ${gridCols}`}>
       {images.map((img, i) => {
         const resolved = resolveBlogAsset(slug, img.src);
+        const blurProps = resolved.blurDataURL
+          ? { placeholder: "blur" as const, blurDataURL: resolved.blurDataURL }
+          : {};
         return (
           <div
             key={i}
@@ -29,8 +32,7 @@ export function Gallery({ slug, images, columns = 2 }: GalleryProps) {
               alt={img.alt}
               fill
               sizes={`(max-width: 768px) 100vw, ${100 / columns}vw`}
-              placeholder={resolved.blurDataURL ? "blur" : undefined}
-              blurDataURL={resolved.blurDataURL}
+              {...blurProps}
               className="object-cover"
             />
           </div>
