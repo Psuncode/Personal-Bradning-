@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 
 interface GridItem {
-  type: "ai-project-hero" | "ai-project" | "healthcare" | "linkedin" | "photography" | "resume" | "photography-cta";
+  type: "ai-project-hero" | "ai-project" | "healthcare" | "linkedin" | "photography" | "photography-cta";
   title: string;
   description?: string;
   excerpt?: string;
@@ -37,13 +37,6 @@ const gridItems: GridItem[] = [
     reactions: "184 reactions",
     span: "md:col-span-1",
     href: "https://www.linkedin.com/in/-philipsun/",
-  },
-  {
-    type: "resume",
-    title: "View Full Resume",
-    description: "Healthcare PM experience across MedTech, Faith Tech, and AI diagnostics.",
-    span: "md:col-span-1",
-    href: "/resume",
   },
   {
     type: "ai-project-hero",
@@ -232,16 +225,6 @@ export function ContentGrid() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
                     <h3 className="font-[family-name:var(--font-playfair)] text-xl text-white">{item.title}</h3>
                   </div>
-                </div>
-              )}
-
-              {item.type === "resume" && (
-                <div className="bg-gradient-to-br from-gray-100 to-gray-200 h-full p-6 flex flex-col justify-center items-center text-center group-hover:from-gray-900 group-hover:to-gray-800 transition-all">
-                  <svg className="w-12 h-12 mb-3 text-gray-900 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 12H15M9 16H15M17 21H7C5.89543 21 5 20.1046 5 19V5C5 3.89543 5.89543 3 7 3H12.5858C12.851 3 13.1054 3.10536 13.2929 3.29289L18.7071 8.70711C18.8946 8.89464 19 9.149 19 9.41421V19C19 20.1046 18.1046 21 17 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                  <h3 className="font-[family-name:var(--font-playfair)] text-xl mb-2 group-hover:text-white transition-colors">{item.title}</h3>
-                  <p className="text-sm text-gray-600 group-hover:text-gray-300 transition-colors opacity-70">{item.description}</p>
                 </div>
               )}
 

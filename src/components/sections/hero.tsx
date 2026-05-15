@@ -63,12 +63,6 @@ export function Hero() {
           >
             Book a Call
           </Link>
-          <Link
-            href="/resume"
-            className="inline-flex items-center gap-2 rounded-full border border-[color:var(--color-rule)] bg-[rgba(251,247,241,0.6)] px-6 py-3 text-sm font-medium text-[color:var(--color-ink)] transition-colors hover:border-[color:var(--color-ink)]"
-          >
-            View Resume
-          </Link>
         </motion.div>
       </div>
     </section>

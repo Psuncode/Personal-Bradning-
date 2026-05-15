@@ -38,21 +38,10 @@ describe("Footer Component", () => {
     expect(screen.getByText("Book a Call")).toBeDefined();
   });
 
-  it("renders View Resume button", () => {
-    render(<Footer />);
-    expect(screen.getByText("View Resume")).toBeDefined();
-  });
-
   it("Book a Call links to meet page", () => {
     render(<Footer />);
     const link = screen.getByText("Book a Call").closest("a");
     expect(link?.getAttribute("href")).toBe("/meet");
-  });
-
-  it("View Resume links to resume page", () => {
-    render(<Footer />);
-    const link = screen.getByText("View Resume").closest("a");
-    expect(link?.getAttribute("href")).toBe("/resume");
   });
 
   it("renders email link", () => {

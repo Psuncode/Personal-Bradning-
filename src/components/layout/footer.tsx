@@ -20,12 +20,6 @@ export function Footer() {
               >
                 Book a Call
               </Link>
-              <Link
-                href="/resume"
-                className="inline-flex items-center gap-2 px-8 py-4 border-2 border-white text-white rounded-full hover:bg-white hover:text-black transition-colors font-medium"
-              >
-                View Resume
-              </Link>
             </div>
           </div>
 

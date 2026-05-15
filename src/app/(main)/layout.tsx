@@ -5,7 +5,6 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { GrainOverlay } from "@/components/editorial/grain-overlay";
 import { siteConfig } from "@/data/site-config";
-import { roles, education } from "@/data/resume";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -54,9 +53,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const founderRole = roles.find((r) => r.company === "Inara Health Diagnostic");
-  const pmRole = roles.find((r) => r.title.includes("Product Manager"));
-
   const personJsonLd = {
     "@context": "https://schema.org",
     "@type": "Person",
@@ -64,10 +60,6 @@ export default function RootLayout({
     url: siteConfig.url,
     jobTitle: "Product Manager & Founder",
     email: siteConfig.email,
-    alumniOf: {
-      "@type": "EducationalOrganization",
-      name: education[0]?.school ?? "Brigham Young University",
-    },
     sameAs: [siteConfig.links.linkedin, siteConfig.links.github],
     knowsAbout: [
       "Product Management",
@@ -82,11 +74,11 @@ export default function RootLayout({
     hasOccupation: [
       {
         "@type": "Occupation",
-        name: pmRole?.title ?? "Product Manager",
+        name: "Product Manager",
       },
       {
         "@type": "Occupation",
-        name: founderRole?.title ?? "Founder & CEO",
+        name: "Founder & CEO",
         occupationalCategory: "Medical Device Startup",
       },
       {
