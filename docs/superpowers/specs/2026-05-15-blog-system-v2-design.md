@@ -207,6 +207,55 @@ Covers can be added later — the convention is opt-in. One commit.
 - **Smoke test** — a fixture post using all six shortcodes renders without crashing in `BlogPostView`.
 - **Series header test** — render `<SeriesHeader>` with a fixture of three series-tagged posts and assert prev/next labels and ordering.
 
+## Authoring skill — `write-blog-post`
+
+Project-scoped Claude Code skill that drafts a polished post end-to-end. Lives at `.claude/skills/write-blog-post/SKILL.md`.
+
+**Trigger:** `/write-blog-post` or natural-language ("help me write a blog post about X").
+
+**Flow (interview → framework recommendation → storyteller confirmation → blog wrap):**
+
+1. **Context gather** (in-skill, conversational, one question per turn — 5 to 7 questions max):
+   - What's the topic / working title?
+   - Who is the audience? (peers, recruiters, photography clients, general builders)
+   - What's the single insight or "so what"?
+   - What experience or evidence grounds it?
+   - What outcome do you want for the reader? (a-ha, a new mental model, a decision, a feeling)
+   - Approximate length? (short ~500w, medium ~900w, long ~1500w)
+   - Any photos you plan to drop into the post folder?
+
+2. **Internal framework recommendation.** The skill carries a small embedded map of Pip Decks Storyteller Tactics with blog-fit annotations — e.g. **Mountain** (struggle → resolution, ~900–1500w), **Sparklines** (expectation vs reality, ~500–900w), **Cinderella** (transformation arc, ~900w), **Quest** (decision-driven narrative, ~1200w), **Petal Structure** (single insight illuminated from multiple angles, ~700w). Based on the gathered context — primary emotion, length, whether there's a turn or a contrast — the skill picks the best fit and prepares a brief justification.
+
+3. **Hand off to `/storyteller-writing-assistant` mid-flow to confirm purpose + framework.** The skill MUST invoke the storyteller skill (via the Skill tool) with a precise handoff prompt: "I'm drafting a blog post. Here's the context [pass all gathered answers]. My recommended framework is [name] because [reason]. Please (a) confirm the purpose statement with the user, (b) confirm or override the framework, and (c) produce a section-by-section outline I can draft against." Storyteller runs its own short interview to validate or change course, then returns a locked purpose + framework + outline. This handoff is non-negotiable — it's the engagement gate.
+
+4. **Draft using the confirmed framework.** Once storyteller hands back:
+   - Write the full MDX body following the outline.
+   - Open with a drop-cap-friendly first sentence (no ramp-up, no "in this post we'll").
+   - Place editorial shortcodes at narrative pivots: `<PullQuote>` at the emotional/insight peak, `<Figure src="./photo.jpg" caption="..." />` placeholders wherever the outline suggests imagery, `<TwoColumn>` for contrast moments (especially natural in Sparklines), `<Aside>` for tangents the user mentioned but that would derail the spine.
+   - Slug suggestion: kebab-case of the working title, max 5 words.
+   - Pre-filled frontmatter: `title`, `date` (today), `excerpt` (1-sentence pulled from the body, written for the index page), `tags` (suggest 2–3 from the existing taxonomy across `content/blog/`), `published: false`.
+
+5. **Write to disk:** create `content/blog/<slug>/index.mdx` with the draft. If the post called for cover imagery, also write `content/blog/<slug>/COVER_NOTES.md` describing what photo would fit the post's emotional tone (subject, mood, aspect ratio) so the user knows what to shoot/pick. The user drops in `cover.jpg` later.
+
+6. **Stop and hand back.** Print the file paths created, suggest 1–2 light edits the user might want, and exit. Do not commit to git — the user reviews and commits when ready.
+
+**Hard rules in the skill body:**
+- The storyteller handoff is non-negotiable. If for any reason storyteller can't run, the skill stops and surfaces the failure rather than guessing at narrative structure alone.
+- The skill's internal framework map is a *recommendation engine*, not the final answer — storyteller always confirms or overrides.
+- All file writes go through the per-post folder convention (A1).
+- Frontmatter always ships with `published: false` so nothing goes live by accident.
+- The skill never drafts in the abstract — every post is written to disk before exit.
+
+**Where the skill goes:**
+- File: `.claude/skills/write-blog-post/SKILL.md`
+- Format: YAML frontmatter (`name`, `description`) + body with the flow above.
+- The skill's `description` must include trigger phrases: "write a blog post", "draft a post", "new blog post", "blog post about", so natural-language invocation works.
+
+**Out of scope for the skill itself (these stay manual):**
+- Selecting / placing real images (user does this after the draft exists).
+- Final copyedit pass.
+- Setting `published: true` and committing.
+
 ## Out of scope (deferred)
 
 - Web upload UI / admin dashboard / WYSIWYG editor.
@@ -226,3 +275,4 @@ Covers can be added later — the convention is opt-in. One commit.
 6. `<BlogCover>` renders only when a cover file is present, with a working view-transition between `/blog` and `/blog/<slug>` (matching the projects pattern).
 7. `public/_blog-assets/` is gitignored and rebuilt from source on every build.
 8. Documentation lives at `content/blog/AUTHORING.md` — a short guide so the user (future-self) remembers the conventions.
+9. The `write-blog-post` skill exists at `.claude/skills/write-blog-post/SKILL.md`, triggers on `/write-blog-post` and natural-language phrases, performs the context-gathering → storyteller handoff → draft → write-to-disk flow described above, and has been smoke-tested by invoking it once and producing a real draft post on disk.
