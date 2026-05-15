@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# blog system v2 build artifact (regenerated via prebuild hook)
+/public/_blog-assets/
