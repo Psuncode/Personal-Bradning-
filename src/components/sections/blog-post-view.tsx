@@ -111,9 +111,18 @@ export function BlogPostView({ post, Content, allPosts }: BlogPostViewProps) {
         </div>
 
         <div className="mb-10 max-w-3xl">
-          <h1 className="editorial-display mb-4 font-[family-name:var(--font-playfair)] text-4xl md:text-5xl text-[color:var(--color-ink)] leading-tight">
-            {post.frontmatter.title}
-          </h1>
+          {post.cover ? (
+            <p
+              aria-hidden="true"
+              className="editorial-display mb-4 font-[family-name:var(--font-playfair)] text-4xl md:text-5xl text-[color:var(--color-ink)] leading-tight"
+            >
+              {post.frontmatter.title}
+            </p>
+          ) : (
+            <h1 className="editorial-display mb-4 font-[family-name:var(--font-playfair)] text-4xl md:text-5xl text-[color:var(--color-ink)] leading-tight">
+              {post.frontmatter.title}
+            </h1>
+          )}
           <div className="mb-4 flex flex-wrap items-center gap-4 text-sm text-[color:var(--color-ink-soft)]">
             <span className="flex items-center gap-1.5">
               <Calendar className="size-4" />
