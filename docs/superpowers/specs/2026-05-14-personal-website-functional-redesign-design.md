@@ -72,7 +72,7 @@ The nav and route structure stay as they are today. What changes is what each pa
 ### New components
 
 **`<TopStrip>`** — slim row above `<Navbar>`. Renders editorial ink on cream, ~36 px tall, no shadow.
-- Copy: "Open to PM roles in healthcare & high-growth · [Email](mailto:) · [LinkedIn]"
+- Copy: "Open to PM roles in healthcare & high-growth · [Email] · [LinkedIn]". The Email link uses `siteConfig.links.email` (a `mailto:` URL) and the LinkedIn link uses `siteConfig.links.linkedin`. Both come from `src/data/site-config.ts`.
 - Behavior: auto-hides on scroll down past ~80 px, reappears on scroll up. Implemented via a `useScrollDirection` hook and a CSS transform. No JS animation library required.
 - Accessibility: links keyboard-reachable, focus-visible style preserved, hidden state uses `aria-hidden` so screen readers skip it cleanly.
 
@@ -112,7 +112,7 @@ The nav and route structure stay as they are today. What changes is what each pa
 
 ## Data Flow
 
-- `<TailCTA variant="case-study">` takes the current `Project` (already passed to `project-detail-view`) and derives the prev/next via the order in `src/data/projects.ts`. The "topic" string is sourced from `project.techStack[0]` or `project.title` — chosen during implementation.
+- `<TailCTA variant="case-study">` takes the current `Project` (already passed to `project-detail-view`) and derives the prev/next via the order in `src/data/projects.ts`. The "topic" string is `project.title` — always present and concrete (e.g., "Inara Health Diagnostic" reads better than the generic "Hardware" from `techStack[0]`).
 - `<TailCTA variant="blog">` takes the current `BlogPost` plus the result of `getAllPosts()` and filters by overlapping tags. Two-post cap; ordered by date desc.
 - `<TopStrip>` is fully static. No props beyond copy constants. Email and LinkedIn URLs read from `siteConfig`.
 - `<EditorialPageHeader>` is a pure component: `kicker?`, `title`, `sub?`. No data dependencies.
@@ -125,7 +125,7 @@ This is a sweep, not a redesign surface. The bar is defined here; the per-fix li
 - Read every visible string on the 8 main-route pages. Flag and fix anything template-y, weak, or duplicative.
 - Known weak surfaces:
   - Footer headline ("Let's work together") + paragraph mentioning "photography sessions and B2B product inquiries" — contradicts the executive-first framing of the editorial refresh. Tighten.
-  - `siteConfig.title` is `"Philip Sun | PM · Founder · Photographer"`. Re-evaluate whether "Photographer" belongs in the title given executive-first positioning.
+  - `siteConfig.title` currently reads `"Philip Sun | PM · Founder · Photographer"`. Update to `"Philip Sun | PM · Founder"` for executive-first framing. Photographer remains visible via the Ventures nav group and the photography sub-brand.
 
 **Mobile + accessibility.**
 - Visual check at 375 / 768 / 1024 / 1440 px on every main-route page.
