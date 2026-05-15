@@ -32,3 +32,15 @@ describe("blog discovery", () => {
     }
   });
 });
+
+describe("cover detection", () => {
+  it("getPostBySlug returns cover.src when a cover.jpg is present", () => {
+    const post = getPostBySlug("hello-world");
+    expect(post?.cover?.src).toBe("/_blog-assets/hello-world/cover.jpg");
+  });
+
+  it("getPostBySlug omits cover when no cover file exists", () => {
+    const post = getPostBySlug("lessons-from-building");
+    expect(post?.cover).toBeUndefined();
+  });
+});
