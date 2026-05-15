@@ -6,45 +6,92 @@ import type { BlogPost } from "@/types/blog";
 
 const BLOG_DIR = path.join(process.cwd(), "content/blog");
 
-export function getAllPosts(): BlogPost[] {
+interface DiscoveredEntry {
+  slug: string;
+  filePath: string;
+  folder?: string;
+}
+
+function discoverEntries(): DiscoveredEntry[] {
   if (!fs.existsSync(BLOG_DIR)) return [];
 
-  const files = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith(".mdx"));
+  const entries = fs.readdirSync(BLOG_DIR, { withFileTypes: true });
+  const found: DiscoveredEntry[] = [];
 
-  return files
-    .map((filename) => {
-      const slug = filename.replace(".mdx", "");
-      const raw = fs.readFileSync(path.join(BLOG_DIR, filename), "utf-8");
-      const { data, content } = matter(raw);
-      const stats = readingTime(content);
+  for (const entry of entries) {
+    if (entry.name.startsWith(".") || entry.name.startsWith("_")) continue;
 
-      return {
-        slug,
-        frontmatter: data as BlogPost["frontmatter"],
-        readingTime: stats.text,
-        content,
-      };
-    })
-    .filter((post) => post.frontmatter.published)
+    if (entry.isDirectory()) {
+      const indexPath = path.join(BLOG_DIR, entry.name, "index.mdx");
+      if (fs.existsSync(indexPath)) {
+        found.push({
+          slug: entry.name,
+          filePath: indexPath,
+          folder: path.join(BLOG_DIR, entry.name),
+        });
+      }
+      continue;
+    }
+
+    if (entry.isFile() && entry.name.endsWith(".mdx")) {
+      const slug = entry.name.replace(/\.mdx$/, "");
+      const folderExists = entries.some(
+        (e) => e.isDirectory() && e.name === slug,
+      );
+      if (!folderExists) {
+        found.push({ slug, filePath: path.join(BLOG_DIR, entry.name) });
+      } else if (process.env.NODE_ENV !== "test") {
+        console.warn(
+          `[blog] legacy ${entry.name} shadowed by folder ${slug}/; using folder.`,
+        );
+      }
+    }
+  }
+
+  return found;
+}
+
+function detectCover(
+  folder: string | undefined,
+  slug: string,
+): BlogPost["cover"] {
+  if (!folder) return undefined;
+  for (const ext of ["jpg", "jpeg", "png", "webp"]) {
+    const local = path.join(folder, `cover.${ext}`);
+    if (fs.existsSync(local)) {
+      return { src: `/_blog-assets/${slug}/cover.${ext}` };
+    }
+  }
+  return undefined;
+}
+
+function readPost(entry: DiscoveredEntry): BlogPost {
+  const raw = fs.readFileSync(entry.filePath, "utf-8");
+  const { data, content } = matter(raw);
+  const stats = readingTime(content);
+  return {
+    slug: entry.slug,
+    frontmatter: data as BlogPost["frontmatter"],
+    readingTime: stats.text,
+    content,
+    cover: detectCover(entry.folder, entry.slug),
+  };
+}
+
+export function getAllPosts(): BlogPost[] {
+  return discoverEntries()
+    .map(readPost)
+    .filter((p) => p.frontmatter.published)
     .sort(
       (a, b) =>
         new Date(b.frontmatter.date).getTime() -
-        new Date(a.frontmatter.date).getTime()
+        new Date(a.frontmatter.date).getTime(),
     );
 }
 
 export function getPostBySlug(slug: string): BlogPost | null {
-  const filePath = path.join(BLOG_DIR, `${slug}.mdx`);
-  if (!fs.existsSync(filePath)) return null;
-
-  const raw = fs.readFileSync(filePath, "utf-8");
-  const { data, content } = matter(raw);
-  const stats = readingTime(content);
-
-  return {
-    slug,
-    frontmatter: data as BlogPost["frontmatter"],
-    readingTime: stats.text,
-    content,
-  };
+  const entries = discoverEntries();
+  const entry = entries.find((e) => e.slug === slug);
+  if (!entry) return null;
+  return readPost(entry);
 }
