@@ -36,9 +36,9 @@ export default function HomePage() {
           <div className="editorial-shell editorial-rule pt-10">
             <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
-                <p className="editorial-kicker mb-3">Latest Writing</p>
+                <p className="editorial-kicker mb-3">Writing</p>
                 <h2 className="font-[family-name:var(--font-playfair)] text-4xl text-[color:var(--color-ink)] md:text-5xl">
-                  Latest Writing
+                  Notes & Essays
                 </h2>
                 <p className="mt-3 max-w-2xl text-base leading-7 text-[color:var(--color-ink-soft)]">
                   Notes, essays, and field reports on product, systems, and building well.

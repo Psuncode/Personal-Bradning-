@@ -180,23 +180,17 @@ export function CaseStudies() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
         >
-          <p className="editorial-kicker !text-[color:var(--color-paper-elevated)] opacity-80 mb-6">Open to opportunities</p>
+          <p className="editorial-kicker !text-[color:var(--color-paper-elevated)] opacity-80 mb-6">Selected Work</p>
           <h2 className="mb-6 font-[family-name:var(--font-playfair)] text-4xl md:text-5xl text-[color:var(--color-paper-elevated)]">
-            Like what you see?
+            More in the archive.
           </h2>
           <p className="mx-auto mb-10 max-w-2xl text-lg leading-8 text-[color:var(--color-paper-elevated)] opacity-80">
-            Let's discuss how I can bring operational leverage, clear product strategy, and thoughtful execution to your team.
+            Healthcare hardware, enterprise PM, AI shipped, analytics — the full catalogue lives on the projects page.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
-              href="/meet"
-              className="inline-flex items-center gap-2 rounded-full bg-[color:var(--color-paper)] px-8 py-4 text-sm font-medium text-[color:var(--color-ink)] transition-transform hover:scale-105"
-            >
-              Book a Call
-            </Link>
-            <Link
               href="/projects"
-              className="inline-flex items-center gap-2 rounded-full border border-[color:var(--color-paper-elevated)]/30 px-8 py-4 text-sm font-medium text-[color:var(--color-paper-elevated)] transition-colors hover:bg-[color:var(--color-paper-elevated)]/10"
+              className="inline-flex items-center gap-2 rounded-full bg-[color:var(--color-paper)] px-8 py-4 text-sm font-medium text-[color:var(--color-ink)] transition-transform hover:scale-105"
             >
               See All Projects
             </Link>
