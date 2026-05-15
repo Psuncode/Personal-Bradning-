@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 const competencies = [
   {
@@ -18,8 +21,14 @@ const competencies = [
 
 export function About() {
   return (
-    <section id="about" className="py-24">
-      <div className="editorial-shell grid gap-12 md:grid-cols-12">
+    <section id="about" className="pt-32 pb-24 overflow-hidden">
+      <motion.div 
+        className="editorial-shell grid gap-12 md:grid-cols-12"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         <div className="md:col-span-7">
           <p className="editorial-kicker mb-4">Profile</p>
           <h2 className="font-[family-name:var(--font-playfair)] text-4xl leading-tight text-[color:var(--color-ink)] md:text-6xl">
@@ -83,7 +92,7 @@ export function About() {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

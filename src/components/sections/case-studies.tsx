@@ -1,20 +1,23 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { projects } from "@/data/projects";
 
-// Placeholder images for the scrolling visual column
+// Expected local paths for native project imagery
 const projectImages: Record<string, string[]> = {
   "inara-health": [
-    "https://images.unsplash.com/photo-1766934587214-86e21b3ae093?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-    "https://images.unsplash.com/photo-1688413709025-5f085266935a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    "/images/projects/inara/product-ui-1.jpg",
+    "/images/projects/inara/product-ui-2.jpg",
   ],
   "lds-church-pm": [
-    "https://images.unsplash.com/photo-1750056393306-ac672d0dbb8c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-    "https://images.unsplash.com/photo-1647368890626-7e9e59c05a55?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    "/images/projects/lds/dashboard-1.jpg",
+    "/images/projects/lds/migration-architecture.jpg",
   ],
   "nursa-ai-tb": [
-    "https://images.unsplash.com/photo-1688413709025-5f085266935a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-    "https://images.unsplash.com/photo-1766934587214-86e21b3ae093?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    "/images/projects/nursa/test-builder-1.jpg",
+    "/images/projects/nursa/data-schema.jpg",
   ],
 };
 
@@ -45,7 +48,14 @@ export function CaseStudies() {
               .filter(Boolean);
 
             return (
-              <article key={project.id} className="editorial-rule grid gap-8 pt-10 md:grid-cols-12">
+              <motion.article 
+                key={project.id} 
+                className="editorial-rule grid gap-8 pt-10 md:grid-cols-12"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              >
                 {/* Sticky left column */}
                 <div className="md:col-span-5 space-y-8 md:sticky md:top-32 md:self-start">
                   <div>
@@ -86,19 +96,35 @@ export function CaseStudies() {
                     </div>
 
                     <div>
-                      <h4 className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-[color:var(--color-accent)]">
+                      <h4 className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-[color:var(--color-accent)]">
                         Outcomes
                       </h4>
-                      <ul className="space-y-2">
-                        {outcomes.map((outcome, idx) => (
-                          <li key={idx} className="flex items-start gap-2 leading-8 text-[color:var(--color-ink-soft)]">
-                            <svg className="mt-1 h-5 w-5 shrink-0 text-[color:var(--color-accent)]" viewBox="0 0 20 20" fill="currentColor">
-                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
-                            </svg>
-                            {outcome}
-                          </li>
-                        ))}
-                      </ul>
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        {outcomes.map((outcome, idx) => {
+                          const match = outcome.match(/^([\$\d\.,%KMBT\+]+)\s*(.*)/i);
+                          return (
+                            <div key={idx} className="editorial-card rounded-2xl p-4 transition-all hover:-translate-y-1 bg-white/50 border border-[color:var(--color-rule)] h-full flex flex-col justify-center">
+                              {match ? (
+                                <>
+                                  <div className="font-[family-name:var(--font-playfair)] text-3xl font-medium text-[color:var(--color-ink)] mb-1">
+                                    {match[1]}
+                                  </div>
+                                  <div className="text-sm leading-6 text-[color:var(--color-ink-soft)]">
+                                    {match[2]}
+                                  </div>
+                                </>
+                              ) : (
+                                <div className="flex items-start gap-2 text-sm leading-6 text-[color:var(--color-ink-soft)]">
+                                  <svg className="mt-1 h-4 w-4 shrink-0 text-[color:var(--color-accent)]" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                                  </svg>
+                                  <span>{outcome}</span>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
 
@@ -115,9 +141,16 @@ export function CaseStudies() {
 
                   <Link
                     href={`/projects/${project.slug}`}
-                    className="inline-flex items-center gap-2 pt-2 text-sm font-medium uppercase tracking-[0.18em] text-[color:var(--color-accent)] hover:underline"
+                    className="group inline-flex items-center gap-2 pt-2 text-sm font-medium uppercase tracking-[0.18em] text-[color:var(--color-accent)] transition-all hover:text-[color:var(--color-ink)]"
                   >
-                    View Full Case Study →
+                    <span className="group-hover:underline">View Full Case Study</span>
+                    <motion.span
+                      initial={{ x: 0 }}
+                      whileHover={{ x: 4 }}
+                      className="inline-block"
+                    >
+                      →
+                    </motion.span>
                   </Link>
                 </div>
 
@@ -136,19 +169,39 @@ export function CaseStudies() {
                     </div>
                   ))}
                 </div>
-              </article>
+              </motion.article>
             );
           })}
         </div>
 
-        <div className="mt-16 text-center">
-          <Link
-            href="/projects"
-            className="inline-flex items-center gap-2 rounded-full bg-[color:var(--color-ink)] px-6 py-3 text-sm font-medium text-[color:var(--color-paper-elevated)] transition-colors hover:bg-[color:var(--color-accent)]"
-          >
-            See All Projects
-          </Link>
-        </div>
+        <motion.div 
+          className="mt-32 rounded-[2.5rem] bg-[color:var(--color-ink)] px-8 py-16 text-center text-[color:var(--color-paper-elevated)] md:px-12 md:py-24"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+        >
+          <p className="editorial-kicker !text-[color:var(--color-paper-elevated)] opacity-80 mb-6">Open to opportunities</p>
+          <h2 className="mb-6 font-[family-name:var(--font-playfair)] text-4xl md:text-5xl text-[color:var(--color-paper-elevated)]">
+            Like what you see?
+          </h2>
+          <p className="mx-auto mb-10 max-w-2xl text-lg leading-8 text-[color:var(--color-paper-elevated)] opacity-80">
+            Let's discuss how I can bring operational leverage, clear product strategy, and thoughtful execution to your team.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Link
+              href="/meet"
+              className="inline-flex items-center gap-2 rounded-full bg-[color:var(--color-paper)] px-8 py-4 text-sm font-medium text-[color:var(--color-ink)] transition-transform hover:scale-105"
+            >
+              Book a Call
+            </Link>
+            <Link
+              href="/projects"
+              className="inline-flex items-center gap-2 rounded-full border border-[color:var(--color-paper-elevated)]/30 px-8 py-4 text-sm font-medium text-[color:var(--color-paper-elevated)] transition-colors hover:bg-[color:var(--color-paper-elevated)]/10"
+            >
+              See All Projects
+            </Link>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

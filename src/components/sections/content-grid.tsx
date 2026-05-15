@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 interface GridItem {
   type: "ai-project-hero" | "ai-project" | "healthcare" | "linkedin" | "photography" | "resume" | "photography-cta";
@@ -57,7 +60,7 @@ const gridItems: GridItem[] = [
   {
     type: "photography",
     title: "Design & Space",
-    image: "https://images.unsplash.com/photo-1647368890626-7e9e59c05a55?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    image: "/images/photography/design-space.jpg",
     span: "md:col-span-1 md:row-span-1",
     href: "/photography",
   },
@@ -88,7 +91,7 @@ const gridItems: GridItem[] = [
   {
     type: "photography",
     title: "Urban Studies",
-    image: "https://images.unsplash.com/photo-1762436933065-fe6d7f51d4f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    image: "/images/photography/urban-studies.jpg",
     span: "md:col-span-1 md:row-span-1",
     href: "/photography",
   },
@@ -122,8 +125,14 @@ function CardWrapper({ item, children }: { item: GridItem; children: React.React
 
 export function ContentGrid() {
   return (
-    <section id="projects" className="bg-[#faf9f7] py-24 px-6 md:px-12">
-      <div className="max-w-7xl mx-auto">
+    <section id="projects" className="bg-[#faf9f7] py-24 px-6 md:px-12 overflow-hidden">
+      <motion.div 
+        className="max-w-7xl mx-auto"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         <div className="mb-16">
           <h2 className="font-[family-name:var(--font-playfair)] text-5xl md:text-6xl text-gray-900 mb-4">
             Projects &amp; Thought Leadership
@@ -260,7 +269,7 @@ export function ContentGrid() {
             </CardWrapper>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -13,12 +13,11 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <CurrentFocus />
-      <About />
       <CaseStudies />
-      <ContentGrid />
+      <About />
+      <CurrentFocus />
       {recentPosts.length > 0 && (
-        <section className="px-6 py-24 md:px-12">
+        <section className="px-6 py-24 md:px-12 bg-white/40">
           <div className="editorial-shell editorial-rule pt-10">
             <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
@@ -61,6 +60,7 @@ export default function HomePage() {
           </div>
         </section>
       )}
+      <ContentGrid />
     </>
   );
 }

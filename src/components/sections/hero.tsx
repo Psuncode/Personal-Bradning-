@@ -40,7 +40,7 @@ export function Hero() {
             initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: 0.28 }}
-            className="editorial-card md:col-span-4 rounded-[1.75rem] p-6"
+            className="editorial-card md:col-span-4 rounded-[1.75rem] p-8 bg-[rgba(251,247,241,0.8)] border border-[color:var(--color-rule)] shadow-sm backdrop-blur-sm"
           >
             <p className="editorial-kicker mb-4">Current Positioning</p>
             <div className="space-y-3 text-sm leading-7 text-[color:var(--color-ink-soft)]">

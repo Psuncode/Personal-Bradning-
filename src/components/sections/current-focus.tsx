@@ -1,11 +1,20 @@
+"use client";
+
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Container } from "@/components/layout/container";
 import { currentFocus } from "@/data/current-focus";
 
 export function CurrentFocus() {
   return (
-    <section className="border-y border-[color:var(--color-rule)] bg-[rgba(251,247,241,0.55)] py-20">
-      <Container>
+    <section className="border-y border-[color:var(--color-rule)] bg-[rgba(251,247,241,0.55)] py-20 overflow-hidden">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
+        <Container>
         <div className="mb-10 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="editorial-kicker mb-3">Current Focus</p>
@@ -52,7 +61,8 @@ export function CurrentFocus() {
             );
           })}
         </div>
-      </Container>
+        </Container>
+      </motion.div>
     </section>
   );
 }
