@@ -19,7 +19,6 @@ const navLinks = [
   { href: "/projects", label: "Projects" },
   { href: "/blog", label: "Writing" },
   { href: "/meet", label: "Meet" },
-  { href: "/contact", label: "Contact" },
 ];
 
 const businessLinks = [

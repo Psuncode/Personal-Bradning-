@@ -55,19 +55,18 @@ describe("Navbar Component", () => {
   it("renders all navigation links on desktop", () => {
     render(<Navbar />);
     expect(screen.getByText("Projects")).toBeDefined();
+    expect(screen.getByText("Writing")).toBeDefined();
     expect(screen.getByText("Book a Call")).toBeDefined();
-    expect(screen.getByText("Contact")).toBeDefined();
+    expect(screen.queryByText("Contact")).toBeNull();
   });
 
   it("navigation links have correct hrefs", () => {
     render(<Navbar />);
     const projectsLink = screen.getByText("Projects").closest("a");
     const meetLink = screen.getByText("Book a Call").closest("a");
-    const contactLink = screen.getByText("Contact").closest("a");
 
     expect(projectsLink?.getAttribute("href")).toBe("/projects");
     expect(meetLink?.getAttribute("href")).toBe("/meet");
-    expect(contactLink?.getAttribute("href")).toBe("/contact");
   });
 
   it("does not render Home link", () => {
