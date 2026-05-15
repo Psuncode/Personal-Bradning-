@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
-import { BlogPostView, mdxComponents } from "@/components/sections/blog-post-view";
+import { BlogPostView, buildMdxComponents } from "@/components/sections/blog-post-view";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { siteConfig } from "@/data/site-config";
 
@@ -33,7 +33,7 @@ export default async function BlogPostPage({
   if (!post) notFound();
 
   const Content = async () => (
-    <MDXRemote source={post.content} components={mdxComponents} />
+    <MDXRemote source={post.content} components={buildMdxComponents(post.slug)} />
   );
 
   const jsonLd = {
