@@ -1,63 +1,38 @@
-import Link from "next/link";
 import { siteConfig } from "@/data/site-config";
 
 export function Footer() {
   return (
     <footer id="contact" className="bg-[#0a0a0a] text-white py-24 px-6 md:px-12">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-16 mb-16">
-          <div>
-            <h2 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl mb-6">
-              Let&apos;s work together.
-            </h2>
-            <p className="text-gray-400 text-lg leading-relaxed mb-8">
-              Open to PM roles in healthcare tech and high-growth companies. Also available for photography sessions and B2B product inquiries. Always interested in challenging problems and mission-driven teams.
-            </p>
-            <div className="flex flex-wrap gap-4 pt-4">
-              <Link
-                href="/meet"
-                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-black rounded-full hover:bg-gray-100 transition-colors font-medium"
-              >
-                Book a Call
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col justify-center space-y-4">
+      <div className="max-w-6xl mx-auto grid gap-12 md:grid-cols-3">
+        <div>
+          <p className="font-[family-name:var(--font-playfair)] text-3xl mb-2">Philip Sun</p>
+          <p className="text-sm text-gray-400">Portfolio · {new Date().getFullYear()}</p>
+        </div>
+        <div className="text-sm space-y-2">
+          <a href={siteConfig.links.email} className="block hover:text-gray-300">
+            {siteConfig.email}
+          </a>
+          <div className="flex gap-4 text-gray-400">
             <a
-              href={siteConfig.links.email}
-              className="text-2xl hover:text-gray-300 transition-colors"
+              href={siteConfig.links.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white"
             >
-              {siteConfig.email}
+              LinkedIn
             </a>
-            <div className="flex gap-6 pt-4">
-              <a
-                href={siteConfig.links.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                LinkedIn
-              </a>
-              <a
-                href={siteConfig.links.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                GitHub
-              </a>
-            </div>
+            <a
+              href={siteConfig.links.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white"
+            >
+              GitHub
+            </a>
           </div>
         </div>
-
-        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-500 text-sm">
-            &copy; {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
-          </p>
-          <p className="text-gray-500 text-sm">
-            Built with care and attention to detail.
-          </p>
+        <div className="text-xs text-gray-500 leading-6">
+          Built with Next.js and Tailwind. Photography by Philip. Set in Playfair Display and Inter.
         </div>
       </div>
     </footer>

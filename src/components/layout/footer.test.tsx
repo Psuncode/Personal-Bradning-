@@ -7,7 +7,6 @@ type LinkProps = PropsWithChildren<
   { href: string } & AnchorHTMLAttributes<HTMLAnchorElement>
 >;
 
-// Mock next/link
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }: LinkProps) => (
     <a href={href} {...props}>
@@ -23,25 +22,15 @@ describe("Footer Component", () => {
     expect(footer).toBeDefined();
   });
 
-  it("renders the CTA heading", () => {
+  it("renders the signature name", () => {
     render(<Footer />);
-    expect(screen.getByText(/Let's work together/i)).toBeDefined();
+    expect(screen.getByText("Philip Sun")).toBeDefined();
   });
 
-  it("renders footer description", () => {
+  it("renders portfolio + year colophon", () => {
     render(<Footer />);
-    expect(screen.getByText(/PM roles in healthcare tech/i)).toBeDefined();
-  });
-
-  it("renders Book a Call button", () => {
-    render(<Footer />);
-    expect(screen.getByText("Book a Call")).toBeDefined();
-  });
-
-  it("Book a Call links to meet page", () => {
-    render(<Footer />);
-    const link = screen.getByText("Book a Call").closest("a");
-    expect(link?.getAttribute("href")).toBe("/meet");
+    const year = new Date().getFullYear().toString();
+    expect(screen.getByText(new RegExp(`Portfolio · ${year}`))).toBeDefined();
   });
 
   it("renders email link", () => {
@@ -52,7 +41,7 @@ describe("Footer Component", () => {
     expect(emailLinks.length).toBeGreaterThan(0);
   });
 
-  it("GitHub link has correct href and attributes", () => {
+  it("GitHub link has correct attributes", () => {
     render(<Footer />);
     const githubLinks = screen.getAllByRole("link").filter(
       (link) =>
@@ -62,7 +51,7 @@ describe("Footer Component", () => {
     expect(githubLinks.length).toBeGreaterThan(0);
   });
 
-  it("LinkedIn link has correct href and attributes", () => {
+  it("LinkedIn link has correct attributes", () => {
     render(<Footer />);
     const linkedinLinks = screen.getAllByRole("link").filter(
       (link) =>
@@ -70,17 +59,6 @@ describe("Footer Component", () => {
         link.getAttribute("target") === "_blank"
     );
     expect(linkedinLinks.length).toBeGreaterThan(0);
-  });
-
-  it("renders copyright text with current year", () => {
-    render(<Footer />);
-    const currentYear = new Date().getFullYear().toString();
-    expect(screen.getByText(new RegExp(currentYear))).toBeDefined();
-  });
-
-  it("renders copyright notice text", () => {
-    render(<Footer />);
-    expect(screen.getByText(/All rights reserved/i)).toBeDefined();
   });
 
   it("footer has dark background styling", () => {
@@ -95,10 +73,10 @@ describe("Footer Component", () => {
     expect(footer?.className).toContain("text-white");
   });
 
-  it("renders grid layout for footer sections", () => {
+  it("renders three-column colophon grid layout", () => {
     const { container } = render(<Footer />);
     const gridDiv = container.querySelector(".grid");
-    expect(gridDiv?.className).toContain("md:grid-cols-2");
+    expect(gridDiv?.className).toContain("md:grid-cols-3");
   });
 
   it("external social links open in new tab", () => {
@@ -113,6 +91,12 @@ describe("Footer Component", () => {
       expect(link.getAttribute("rel")).toContain("noopener");
       expect(link.getAttribute("rel")).toContain("noreferrer");
     });
+  });
+
+  it("does not render legacy sales copy", () => {
+    render(<Footer />);
+    expect(screen.queryByText(/Let's work together/i)).toBeNull();
+    expect(screen.queryByText(/Book a Call/i)).toBeNull();
   });
 
   it("renders without crashing", () => {
