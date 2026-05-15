@@ -190,3 +190,42 @@
   /* Grain is static; nothing to disable, but keep this comment as a marker
      for the view-transition reduced-motion fallback added later. */
 }
+
+/* Drop cap — applied to the first child paragraph of a prose container */
+.editorial-prose > p:first-of-type::first-letter {
+  font-family: var(--font-playfair), serif;
+  float: left;
+  font-size: 4.5em;
+  line-height: 0.9;
+  padding-right: 0.08em;
+  padding-top: 0.06em;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+/* Hung punctuation — applied to display headings */
+.editorial-display {
+  hanging-punctuation: first last;
+}
+
+/* Oldstyle figures — applied to body copy where supported */
+.editorial-numerals {
+  font-variant-numeric: oldstyle-nums;
+}
+
+/* Asymmetric layout helpers (used by EditorialEntry, project body) */
+.editorial-asym-left { grid-column: 1 / span 8; }
+.editorial-asym-right { grid-column: 5 / span 8; }
+@media (max-width: 768px) {
+  .editorial-asym-left,
+  .editorial-asym-right { grid-column: 1 / -1; }
+}
+
+/* View-transition reduced-motion fallback */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0s !important;
+  }
+}
