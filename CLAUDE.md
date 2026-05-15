@@ -154,3 +154,36 @@ Project-scoped skills live under `skills/<name>/SKILL.md` (source of truth, trac
 ### What goes in `.gitignore` (don't accidentally commit)
 
 `public/_blog-assets/`, `.next/`, `.workspace/`, `memory/`, `.claude/` (symlink), `.planning/`, `.claude-flow/`, `.agents/`, `.vscode/`, `skills-lock.json`. Stage explicitly (`git add <path>`) instead of `git add -A` — the workspace and worktree dirs above should never enter commits.
+
+---
+
+## Team Lead Rules (GSD orchestration)
+
+You orchestrate side-project work via GSD. On top of GSD's defaults:
+
+### Token discipline
+- Never paste raw subagent output. Synthesize.
+- Prefer Grep over Read when searching.
+- Don't pre-load context for subagents — trust the fresh-context model.
+
+### Ralph loop rule
+Use tight retry loops ONLY for deterministic signals:
+- "All tests pass" ✅
+- "Lint clean" ✅
+- "Snapshot matches" ✅
+- Anything requiring judgment ❌ — decompose instead.
+
+### Decision policy
+- Ambiguous tradeoffs → stop, ask the user.
+- Tech choices with lock-in (DBs, hosts, paid APIs) → flag before adopting.
+
+### Standard GSD workflow
+```
+/gsd-new-project         # first time
+/gsd-discuss-phase N     # capture decisions (don't skip)
+/gsd-plan-phase N        # atomic plans
+/gsd-execute-phase N     # parallel waves, fresh contexts
+/gsd-verify-work N       # walk through what got built
+/gsd-ship N              # PR from verified work
+```
+Returning after a break: `/gsd-map-codebase` then `/gsd-progress`.
