@@ -18,9 +18,10 @@ export async function generateMetadata({
   params: Promise<{ tag: string }>;
 }): Promise<Metadata> {
   const { tag } = await params;
+  const decoded = decodeURIComponent(tag);
   return {
-    title: `#${tag} — Writing`,
-    description: `Posts tagged #${tag} on ${siteConfig.name}.`,
+    title: `#${decoded} — Writing`,
+    description: `Posts tagged #${decoded} on ${siteConfig.name}.`,
   };
 }
 
@@ -30,15 +31,16 @@ export default async function BlogTagPage({
   params: Promise<{ tag: string }>;
 }) {
   const { tag } = await params;
-  const posts = getAllPosts().filter((p) => p.frontmatter.tags.includes(tag));
+  const decoded = decodeURIComponent(tag);
+  const posts = getAllPosts().filter((p) => p.frontmatter.tags.includes(decoded));
   if (posts.length === 0) notFound();
 
   return (
     <>
       <EditorialPageHeader
         kicker="Writing"
-        title={`#${tag}`}
-        sub={`Posts tagged #${tag}.`}
+        title={`#${decoded}`}
+        sub={`Posts tagged #${decoded}.`}
       />
       <div className="editorial-shell pb-24">
         {posts.map((post, i) => (

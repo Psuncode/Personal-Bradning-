@@ -133,7 +133,7 @@ export function BlogPostView({ post, Content, allPosts }: BlogPostViewProps) {
             {post.frontmatter.tags.map((tag) => (
               <Link
                 key={tag}
-                href={`/blog/tag/${tag}`}
+                href={`/blog/tag/${encodeURIComponent(tag)}`}
                 className="px-3 py-1 border border-[color:var(--color-rule)] text-[color:var(--color-ink-soft)] text-xs uppercase tracking-[0.18em] hover:text-[color:var(--color-ink)] transition-colors"
               >
                 {tag}
