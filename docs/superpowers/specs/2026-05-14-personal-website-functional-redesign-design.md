@@ -86,7 +86,7 @@ The route structure changes in exactly two ways: `/resume` is removed, and the R
 **Project cover images.**
 - Every project in `src/data/projects.ts` gains a `coverImage` field: `{ src: string; alt: string; focalPoint?: 'center' | 'top' | 'bottom' }`. Type updated in `src/types/index.ts`.
 - For projects without literal mockups (Inara, LDS, Nursa, Granger, Cocker), the cover is selected from existing photography (`src/data/photography.ts`) chosen for tonal fit, or a sourced editorial image. Specific image selection happens during execution, not in this spec.
-- Cover renders full-bleed at the top of `/projects/[slug]`. Title typesets over the image with a backdrop scrim if needed for legibility, or sits beside it in an asymmetric two-column header. Layout choice made per project during execution.
+- Cover renders full-bleed at the top of `/projects/[slug]`. Title can either overlay the image (with a backdrop scrim for legibility) or sit beside it in an asymmetric two-column header. Implementation uses **one `<ProjectCover>` component with a `layout: 'overlay' | 'beside'` prop**, with the choice stored on the project data (`coverImage.layout`) so editorial decisions live in `src/data/projects.ts`, not in component branching.
 
 **Photography cross-pollination.**
 - Selected photos from `src/data/photography.ts` (likely the landscape category, to avoid mixing personal portraits into a business context) appear as section transitions on the homepage and as decorative breaks on `/projects` and `/blog` index pages. Two to four images total across the main site.
@@ -141,6 +141,7 @@ The route structure changes in exactly two ways: `/resume` is removed, and the R
 **`<ProjectNavLinks>`** — quieter version of case-study TailCTA, with no email language.
 - Props: `current`, `all`.
 - Renders Prev / Next project name and number. Plain text links, editorial styling, no calls to action.
+- Edge behavior: **omit** the prev link on the first project and the next link on the last project. Do not wrap.
 
 ### Refined components
 
@@ -193,7 +194,7 @@ This is a sweep alongside the redesign work, not a separate phase. The bar is de
 **Copy.**
 - Read every visible string on the 7 main-route pages. Flag and rewrite anything template-y, weak, sales-y, or duplicative.
 - Footer copy fully rewritten per the signature/colophon spec above.
-- `siteConfig.title` updated from `"Philip Sun | PM · Founder · Photographer"` to `"Philip Sun — Selected Work"` (or a close variant). No role-stacking.
+- `siteConfig.title` updated from `"Philip Sun | PM · Founder · Photographer"` to exactly `"Philip Sun — Selected Work"`. No role-stacking.
 - `siteConfig.description` audited and tightened in the same pass.
 
 **Accessibility.**
