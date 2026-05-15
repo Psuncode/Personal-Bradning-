@@ -33,6 +33,9 @@ export default async function ProjectDetailPage({
   const project = projects.find((p) => p.slug === slug);
   if (!project) notFound();
 
+  const index = projects.findIndex((p) => (p.slug ?? p.id) === slug);
+  const numeral = index >= 0 ? String(index + 1).padStart(2, "0") : undefined;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
@@ -47,12 +50,12 @@ export default async function ProjectDetailPage({
   };
 
   return (
-    <div className="pb-24 pt-8">
+    <div className="pb-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ProjectDetailView project={project} />
+      <ProjectDetailView project={project} allProjects={projects} numeral={numeral} />
     </div>
   );
 }
