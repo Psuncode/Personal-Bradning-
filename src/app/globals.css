@@ -173,3 +173,20 @@
     @apply backdrop-blur-sm;
   }
 }
+
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url("/grain.svg");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  opacity: 0.04;
+  mix-blend-mode: multiply;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Grain is static; nothing to disable, but keep this comment as a marker
+     for the view-transition reduced-motion fallback added later. */
+}
