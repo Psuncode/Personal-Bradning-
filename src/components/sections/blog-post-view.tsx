@@ -6,6 +6,7 @@ import type { BlogPost } from "@/types/blog";
 import type { MDXComponents } from "mdx/types";
 import { formatDate } from "@/lib/utils";
 import { RelatedPosts } from "@/components/editorial/related-posts";
+import { BlogCover } from "@/components/editorial/blog-cover";
 import { Figure } from "@/components/mdx/figure";
 import { FullBleed } from "@/components/mdx/full-bleed";
 import { Gallery } from "@/components/mdx/gallery";
@@ -95,6 +96,7 @@ export const mdxComponents: MDXComponents = buildMdxComponents("");
 export function BlogPostView({ post, Content, allPosts }: BlogPostViewProps) {
   return (
     <>
+      {post.cover && <BlogCover post={post} />}
       <Container>
         <div className="mb-8 pt-8">
           <Link

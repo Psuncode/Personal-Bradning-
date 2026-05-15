@@ -73,6 +73,15 @@ export function BlogList({ posts }: BlogListProps) {
               title={post.frontmatter.title}
               description={post.frontmatter.excerpt}
               href={`/blog/${post.slug}`}
+              cover={
+                post.cover
+                  ? {
+                      src: post.cover.src,
+                      alt: post.cover.alt ?? post.frontmatter.title,
+                    }
+                  : undefined
+              }
+              transitionName={post.cover ? `blog-cover-${post.slug}` : undefined}
             />
           ))
         )}
