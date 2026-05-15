@@ -8,12 +8,35 @@ import { ContentGrid } from "@/components/sections/content-grid";
 import { getAllPosts } from "@/lib/blog";
 import { formatDate } from "@/lib/utils";
 
-function PhotoBreak({ src, alt }: { src: string; alt: string }) {
+// When real photography is uploaded (see docs/IMAGES_TO_UPLOAD.md P2),
+// set `src` to the new file path. Empty `src` renders an editorial plate.
+function PhotoBreak({
+  src,
+  alt,
+  kicker,
+  caption,
+}: {
+  src?: string;
+  alt?: string;
+  kicker: string;
+  caption: string;
+}) {
   return (
     <section className="px-6 py-12 md:px-12">
       <div className="editorial-shell">
-        <div className="relative w-full aspect-[21/9] overflow-hidden">
-          <Image src={src} alt={alt} fill sizes="100vw" className="object-cover" />
+        <div className="relative w-full aspect-[21/9] overflow-hidden border-y border-[color:var(--color-rule)] bg-[color:var(--color-paper-elevated)]">
+          {src ? (
+            <Image src={src} alt={alt ?? ""} fill sizes="100vw" className="object-cover" />
+          ) : (
+            <div className="flex h-full w-full items-center justify-between px-10 md:px-16">
+              <span className="text-xs uppercase tracking-[0.28em] text-[color:var(--color-accent)]">
+                {kicker}
+              </span>
+              <span className="font-[family-name:var(--font-playfair)] text-2xl text-[color:var(--color-ink)] md:text-4xl">
+                {caption}
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </section>
@@ -27,10 +50,10 @@ export default function HomePage() {
     <>
       <Hero />
       <CaseStudies />
-      <PhotoBreak src="/photography/landscape-1.svg" alt="Utah mountain sunset" />
+      <PhotoBreak kicker="Field Notes" caption="Utah · Wasatch Front" />
       <About />
       <CurrentFocus />
-      <PhotoBreak src="/photography/landscape-2.svg" alt="Desert red rock formation" />
+      <PhotoBreak kicker="From the Archive" caption="Desert · Capitol Reef" />
       {recentPosts.length > 0 && (
         <section className="px-6 py-24 md:px-12 bg-white/40">
           <div className="editorial-shell editorial-rule pt-10">

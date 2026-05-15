@@ -10,7 +10,7 @@ const baseProject: Project = {
   description: "d",
   techStack: [],
   coverImage: {
-    src: "/photography/landscape-1.svg",
+    src: "/images/projects/test-cover.jpg",
     alt: "test cover",
     layout: "overlay",
   },
@@ -27,10 +27,12 @@ describe("ProjectCover", () => {
     expect(screen.getByRole("heading", { level: 1, name: "Test Project" })).toBeInTheDocument();
   });
 
-  it("applies view-transition-name on the image", () => {
+  it("applies view-transition-name on the cover element", () => {
     const { container } = render(<ProjectCover project={baseProject} />);
-    const img = container.querySelector("img");
-    expect(img?.getAttribute("style") || "").toContain("view-transition-name");
+    const styled = Array.from(container.querySelectorAll("[style]")).find((el) =>
+      el.getAttribute("style")?.includes("view-transition-name"),
+    );
+    expect(styled).toBeTruthy();
   });
 
   it("uses overlay layout when project.coverImage.layout is overlay", () => {

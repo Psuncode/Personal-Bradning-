@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { EditorialEntry } from "@/components/editorial/editorial-entry";
 import { EditorialPageHeader } from "@/components/editorial/editorial-page-header";
 import { projects } from "@/data/projects";
@@ -26,14 +25,13 @@ export function ProjectsGrid() {
               transitionName={`cover-${p.slug ?? p.id}`}
             />
             {i === midpoint - 1 && (
-              <div className="relative aspect-[21/9] w-full overflow-hidden my-12">
-                <Image
-                  src="/photography/landscape-3.svg"
-                  alt="Alpine lake reflection — section break"
-                  fill
-                  sizes="100vw"
-                  className="object-cover"
-                />
+              <div className="my-12 flex aspect-[21/9] w-full items-center justify-between border-y border-[color:var(--color-rule)] bg-[color:var(--color-paper-elevated)] px-10 md:px-16">
+                <span className="text-xs uppercase tracking-[0.28em] text-[color:var(--color-accent)]">
+                  Intermission
+                </span>
+                <span className="font-[family-name:var(--font-playfair)] text-2xl text-[color:var(--color-ink)] md:text-4xl">
+                  Continued overleaf
+                </span>
               </div>
             )}
           </div>

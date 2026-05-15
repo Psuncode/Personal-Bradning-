@@ -5,20 +5,13 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { projects } from "@/data/projects";
 
-// Expected local paths for native project imagery
+// Local image paths per project. Add files at these paths to replace
+// the editorial typography "plate" fallback shown until imagery is ready.
+// See docs/IMAGES_TO_UPLOAD.md (P1) for the full naming map.
 const projectImages: Record<string, string[]> = {
-  "inara-health": [
-    "/images/projects/inara/product-ui-1.jpg",
-    "/images/projects/inara/product-ui-2.jpg",
-  ],
-  "lds-church-pm": [
-    "/images/projects/lds/dashboard-1.jpg",
-    "/images/projects/lds/migration-architecture.jpg",
-  ],
-  "nursa-ai-tb": [
-    "/images/projects/nursa/test-builder-1.jpg",
-    "/images/projects/nursa/data-schema.jpg",
-  ],
+  "inara-health": [],
+  "lds-church-pm": [],
+  "nursa-ai-tb": [],
 };
 
 const featuredProjects = projects.filter((p) => p.featured);
@@ -156,16 +149,39 @@ export function CaseStudies() {
 
                 {/* Scrolling right column */}
                 <div className="md:col-span-7 space-y-6">
-                  {images.map((image, imgIndex) => (
+                  {(images.length > 0 ? images : ["plate-1", "plate-2"]).map((image, imgIndex) => (
                     <div key={imgIndex} className="group editorial-card relative h-[500px] overflow-hidden rounded-[2rem] p-3">
-                      <Image
-                        src={image}
-                        alt=""
-                        fill
-                        className="rounded-[1.35rem] object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                        sizes="(max-width: 768px) 100vw, 58vw"
-                      />
-                      <div className="absolute inset-3 rounded-[1.35rem] bg-gradient-to-t from-black/15 to-transparent" />
+                      {images.length > 0 ? (
+                        <>
+                          <Image
+                            src={image}
+                            alt=""
+                            fill
+                            className="rounded-[1.35rem] object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                            sizes="(max-width: 768px) 100vw, 58vw"
+                          />
+                          <div className="absolute inset-3 rounded-[1.35rem] bg-gradient-to-t from-black/15 to-transparent" />
+                        </>
+                      ) : (
+                        <div className="flex h-full w-full flex-col justify-between rounded-[1.35rem] bg-[color:var(--color-paper-elevated)] p-10">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs uppercase tracking-[0.28em] text-[color:var(--color-accent)]">
+                              Plate {String(imgIndex + 1).padStart(2, "0")}
+                            </span>
+                            <span className="text-xs uppercase tracking-[0.22em] text-[color:var(--color-ink-soft)]">
+                              {subtitle}
+                            </span>
+                          </div>
+                          <div>
+                            <p className="font-[family-name:var(--font-playfair)] text-5xl leading-[0.95] tracking-[-0.01em] text-[color:var(--color-ink)] md:text-6xl">
+                              {project.title}
+                            </p>
+                            <p className="mt-6 max-w-md text-sm leading-7 text-[color:var(--color-ink-soft)]">
+                              {project.description}
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

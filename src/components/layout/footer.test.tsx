@@ -61,16 +61,16 @@ describe("Footer Component", () => {
     expect(linkedinLinks.length).toBeGreaterThan(0);
   });
 
-  it("footer has dark background styling", () => {
+  it("footer uses the cream paper background", () => {
     const { container } = render(<Footer />);
     const footer = container.querySelector("footer");
-    expect(footer?.className).toContain("bg-[#0a0a0a]");
+    expect(footer?.className).toContain("bg-[color:var(--color-paper)]");
   });
 
-  it("footer has proper text color", () => {
+  it("footer uses ink text color", () => {
     const { container } = render(<Footer />);
     const footer = container.querySelector("footer");
-    expect(footer?.className).toContain("text-white");
+    expect(footer?.className).toContain("text-[color:var(--color-ink)]");
   });
 
   it("renders three-column colophon grid layout", () => {
