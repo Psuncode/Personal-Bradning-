@@ -3,6 +3,7 @@ import { Inter, Geist_Mono, Playfair_Display } from "next/font/google";
 import "../globals.css";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { GrainOverlay } from "@/components/editorial/grain-overlay";
 import { siteConfig } from "@/data/site-config";
 import { roles, education } from "@/data/resume";
 import { Analytics } from "@vercel/analytics/react";
@@ -117,6 +118,7 @@ export default function RootLayout({
         />
         <Navbar />
         <main id="main-content" className="flex-1">{children}</main>
+        <GrainOverlay />
         <Footer />
         <Analytics />
         <SpeedInsights />
