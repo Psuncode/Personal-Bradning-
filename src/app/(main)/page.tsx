@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Hero } from "@/components/sections/hero";
 import { CurrentFocus } from "@/components/sections/current-focus";
@@ -7,6 +8,18 @@ import { ContentGrid } from "@/components/sections/content-grid";
 import { getAllPosts } from "@/lib/blog";
 import { formatDate } from "@/lib/utils";
 
+function PhotoBreak({ src, alt }: { src: string; alt: string }) {
+  return (
+    <section className="px-6 py-12 md:px-12">
+      <div className="editorial-shell">
+        <div className="relative w-full aspect-[21/9] overflow-hidden">
+          <Image src={src} alt={alt} fill sizes="100vw" className="object-cover" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function HomePage() {
   const recentPosts = getAllPosts().slice(0, 2);
 
@@ -14,8 +27,10 @@ export default function HomePage() {
     <>
       <Hero />
       <CaseStudies />
+      <PhotoBreak src="/photography/landscape-1.svg" alt="Utah mountain sunset" />
       <About />
       <CurrentFocus />
+      <PhotoBreak src="/photography/landscape-2.svg" alt="Desert red rock formation" />
       {recentPosts.length > 0 && (
         <section className="px-6 py-24 md:px-12 bg-white/40">
           <div className="editorial-shell editorial-rule pt-10">

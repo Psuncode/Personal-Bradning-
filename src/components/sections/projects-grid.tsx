@@ -1,8 +1,11 @@
+import Image from "next/image";
 import { EditorialEntry } from "@/components/editorial/editorial-entry";
 import { EditorialPageHeader } from "@/components/editorial/editorial-page-header";
 import { projects } from "@/data/projects";
 
 export function ProjectsGrid() {
+  const midpoint = Math.floor(projects.length / 2);
+
   return (
     <>
       <EditorialPageHeader
@@ -12,15 +15,27 @@ export function ProjectsGrid() {
       />
       <div className="editorial-shell pb-24">
         {projects.map((p, i) => (
-          <EditorialEntry
-            key={p.id}
-            index={i}
-            kicker={String(i + 1).padStart(2, "0")}
-            title={p.title}
-            description={p.description}
-            href={`/projects/${p.slug ?? p.id}`}
-            cover={{ src: p.coverImage.src, alt: p.coverImage.alt }}
-          />
+          <div key={p.id}>
+            <EditorialEntry
+              index={i}
+              kicker={String(i + 1).padStart(2, "0")}
+              title={p.title}
+              description={p.description}
+              href={`/projects/${p.slug ?? p.id}`}
+              cover={{ src: p.coverImage.src, alt: p.coverImage.alt }}
+            />
+            {i === midpoint - 1 && (
+              <div className="relative aspect-[21/9] w-full overflow-hidden my-12">
+                <Image
+                  src="/photography/landscape-3.svg"
+                  alt="Alpine lake reflection — section break"
+                  fill
+                  sizes="100vw"
+                  className="object-cover"
+                />
+              </div>
+            )}
+          </div>
         ))}
       </div>
     </>
