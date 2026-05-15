@@ -42,3 +42,21 @@ describe("resolveBlogAsset", () => {
     expect(out.blurDataURL).toBeUndefined();
   });
 });
+
+describe("resolveBlogAsset cache behavior", () => {
+  it("bypasses cache in non-production environments", () => {
+    // First call populates the cache
+    const first = resolveBlogAsset("asset-helper-fixture", "./hero.jpg");
+    expect(first.blurDataURL).toBe("data:image/jpeg;base64,XYZ");
+
+    // Mutate the on-disk blur map
+    fs.writeFileSync(
+      path.join(PUBLIC_DIR, "__blur.json"),
+      JSON.stringify({ "hero.jpg": "data:image/jpeg;base64,UPDATED" }),
+    );
+
+    // Second call should reflect the new value (cache bypassed in test/dev)
+    const second = resolveBlogAsset("asset-helper-fixture", "./hero.jpg");
+    expect(second.blurDataURL).toBe("data:image/jpeg;base64,UPDATED");
+  });
+});

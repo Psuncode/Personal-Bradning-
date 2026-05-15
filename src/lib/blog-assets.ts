@@ -9,7 +9,9 @@ interface Resolved {
 const blurCache = new Map<string, Record<string, string>>();
 
 function loadBlurMap(slug: string): Record<string, string> {
-  if (blurCache.has(slug)) return blurCache.get(slug)!;
+  if (process.env.NODE_ENV === "production" && blurCache.has(slug)) {
+    return blurCache.get(slug)!;
+  }
   const file = path.join(
     process.cwd(),
     "public/_blog-assets",
@@ -24,7 +26,9 @@ function loadBlurMap(slug: string): Record<string, string> {
       map = {};
     }
   }
-  blurCache.set(slug, map);
+  if (process.env.NODE_ENV === "production") {
+    blurCache.set(slug, map);
+  }
   return map;
 }
 
