@@ -101,7 +101,7 @@ export default async function BlogPostPage({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
         />
       )}
-      <BlogPostView post={post} Content={Content as React.ComponentType} />
+      <BlogPostView post={post} Content={Content as React.ComponentType} allPosts={getAllPosts()} />
     </div>
   );
 }

@@ -5,116 +5,134 @@ import { Separator } from "@/components/ui/separator";
 import type { BlogPost } from "@/types/blog";
 import type { MDXComponents } from "mdx/types";
 import { formatDate } from "@/lib/utils";
+import { RelatedPosts } from "@/components/editorial/related-posts";
 
 interface BlogPostViewProps {
   post: BlogPost;
   Content: React.ComponentType;
+  allPosts?: BlogPost[];
 }
 
 export const mdxComponents: MDXComponents = {
   h1: ({ children }) => (
-    <h1 className="mt-8 mb-4 text-3xl font-bold text-gray-900">{children}</h1>
+    <h1 className="mt-10 mb-4 font-[family-name:var(--font-playfair)] text-3xl text-[color:var(--color-ink)]">
+      {children}
+    </h1>
   ),
   h2: ({ children }) => (
-    <h2 className="mt-6 mb-3 text-2xl font-bold text-gray-900">{children}</h2>
+    <h2 className="mt-8 mb-3 font-[family-name:var(--font-playfair)] text-2xl text-[color:var(--color-ink)]">
+      {children}
+    </h2>
   ),
   h3: ({ children }) => (
-    <h3 className="mt-4 mb-2 text-xl font-semibold text-gray-900">{children}</h3>
+    <h3 className="mt-6 mb-2 text-xl font-semibold text-[color:var(--color-ink)]">{children}</h3>
   ),
   p: ({ children }) => (
-    <p className="mb-4 leading-relaxed text-gray-600">{children}</p>
+    <p className="mb-5 leading-8 text-[color:var(--color-ink)]">{children}</p>
   ),
   a: ({ children, href }) => (
-    <a href={href} className="text-gray-900 underline hover:text-gray-600 transition-colors">
+    <a
+      href={href}
+      className="text-[color:var(--color-accent)] underline underline-offset-4 hover:text-[color:var(--color-ink)] transition-colors"
+    >
       {children}
     </a>
   ),
   code: ({ children }) => (
-    <code className="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-sm text-gray-800">
+    <code className="rounded bg-[color:var(--color-paper-elevated)] px-1.5 py-0.5 font-mono text-sm text-[color:var(--color-ink)] border border-[color:var(--color-rule)]">
       {children}
     </code>
   ),
   pre: ({ children }) => (
-    <pre className="my-6 overflow-x-auto rounded-xl bg-gray-900 p-4 font-mono text-sm text-gray-100">
+    <pre className="my-6 overflow-x-auto rounded-xl bg-[#0a0a0a] p-4 font-mono text-sm text-gray-100">
       {children}
     </pre>
   ),
   blockquote: ({ children }) => (
-    <blockquote className="my-4 border-l-4 border-gray-300 pl-4 italic text-gray-600">
+    <blockquote className="my-6 border-l-2 border-[color:var(--color-accent)] pl-4 italic text-[color:var(--color-ink-soft)]">
       {children}
     </blockquote>
   ),
   ul: ({ children }) => (
-    <ul className="mb-4 list-inside list-disc space-y-1 text-gray-600">
+    <ul className="mb-5 list-inside list-disc space-y-1.5 leading-8 text-[color:var(--color-ink)]">
       {children}
     </ul>
   ),
   ol: ({ children }) => (
-    <ol className="mb-4 list-inside list-decimal space-y-1 text-gray-600">
+    <ol className="mb-5 list-inside list-decimal space-y-1.5 leading-8 text-[color:var(--color-ink)]">
       {children}
     </ol>
   ),
-  hr: () => <Separator className="my-8" />,
+  hr: () => <Separator className="my-10" />,
 };
 
-export function BlogPostView({ post, Content }: BlogPostViewProps) {
+export function BlogPostView({ post, Content, allPosts }: BlogPostViewProps) {
   return (
-    <Container>
-      {/* Back link */}
-      <div className="mb-8">
-        <Link
-          href="/blog"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-600 hover:text-gray-900 transition-colors"
-        >
-          <ArrowLeft className="size-4" />
-          All Posts
-        </Link>
-      </div>
-
-      {/* Post header */}
-      <div className="mb-8 max-w-2xl">
-        <h1 className="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl leading-tight">
-          {post.frontmatter.title}
-        </h1>
-        <div className="mb-4 flex flex-wrap items-center gap-4 text-sm text-gray-500">
-          <span className="flex items-center gap-1.5">
-            <Calendar className="size-4" />
-            {formatDate(post.frontmatter.date)}
-          </span>
-          <span className="flex items-center gap-1.5">
-            <Clock className="size-4" />
-            {post.readingTime}
-          </span>
+    <>
+      <Container>
+        <div className="mb-8 pt-8">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-1.5 text-sm text-[color:var(--color-ink-soft)] hover:text-[color:var(--color-ink)] transition-colors"
+          >
+            <ArrowLeft className="size-4" />
+            All Posts
+          </Link>
         </div>
-        <div className="flex flex-wrap gap-2">
-          {post.frontmatter.tags.map((tag) => (
-            <span key={tag} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
-              {tag}
+
+        <div className="mb-10 max-w-3xl">
+          <h1 className="editorial-display mb-4 font-[family-name:var(--font-playfair)] text-4xl md:text-5xl text-[color:var(--color-ink)] leading-tight">
+            {post.frontmatter.title}
+          </h1>
+          <div className="mb-4 flex flex-wrap items-center gap-4 text-sm text-[color:var(--color-ink-soft)]">
+            <span className="flex items-center gap-1.5">
+              <Calendar className="size-4" />
+              {formatDate(post.frontmatter.date)}
             </span>
-          ))}
+            <span className="flex items-center gap-1.5">
+              <Clock className="size-4" />
+              {post.readingTime}
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {post.frontmatter.tags.map((tag) => (
+              <span
+                key={tag}
+                className="px-3 py-1 border border-[color:var(--color-rule)] text-[color:var(--color-ink-soft)] text-xs uppercase tracking-[0.18em]"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <Separator className="mb-10" />
+        <Separator className="mb-10" />
 
-      {/* Post content */}
-      <article className="mx-auto max-w-2xl">
-        <Content />
-      </article>
+        <article className="editorial-prose mx-auto max-w-2xl">
+          <Content />
+        </article>
 
-      {/* CTA block */}
-      <div className="mx-auto max-w-2xl mt-16 bg-gray-50 rounded-2xl p-8 text-center">
-        <h3 className="font-[family-name:var(--font-playfair)] text-2xl text-gray-900 mb-3">
-          Want to discuss?
-        </h3>
-        <p className="text-gray-600 mb-6">Have thoughts on this post? I&apos;d love to hear from you.</p>
-        <Link
-          href="/meet"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-700 transition-colors font-medium text-sm"
-        >
-          Book a Call
-        </Link>
-      </div>
-    </Container>
+        <div className="mx-auto max-w-2xl mt-16 border-t border-[color:var(--color-rule)] pt-10 text-center">
+          <h3 className="font-[family-name:var(--font-playfair)] text-2xl text-[color:var(--color-ink)] mb-3">
+            Want to discuss?
+          </h3>
+          <p className="text-[color:var(--color-ink-soft)] mb-6">
+            Have thoughts on this post? I&apos;d love to hear from you.
+          </p>
+          <Link
+            href="/meet"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-[color:var(--color-ink)] text-[color:var(--color-paper-elevated)] rounded-full hover:bg-[color:var(--color-accent)] transition-colors font-medium text-sm"
+          >
+            Book a Call
+          </Link>
+        </div>
+      </Container>
+
+      {allPosts && allPosts.length > 1 && (
+        <div className="mt-16">
+          <RelatedPosts currentSlug={post.slug} allPosts={allPosts} />
+        </div>
+      )}
+    </>
   );
 }
