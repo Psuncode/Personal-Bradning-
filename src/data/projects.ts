@@ -18,6 +18,12 @@ export const projects: Project[] = [
       "Hardware product development requires much longer feedback loops than software. Getting clinical stakeholders involved early — before the prototype exists — accelerates validation and surfaces regulatory constraints you'd otherwise hit late.",
     techStack: ["Hardware", "Biosensing", "Clinical Research", "Product Strategy", "Figma"],
     featured: true,
+    coverImage: {
+      src: "/photography/landscape-1.svg",
+      alt: "Utah mountain sunset — cover image for the Inara Health Diagnostic case study",
+      focalPoint: "center",
+      layout: "overlay",
+    },
   },
   {
     id: "lds-church-pm",
@@ -36,6 +42,12 @@ export const projects: Project[] = [
       "At enterprise scale, the hardest part of a migration isn't the technology — it's stakeholder alignment across dozens of teams with competing priorities. Weekly 1:1s with department leads made the difference between a smooth rollout and a stalled one.",
     techStack: ["Power BI", "Microsoft Teams", "Zoom", "Power Automate", "Stakeholder Management"],
     featured: true,
+    coverImage: {
+      src: "/photography/landscape-2.svg",
+      alt: "Desert red rock formation — cover image for the LDS Church enterprise PM case study",
+      focalPoint: "center",
+      layout: "beside",
+    },
   },
   {
     id: "nursa-ai-tb",
@@ -54,6 +66,12 @@ export const projects: Project[] = [
       "Replacing a vendor with an in-house model requires more than technical accuracy — you need to match the vendor's reliability guarantees and build internal confidence before you can cut the contract. Tracking edge cases early is critical.",
     techStack: ["Python", "AI/ML", "Segment", "SQL", "Tableau"],
     featured: true,
+    coverImage: {
+      src: "/photography/landscape-3.svg",
+      alt: "Alpine lake reflection — cover image for the Nursa AI TB verification case study",
+      focalPoint: "center",
+      layout: "overlay",
+    },
   },
   {
     id: "granger-rvu-analytics",
@@ -73,6 +91,12 @@ export const projects: Project[] = [
     techStack: ["JavaScript", "Python", "CMS Data", "Healthcare Finance", "Data Analysis"],
     liveUrl: "/rvu-calculator/index.html",
     featured: false,
+    coverImage: {
+      src: "/photography/landscape-1.svg",
+      alt: "Mountain landscape — cover image for the Granger Medical RVU analytics case study",
+      focalPoint: "bottom",
+      layout: "overlay",
+    },
   },
   {
     id: "cocker-fellowship",
@@ -91,5 +115,11 @@ export const projects: Project[] = [
       "Customer discovery at the 0-to-1 stage is less about confirming your hypothesis and more about finding the problem worth solving. The best insight from 200+ interviews wasn't what we expected — it reframed the entire go-to-market angle.",
     techStack: ["Product Strategy", "AI/SEO", "Email Automation", "Figma", "Go-to-Market"],
     featured: false,
+    coverImage: {
+      src: "/photography/landscape-2.svg",
+      alt: "Desert red rock formation — cover image for the Cocker Innovation Fellowship case study",
+      focalPoint: "top",
+      layout: "beside",
+    },
   },
 ];

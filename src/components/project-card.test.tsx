@@ -31,6 +31,12 @@ vi.mock("lucide-react", () => ({
   ExternalLink: () => <div data-testid="external-link-icon">External Link Icon</div>,
 }));
 
+const mockCoverImage = {
+  src: "/photography/landscape-1.svg",
+  alt: "Test cover image",
+  layout: "overlay" as const,
+};
+
 const mockProject: Project = {
   id: "test-project",
   title: "Test Project",
@@ -39,6 +45,7 @@ const mockProject: Project = {
   githubUrl: "https://github.com/example/test",
   liveUrl: "https://example.com",
   featured: true,
+  coverImage: mockCoverImage,
 };
 
 const mockProjectWithoutLinks: Project = {
@@ -47,6 +54,7 @@ const mockProjectWithoutLinks: Project = {
   description: "A test project without links",
   techStack: ["Next.js"],
   featured: false,
+  coverImage: mockCoverImage,
 };
 
 describe("ProjectCard Component", () => {

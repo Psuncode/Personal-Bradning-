@@ -1,3 +1,10 @@
+export interface CoverImage {
+  src: string;
+  alt: string;
+  focalPoint?: "center" | "top" | "bottom";
+  layout: "overlay" | "beside";
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -14,6 +21,7 @@ export interface Project {
   results?: string;
   metrics?: string[];
   lessonsLearned?: string;
+  coverImage: CoverImage;
 }
 
 export interface SocialLink {
