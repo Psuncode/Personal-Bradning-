@@ -40,5 +40,13 @@ jobs:
       - name: Test (vitest run-once)
         run: npm run test -- --run --exclude '**/{home,about,case-studies,current-focus}.test.tsx'
 
+      # Build-time-required env vars (src/lib/env.ts BUILD_TIME_REQUIRED tier).
+      # These are placeholders that satisfy the requireBuildEnv presence + length
+      # checks so the page-data-collection pass completes for /admin and
+      # /api/checkout. They are NEVER deployed — real secrets live in Vercel
+      # project settings per environment (Preview / Production).
       - name: Build
+        env:
+          SESSION_SECRET: ci_placeholder_at_least_32_chars_long_xxxxxxxxxxxx
+          NEXT_PUBLIC_PHOTOGRAPHY_URL: https://photography.philipsun.com
         run: npm run build
