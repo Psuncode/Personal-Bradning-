@@ -22,6 +22,9 @@ export async function generateMetadata({
   return {
     title: `#${decoded} — Writing`,
     description: `Posts tagged #${decoded} on ${siteConfig.name}.`,
+    alternates: {
+      canonical: `${siteConfig.url}/blog/tag/${encodeURIComponent(decoded)}`,
+    },
   };
 }
 

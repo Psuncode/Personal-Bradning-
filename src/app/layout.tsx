@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { siteConfig } from "@/data/site-config";
 
@@ -11,6 +11,15 @@ import { siteConfig } from "@/data/site-config";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
+};
+
+// Next.js 16 no longer auto-injects a viewport meta tag, so we have to
+// declare it explicitly. `themeColor` matches the editorial paper bg
+// (`--color-paper`) so mobile chrome tints to the same cream.
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#f4efe6",
 };
 
 export default function RootLayout({

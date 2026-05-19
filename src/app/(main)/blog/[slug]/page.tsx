@@ -21,6 +21,9 @@ export async function generateMetadata({
   return {
     title: post.frontmatter.title,
     description: post.frontmatter.excerpt,
+    alternates: {
+      canonical: `${siteConfig.url}/blog/${slug}`,
+    },
     openGraph: {
       title: post.frontmatter.title,
       description: post.frontmatter.excerpt,
@@ -48,12 +51,19 @@ export default async function BlogPostPage({
     <MDXRemote source={post.content} components={buildMdxComponents(post.slug)} />
   );
 
+  // Prefer the real cover image (absolute URL) so Google/social pickers
+  // surface the editorial hero. Fall back to the synthetic OG card when
+  // a post has no cover on disk.
+  const coverImageUrl = post.cover?.src
+    ? `${siteConfig.url}${post.cover.src}`
+    : `${siteConfig.url}/blog/${slug}/og`;
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: post.frontmatter.title,
     description: post.frontmatter.excerpt,
-    image: [`${siteConfig.url}/blog/${slug}/og`],
+    image: [coverImageUrl],
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": `${siteConfig.url}/blog/${slug}`,
@@ -66,9 +76,12 @@ export default async function BlogPostPage({
       url: siteConfig.url,
     },
     publisher: {
-      "@type": "Person",
-      name: "Philip Sun",
-      url: siteConfig.url,
+      "@type": "Organization",
+      name: siteConfig.name,
+      logo: {
+        "@type": "ImageObject",
+        url: `${siteConfig.url}/favicon.ico`,
+      },
     },
   };
 
