@@ -50,7 +50,7 @@ export function About() {
           <div className="mt-8">
             <Link
               href="/meet"
-              className="inline-flex items-center border-b border-[color:var(--color-accent)] pb-1 text-sm font-medium uppercase tracking-[0.18em] text-[color:var(--color-accent)]"
+              className="inline-flex items-center border-b border-[color:var(--color-ink)] pb-1 text-sm font-medium uppercase tracking-[0.18em] text-[color:var(--color-ink)] hover:text-[color:var(--color-accent)] hover:border-[color:var(--color-accent)] transition-colors"
             >
               Open to full-time PM roles starting April 2026
             </Link>
@@ -82,7 +82,7 @@ export function About() {
           <div className="editorial-card sticky top-28 overflow-hidden rounded-[2rem] p-4">
             <div className="relative flex h-[560px] flex-col justify-between overflow-hidden rounded-[1.5rem] bg-[color:var(--color-paper-elevated)] p-10">
               <div className="flex items-center justify-between">
-                <span className="text-xs uppercase tracking-[0.28em] text-[color:var(--color-accent)]">
+                <span className="text-xs uppercase tracking-[0.28em] text-[color:var(--color-ink-soft)]">
                   Portrait
                 </span>
                 <span className="text-xs uppercase tracking-[0.22em] text-[color:var(--color-ink-soft)]">

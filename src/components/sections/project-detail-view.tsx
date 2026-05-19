@@ -84,7 +84,7 @@ export function ProjectDetailView({ project, allProjects, numeral }: ProjectDeta
                   {project.metrics.map((metric, i) => (
                     <li
                       key={i}
-                      className="border-l-2 border-[color:var(--color-accent)] pl-4 text-base leading-7 text-[color:var(--color-ink)]"
+                      className="border-l-2 border-[color:var(--color-ink-soft)] pl-4 text-base leading-7 text-[color:var(--color-ink)]"
                     >
                       {metric}
                     </li>

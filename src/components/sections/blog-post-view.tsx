@@ -44,7 +44,7 @@ export function buildMdxComponents(slug: string): MDXComponents {
     a: ({ children, href }) => (
       <a
         href={href}
-        className="text-[color:var(--color-accent)] underline underline-offset-4 hover:text-[color:var(--color-ink)] transition-colors"
+        className="text-[color:var(--color-ink)] underline underline-offset-4 hover:text-[color:var(--color-accent)] transition-colors"
       >
         {children}
       </a>
@@ -60,7 +60,7 @@ export function buildMdxComponents(slug: string): MDXComponents {
       </pre>
     ),
     blockquote: ({ children }) => (
-      <blockquote className="my-6 border-l-2 border-[color:var(--color-accent)] pl-4 italic text-[color:var(--color-ink-soft)]">
+      <blockquote className="my-6 border-l-2 border-[color:var(--color-ink-soft)] pl-4 italic text-[color:var(--color-ink-soft)]">
         {children}
       </blockquote>
     ),

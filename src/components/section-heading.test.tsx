@@ -96,7 +96,7 @@ describe("SectionHeading Component", () => {
   it("underline has correct color", () => {
     const { container } = render(<SectionHeading title="Test" />);
     const underline = container.querySelector(".h-1");
-    expect(underline?.className).toContain("bg-[color:var(--color-accent)]");
+    expect(underline?.className).toContain("bg-[color:var(--color-ink-soft)]");
   });
 
   it("renders wrapper div with proper spacing", () => {

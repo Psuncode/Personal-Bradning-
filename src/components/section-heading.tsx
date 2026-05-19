@@ -29,7 +29,7 @@ export function SectionHeading({
       )}
       <div
         className={cn(
-          "mt-4 h-1 w-16 rounded bg-[color:var(--color-accent)]",
+          "mt-4 h-1 w-16 rounded bg-[color:var(--color-ink-soft)]",
           align === "center" && "mx-auto"
         )}
       />

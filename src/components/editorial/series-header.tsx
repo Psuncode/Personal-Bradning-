@@ -31,7 +31,7 @@ export function SeriesHeader({ current, all }: Props) {
   return (
     <div className="editorial-shell mb-6 mt-2 flex flex-col gap-2 border-y border-[color:var(--color-rule)] py-4 text-sm md:flex-row md:items-center md:justify-between">
       <div className="flex flex-wrap items-center gap-3">
-        <span className="text-xs uppercase tracking-[0.22em] text-[color:var(--color-accent)]">
+        <span className="text-xs uppercase tracking-[0.22em] text-[color:var(--color-ink-soft)]">
           Series · {series}
         </span>
         <span className="text-xs uppercase tracking-[0.22em] text-[color:var(--color-ink-soft)]">

@@ -30,7 +30,7 @@ export default function BookingPage() {
           <div className="lg:sticky lg:top-24">
             <p
               className="text-xs font-medium tracking-widest uppercase mb-3"
-              style={{ color: 'var(--color-accent)' }}
+              style={{ color: 'var(--color-ink-soft)' }}
             >
               Let&apos;s shoot
             </p>
@@ -52,7 +52,7 @@ export default function BookingPage() {
             <div>
               <p
                 className="text-xs font-semibold tracking-widest uppercase mb-4"
-                style={{ color: 'var(--color-accent)' }}
+                style={{ color: 'var(--color-ink-soft)' }}
               >
                 How it works
               </p>
@@ -89,7 +89,7 @@ export default function BookingPage() {
               <div className="flex items-center gap-2 mb-2">
                 <CheckCircle
                   className="size-4"
-                  style={{ color: 'var(--color-accent)' }}
+                  style={{ color: 'var(--color-ink-soft)' }}
                 />
                 <span
                   className="text-sm font-medium"
