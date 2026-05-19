@@ -137,10 +137,7 @@ export function SitemapFooter() {
               <h2 className={columnHeader}>Contact</h2>
               <ul className="space-y-1">
                 <li>
-                  <a
-                    href={siteConfig.links.email}
-                    className="font-[family-name:var(--font-playfair)] text-base text-[color:var(--color-ink)] hover:text-[color:var(--color-accent)] hover:underline transition-colors"
-                  >
+                  <a href={siteConfig.links.email} className={columnLink}>
                     {siteConfig.email}
                   </a>
                 </li>

@@ -67,7 +67,7 @@ export function HeadlineProject({ project }: HeadlineProjectProps) {
 
         {/* Eyebrow */}
         <p className="mt-12 text-xs uppercase tracking-widest text-[color:var(--color-ink-soft)]">
-          HEADLINE PROJECT · 2025–
+          Headline Project · 2025–
         </p>
 
         {/* H2 */}
@@ -76,7 +76,7 @@ export function HeadlineProject({ project }: HeadlineProjectProps) {
         </h2>
 
         {/* Body */}
-        <p className="mt-6 max-w-[65ch] text-lg leading-8 text-[color:var(--color-ink-soft)]">
+        <p className="mt-6 max-w-[60ch] text-lg leading-8 text-[color:var(--color-ink-soft)]">
           Progesterone levels are critical in early pregnancy, but current
           testing requires clinic visits and days-long lab delays — leaving
           patients without actionable data during their most vulnerable window.

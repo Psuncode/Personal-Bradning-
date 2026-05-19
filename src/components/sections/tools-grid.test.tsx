@@ -54,9 +54,9 @@ describe("ToolsGrid", () => {
     }
   });
 
-  it("renders the TOOLS eyebrow", () => {
+  it("renders the Tools eyebrow", () => {
     render(<ToolsGrid />);
-    expect(screen.getByText("TOOLS")).toBeInTheDocument();
+    expect(screen.getByText("Tools")).toBeInTheDocument();
   });
 
   it("falls back to a typographic plate when no thumbnail is provided", () => {

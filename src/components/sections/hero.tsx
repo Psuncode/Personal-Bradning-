@@ -7,8 +7,8 @@ export function Hero() {
   const shouldReduceMotion = useReducedMotion();
 
   return (
-    <section className="relative pb-24 pt-32 md:pb-32 md:pt-40">
-      <div className="editorial-shell">
+    <section className="relative flex min-h-[85vh] items-center overflow-hidden px-6 py-24 md:px-12">
+      <div className="editorial-shell relative">
         <motion.h1
           initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -28,7 +28,7 @@ export function Hero() {
         <p className="mt-8">
           <Link
             href="/projects/inara-health"
-            className="text-base text-[color:var(--color-ink)] transition-colors hover:text-[color:var(--color-accent)] hover:underline"
+            className="text-base text-[color:var(--color-ink)] transition-[font-style] duration-200 hover:italic"
           >
             See Inara →
           </Link>

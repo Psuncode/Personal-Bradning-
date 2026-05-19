@@ -22,9 +22,9 @@ describe("HeadlineProject", () => {
     expect(h2.textContent).toMatch(/Inara Health/i);
   });
 
-  it("renders the 'HEADLINE PROJECT' eyebrow", () => {
+  it("renders the 'Headline Project' eyebrow", () => {
     render(<HeadlineProject />);
-    expect(screen.getByText(/HEADLINE PROJECT/)).toBeInTheDocument();
+    expect(screen.getByText(/Headline Project/)).toBeInTheDocument();
   });
 
   it("renders the 'Read the case study' link pointing to /projects/inara-health", () => {

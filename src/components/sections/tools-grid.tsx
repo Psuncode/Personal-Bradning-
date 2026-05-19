@@ -95,7 +95,7 @@ export function ToolsGrid({ tools = defaultTools }: ToolsGridProps) {
     <section className="py-24">
       <div className="editorial-shell">
         <p className="mb-8 text-xs uppercase tracking-widest text-[color:var(--color-ink-soft)]">
-          TOOLS
+          Tools
         </p>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           {tools.map((tool) => (

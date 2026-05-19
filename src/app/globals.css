@@ -159,7 +159,7 @@
   }
 
   .editorial-kicker {
-    color: var(--color-accent);
+    color: var(--color-ink-soft);
     @apply text-[11px] font-semibold uppercase tracking-[0.28em];
   }
 

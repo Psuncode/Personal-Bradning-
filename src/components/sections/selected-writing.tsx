@@ -48,7 +48,7 @@ export function SelectedWriting({ limit = 3 }: SelectedWritingProps) {
                 {post.readingTime ? ` · ${post.readingTime}` : ""}
               </p>
               {post.frontmatter.excerpt && (
-                <p className="mt-4 max-w-[65ch] text-base text-[color:var(--color-ink-soft)]">
+                <p className="mt-4 max-w-[60ch] text-base text-[color:var(--color-ink-soft)]">
                   {post.frontmatter.excerpt}
                 </p>
               )}
