@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { revalidateTag } from 'next/cache';
 import { stripe } from '@/lib/stripe';
 import { photographyPackages } from '@/data/photography';
 import { db } from '@/db';
@@ -8,7 +9,7 @@ import {
   checkoutRequestSchema,
   validateBookingDateAgainstCalendar,
 } from '@/lib/validation/booking';
-import { fetchCalendarEventsForRange } from '@/lib/serverCalendar';
+import { fetchCalendarEventsForRange, SERVER_AVAILABILITY_TAG } from '@/lib/serverCalendar';
 
 export async function POST(request: Request) {
   try {
@@ -164,6 +165,16 @@ export async function POST(request: Request) {
       .update(pendingReservations)
       .set({ stripeSessionId: session.id })
       .where(eq(pendingReservations.id, reservation.id));
+
+    // WR-06: bust the server-availability cache so the next page render sees
+    // the new hold immediately instead of waiting for the (now 2-minute) TTL.
+    // Best-effort; failure here doesn't block the checkout response.
+    try {
+      // Next.js 16: second arg is required ('max' = invalidate all profiles).
+      revalidateTag(SERVER_AVAILABILITY_TAG, 'max');
+    } catch (err) {
+      console.warn('[checkout] revalidateTag failed:', err);
+    }
 
     return NextResponse.json({ url: session.url });
   } catch (error) {
