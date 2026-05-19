@@ -27,8 +27,7 @@ const businessLinks: BusinessLink[] = [
   { href: "/photography", label: "Photography" },
   { href: "/ecommerce", label: "Ecommerce" },
   { href: "https://trader.psunproduction.com/scanner", label: "Stock Scanner", external: true },
-  // TODO: swap to https://rvu.psunproduction.com once DNS + GH Pages custom domain are configured.
-  { href: "https://psuncode.github.io/RVU-Calculator/app/", label: "RVU Calculator", external: true },
+  { href: "https://rvu.psunproduction.com/app/", label: "RVU Calculator", external: true },
   { href: "https://freelysweet.com/", label: "Freely Sweet", external: true },
 ];
 
