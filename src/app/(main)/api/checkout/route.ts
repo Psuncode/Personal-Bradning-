@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { revalidateTag } from 'next/cache';
+import { createHash } from 'node:crypto';
 import { stripe } from '@/lib/stripe';
 import { photographyPackages } from '@/data/photography';
 import { db } from '@/db';
@@ -9,7 +10,9 @@ import {
   checkoutRequestSchema,
   validateBookingDateAgainstCalendar,
 } from '@/lib/validation/booking';
+import { normalizeEventDate } from '@/lib/validation/event-date';
 import { fetchCalendarEventsForRange, SERVER_AVAILABILITY_TAG } from '@/lib/serverCalendar';
+import { requireBuildEnv } from '@/lib/env';
 
 export async function POST(request: Request) {
   try {
@@ -25,7 +28,8 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    const { packageId, clientName, clientEmail, phone, notes, eventDate } = parsed.data;
+    const { packageId, clientName, clientEmail, phone, notes, eventDate: requestedEventDate } =
+      parsed.data;
 
     // Validate package — pulled from the static catalogue.
     const pkg = photographyPackages.find((p) => p.id === packageId);
@@ -34,8 +38,12 @@ export async function POST(request: Request) {
     }
 
     // CR-03: re-run weekday / window / business-hours / CalDAV-busy checks.
+    // Run BEFORE normalization — these checks need the original time-of-day in
+    // Mountain Time. Normalization happens immediately after so every
+    // persistence-layer touch (DB precheck, insert, Stripe metadata,
+    // idempotency-key derivation) sees the same UTC-midnight value.
     const dateValidation = await validateBookingDateAgainstCalendar(
-      eventDate,
+      requestedEventDate,
       pkg.id,
       async (start, end) => {
         const events = await fetchCalendarEventsForRange(start, end);
@@ -51,6 +59,12 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
+    // Backlog #5 + #15: collapse the submitted instant to UTC midnight of its
+    // calendar day. From here down, every consumer (DB precheck, DB write,
+    // Stripe metadata, idempotency key) sees the SAME normalized value — no
+    // drift between the request side and the webhook side.
+    const eventDate = normalizeEventDate(requestedEventDate);
 
     // Clean up expired pending reservations BEFORE pre-checks so stale rows
     // don't block legitimate bookings (review CR-02 + WR-02).
@@ -101,6 +115,20 @@ export async function POST(request: Request) {
       );
     }
 
+    // Backlog #19: bust the server-availability cache BEFORE the hold goes in.
+    // Doing it after the insert leaves a ~500ms window where the cache still
+    // shows the slot as free while the row is already present — concurrent
+    // readers would see stale availability. Invalidating first means the next
+    // reader will refetch and pick up the new hold (or at worst race to a
+    // clean 409 at insert time, which the unique constraint backstops).
+    // Best-effort; failure here doesn't block the checkout response.
+    try {
+      // Next.js 16: second arg is required ('max' = invalidate all profiles).
+      revalidateTag(SERVER_AVAILABILITY_TAG, 'max');
+    } catch (err) {
+      console.warn('[checkout] revalidateTag failed:', err);
+    }
+
     // Insert the pending reservation hold (30 min TTL). If two requests race
     // past the SELECTs above, the DB layer will still keep them honest at
     // booking-insert time via UNIQUE(package_id, event_date) on bookings.
@@ -126,55 +154,63 @@ export async function POST(request: Request) {
       throw err;
     }
 
-    // Create Stripe Checkout session — same shape as before.
-    const baseUrl =
-      process.env.NEXT_PUBLIC_PHOTOGRAPHY_URL || 'http://localhost:3000';
-    const session = await stripe.checkout.sessions.create({
-      mode: 'payment',
-      customer_email: clientEmail,
-      line_items: [
-        {
-          price_data: {
-            currency: 'usd',
-            unit_amount: pkg.depositInCents,
-            product_data: {
-              name: `${pkg.name} — Deposit`,
-              description: 'Photography session deposit. Balance due on the day.',
+    // Backlog #2: NEXT_PUBLIC_PHOTOGRAPHY_URL is build-required — no localhost
+    // fallback. If unset, the build fails fast instead of silently routing
+    // production Stripe-success traffic to a dead URL (silent revenue loss).
+    const baseUrl = requireBuildEnv('NEXT_PUBLIC_PHOTOGRAPHY_URL');
+
+    // Backlog #11: Stripe's native idempotency_key, derived deterministically
+    // from (packageId, normalized eventDate, clientEmail). A retried request
+    // with the same triple collapses to the SAME Stripe session — defense in
+    // depth on top of the app-side pending-reservation precheck. We hash the
+    // tuple so the key length stays bounded (Stripe caps idempotency keys at
+    // 255 chars) and the email never travels in plaintext to Stripe's logs.
+    const idempotencyKey = createHash('sha256')
+      .update(
+        `${pkg.id}|${eventDate.toISOString()}|${clientEmail.toLowerCase()}`
+      )
+      .digest('hex');
+
+    const session = await stripe.checkout.sessions.create(
+      {
+        mode: 'payment',
+        customer_email: clientEmail,
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              unit_amount: pkg.depositInCents,
+              product_data: {
+                name: `${pkg.name} — Deposit`,
+                description:
+                  'Photography session deposit. Balance due on the day.',
+              },
             },
+            quantity: 1,
           },
-          quantity: 1,
+        ],
+        metadata: {
+          packageId: String(pkg.id),
+          packageName: pkg.name,
+          clientName,
+          clientEmail,
+          clientPhone: phone || '',
+          clientNotes: notes || '',
+          eventDate: eventDate.toISOString(),
+          reservationId: String(reservation.id),
+          durationMinutes: String(pkg.durationMinutes),
         },
-      ],
-      metadata: {
-        packageId: String(pkg.id),
-        packageName: pkg.name,
-        clientName,
-        clientEmail,
-        clientPhone: phone || '',
-        clientNotes: notes || '',
-        eventDate: eventDate.toISOString(),
-        reservationId: String(reservation.id),
-        durationMinutes: String(pkg.durationMinutes),
+        success_url: `${baseUrl}/photography/book/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${baseUrl}/photography/book?cancelled=true`,
       },
-      success_url: `${baseUrl}/photography/book/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${baseUrl}/photography/book?cancelled=true`,
-    });
+      { idempotencyKey }
+    );
 
     // Link Stripe session to pending reservation
     await db
       .update(pendingReservations)
       .set({ stripeSessionId: session.id })
       .where(eq(pendingReservations.id, reservation.id));
-
-    // WR-06: bust the server-availability cache so the next page render sees
-    // the new hold immediately instead of waiting for the (now 2-minute) TTL.
-    // Best-effort; failure here doesn't block the checkout response.
-    try {
-      // Next.js 16: second arg is required ('max' = invalidate all profiles).
-      revalidateTag(SERVER_AVAILABILITY_TAG, 'max');
-    } catch (err) {
-      console.warn('[checkout] revalidateTag failed:', err);
-    }
 
     return NextResponse.json({ url: session.url });
   } catch (error) {
