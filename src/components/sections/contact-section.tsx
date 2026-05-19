@@ -130,8 +130,23 @@ export function ContactSection() {
             )}
             {state.error && (
               <div role="alert" aria-live="polite" className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md text-red-800 text-sm">
-                {state.error} You can also email me at{' '}
-                <a href={siteConfig.links.email} className="underline">{siteConfig.email}</a> directly.
+                {state.error}
+                {state.fieldErrors && (
+                  <ul className="mt-2 list-disc pl-5 space-y-1">
+                    {(Object.entries(state.fieldErrors) as [string, string[] | undefined][])
+                      .filter(([, msgs]) => Array.isArray(msgs) && msgs.length > 0)
+                      .map(([field, msgs]) => (
+                        <li key={field}>
+                          <span className="font-medium capitalize">{field.replace(/_/g, ' ')}:</span>{' '}
+                          {msgs![0]}
+                        </li>
+                      ))}
+                  </ul>
+                )}
+                <p className="mt-2">
+                  You can also email me at{' '}
+                  <a href={siteConfig.links.email} className="underline">{siteConfig.email}</a> directly.
+                </p>
               </div>
             )}
 
