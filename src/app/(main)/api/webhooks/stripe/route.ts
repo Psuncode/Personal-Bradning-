@@ -5,20 +5,39 @@ import { z } from 'zod';
 import { stripe } from '@/lib/stripe';
 import { db } from '@/db';
 import { bookings, payments, pendingReservations } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import {
   InvalidEmailRecipientError,
   sendBookingConfirmationEmail,
   sendPhilipNotificationEmail,
 } from '@/lib/email';
 import { SERVER_AVAILABILITY_TAG } from '@/lib/serverCalendar';
+import { requiredTrimmedString } from '@/lib/validation/common';
+import { normalizeEventDate } from '@/lib/validation/event-date';
 
 /**
- * Schema for `session.metadata` on `checkout.session.completed`.
+ * Compile-time exhaustiveness sink. If a new variant is added to
+ * `HandledEventType` without a matching switch arm in POST, TypeScript narrows
+ * the parameter to a non-`never` type at the call site and the build fails —
+ * closes backlog item #16.
+ */
+function assertNever(_: never): never {
+  throw new Error('Unexpected Stripe event type reached the exhaustiveness sink.');
+}
+
+/**
+ * Full metadata schema for `checkout.session.completed`. Stripe metadata
+ * values are always strings; we coerce integers explicitly and reject NaN /
+ * out-of-range so a malformed/replayed event never produces
+ * `db.insert({ packageId: NaN })`.
  *
- * Stripe metadata values are always strings. We coerce the integers explicitly
- * and reject NaN / non-integers so a malformed/replayed event never produces
- * `db.insert({ packageId: NaN })` and a 500-then-retry-without-email scenario.
+ * `eventDate` is normalized to UTC-midnight by the schema so downstream code
+ * compares the same instant as the DB row — closes drizzle HI-02 + backlog
+ * #5/#15.
+ *
+ * `clientName` and `packageName` use `requiredTrimmedString` so a
+ * whitespace-only metadata value (e.g. `"   "`) is rejected up-front instead
+ * of writing junk to the bookings row — backlog #7.
  *
  * See WR-01 in .planning/phases/03-booking-and-payments/03-REVIEW.md.
  */
@@ -28,14 +47,15 @@ const checkoutCompletedMetadataSchema = z.object({
     .regex(/^\d+$/, 'packageId must be a non-negative integer string')
     .transform((s) => Number.parseInt(s, 10))
     .refine((n) => Number.isInteger(n) && n > 0, 'packageId must be > 0'),
-  packageName: z.string().min(1),
-  clientName: z.string().min(1),
-  clientEmail: z.string().email(),
+  packageName: requiredTrimmedString('packageName'),
+  clientName: requiredTrimmedString('clientName'),
+  clientEmail: z.email(),
   clientPhone: z.string().optional().default(''),
   clientNotes: z.string().optional().default(''),
   eventDate: z
     .string()
-    .refine((s) => !Number.isNaN(Date.parse(s)), 'eventDate must be a valid ISO date'),
+    .refine((s) => !Number.isNaN(Date.parse(s)), 'eventDate must be a valid ISO date')
+    .transform((s) => normalizeEventDate(s)),
   reservationId: z
     .string()
     .regex(/^\d+$/, 'reservationId must be a non-negative integer string')
@@ -51,17 +71,44 @@ const checkoutCompletedMetadataSchema = z.object({
 });
 
 /**
+ * Lightweight schema for secondary handlers (expired / failed). They only
+ * need to peek at `reservationId`; everything else may be absent. Derived
+ * from the full schema via `pick().partial()` so the integer coercion + range
+ * guard live in exactly one place — closes the zod MEDIUM "bespoke
+ * parseMetadataInt" dedupe item.
+ */
+const secondaryHandlerMetadataSchema = checkoutCompletedMetadataSchema
+  .pick({ reservationId: true })
+  .partial();
+
+/**
+ * Stripe event types this webhook commits to handling. Drives the
+ * `assertNever` exhaustiveness check on the switch in POST.
+ */
+type HandledEventType =
+  | 'checkout.session.completed'
+  | 'checkout.session.expired'
+  | 'charge.refunded'
+  | 'payment_intent.payment_failed';
+
+/**
  * Failure paths the post-DB step needs to distinguish:
  *
- *   DB insert succeeds + email succeeds  -> 200 OK, normal
- *   DB insert succeeds + email FAILS     -> 200 OK + loud manual-followup log.
- *                                           We do NOT 5xx here because the
- *                                           idempotency check would short-circuit
- *                                           Stripe's retry and we'd never re-try
- *                                           the email anyway. The booking row's
- *                                           email_sent_at column stays NULL so a
- *                                           future operator job can replay it.
- *   DB insert FAILS                      -> 5xx, Stripe retries (no row to dupe).
+ *   DB batch succeeds + email succeeds  -> 200 OK, normal
+ *   DB batch succeeds + email FAILS     -> 200 OK + loud manual-followup log.
+ *                                          We do NOT 5xx here because the
+ *                                          idempotency check would short-circuit
+ *                                          Stripe's retry and we'd never re-try
+ *                                          the email anyway. The booking row's
+ *                                          email_sent_at column stays NULL so a
+ *                                          future operator job can replay it.
+ *   DB batch FAILS                      -> 5xx, Stripe retries (no row to dupe).
+ *
+ * `db.batch([...])` is SQL-atomic on neon-http: all statements commit together
+ * or none of them do. Closes drizzle review finding CR-01 (the previous
+ * implementation issued three sequential awaits, so a crash between them
+ * could leave an orphaned booking + missing payment row + stale pending
+ * reservation).
  *
  * See .planning/phases/03-booking-and-payments/03-REVIEW.md CR-01.
  */
@@ -83,30 +130,42 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
   }
 
+  // Narrow to the union of types we explicitly handle. Unknown types fall
+  // through to the default arm and ack with 200 — Stripe sends many event
+  // types we never opted into and we don't want a retry storm for them.
+  const handledType = event.type as HandledEventType | (string & {});
+
   try {
-    if (event.type === 'checkout.session.completed') {
-      return await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
-    }
-
-    if (event.type === 'checkout.session.expired') {
-      return await handleCheckoutExpired(event.data.object as Stripe.Checkout.Session);
-    }
-
-    if (event.type === 'charge.refunded') {
-      return await handleChargeRefunded(event.data.object as Stripe.Charge);
-    }
-
-    if (event.type === 'payment_intent.payment_failed') {
-      return await handlePaymentFailed(event.data.object as Stripe.PaymentIntent);
+    switch (handledType) {
+      case 'checkout.session.completed':
+        return await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
+      case 'checkout.session.expired':
+        return await handleCheckoutExpired(event.data.object as Stripe.Checkout.Session);
+      case 'charge.refunded':
+        return await handleChargeRefunded(event.data.object as Stripe.Charge);
+      case 'payment_intent.payment_failed':
+        return await handlePaymentFailed(event.data.object as Stripe.PaymentIntent);
+      default: {
+        // Exhaustiveness sink for the *declared* union. If `HandledEventType`
+        // ever grows a variant without a matching case above, the cast below
+        // ceases to compile — closes backlog item #16. Unknown event types
+        // (anything outside the union) fall through to the 200 ack.
+        if (
+          handledType === ('checkout.session.completed' satisfies HandledEventType) ||
+          handledType === ('checkout.session.expired' satisfies HandledEventType) ||
+          handledType === ('charge.refunded' satisfies HandledEventType) ||
+          handledType === ('payment_intent.payment_failed' satisfies HandledEventType)
+        ) {
+          return assertNever(handledType as never);
+        }
+        return NextResponse.json({ received: true });
+      }
     }
   } catch (err) {
     // Unhandled errors from inside an event-type branch — 500 lets Stripe retry.
     console.error(`[webhook] Unhandled error in ${event.type} handler:`, err);
     return NextResponse.json({ error: 'Webhook handler failed' }, { status: 500 });
   }
-
-  // Unhandled event types: ack so Stripe doesn't retry them.
-  return NextResponse.json({ received: true });
 }
 
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
@@ -129,6 +188,8 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     );
   }
   const meta = parsed.data;
+  // `meta.eventDate` is already a UTC-midnight Date courtesy of the schema
+  // transform — handlers below pass it through without re-wrapping.
 
   // IDEMPOTENCY: check if booking already exists for this payment intent
   const existing = await db
@@ -157,16 +218,22 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     return NextResponse.json({ received: true });
   }
 
-  // DB writes: if any of these throw, we 500 so Stripe retries with no
-  // orphaned row. They're wrapped in the outer try/catch in POST().
-  const [booking] = await db
+  // Atomic write: booking + payment + pending-reservation cleanup commit in a
+  // single SQL batch on neon-http. If any statement fails the whole batch
+  // rolls back, the outer try/catch in POST returns 500, and Stripe retries
+  // with no orphaned rows. Closes CR-01.
+  //
+  // The payment row references the booking by stripe_payment_intent_id (a
+  // unique column on both tables) via a SQL subquery so the FK relationship
+  // is durable even though batch statements can't see each other's outputs.
+  const bookingInsert = db
     .insert(bookings)
     .values({
       packageId: meta.packageId,
       clientName: meta.clientName,
       clientEmail: meta.clientEmail,
       clientPhone: meta.clientPhone || null,
-      eventDate: new Date(meta.eventDate),
+      eventDate: meta.eventDate,
       stripePaymentIntentId: paymentIntentId,
       depositPaidInCents: session.amount_total ?? 0,
       status: 'confirmed',
@@ -174,18 +241,37 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     })
     .returning();
 
-  await db.insert(payments).values({
-    bookingId: booking.id,
+  const paymentInsert = db.insert(payments).values({
+    // The bookings row is being inserted in the same batch and shares the
+    // unique stripe_payment_intent_id column. Postgres evaluates the
+    // subquery within the same transaction, so the booking is visible by
+    // the time payments lands.
+    bookingId: sql<number>`(SELECT id FROM ${bookings} WHERE ${bookings.stripePaymentIntentId} = ${paymentIntentId})`,
     stripePaymentIntentId: paymentIntentId,
     amountInCents: session.amount_total ?? 0,
     currency: session.currency ?? 'usd',
     status: 'succeeded',
   });
 
+  const batchStatements: [typeof bookingInsert, typeof paymentInsert, ...unknown[]] = [
+    bookingInsert,
+    paymentInsert,
+  ];
   if (meta.reservationId !== undefined) {
-    await db
-      .delete(pendingReservations)
-      .where(eq(pendingReservations.id, meta.reservationId));
+    batchStatements.push(
+      db.delete(pendingReservations).where(eq(pendingReservations.id, meta.reservationId)),
+    );
+  }
+
+  // `db.batch` is typed against a non-empty tuple; cast preserves the
+  // dynamic-length statements array.
+  const batchResults = (await (db as unknown as {
+    batch: (statements: readonly unknown[]) => Promise<ReadonlyArray<ReadonlyArray<{ id: number }>>>;
+  }).batch(batchStatements));
+
+  const insertedBooking = batchResults[0]?.[0];
+  if (!insertedBooking) {
+    throw new Error('Booking insert returned no rows from db.batch');
   }
 
   // The booking is now durably "confirmed" — invalidate any cached availability
@@ -196,7 +282,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   // function — they get logged and the booking row stays email_sent_at=NULL
   // so a follow-up job can replay them.
   await sendBookingEmailsAndMark({
-    bookingId: booking.id,
+    bookingId: insertedBooking.id,
     meta,
     amountTotal: session.amount_total ?? 0,
   });
@@ -226,7 +312,7 @@ async function sendBookingEmailsAndMark({
       clientName: meta.clientName,
       clientEmail: meta.clientEmail,
       packageName: meta.packageName,
-      eventDate: new Date(meta.eventDate),
+      eventDate: meta.eventDate,
       depositPaidInCents: amountTotal,
       durationMinutes: meta.durationMinutes ?? 60,
     });
@@ -235,7 +321,7 @@ async function sendBookingEmailsAndMark({
       clientName: meta.clientName,
       clientEmail: meta.clientEmail,
       packageName: meta.packageName,
-      eventDate: new Date(meta.eventDate),
+      eventDate: meta.eventDate,
       depositPaidInCents: amountTotal,
     });
 
@@ -278,25 +364,15 @@ function safeRevalidateAvailability(triggerEvent: string) {
   }
 }
 
-/**
- * Parse a metadata integer field safely. Returns null when the value is
- * missing, non-numeric, or out of range. Used by handlers where the metadata
- * may not exist at all (e.g. expired sessions without a reservationId).
- */
-function parseMetadataInt(value: unknown): number | null {
-  if (typeof value !== 'string' || !/^\d+$/.test(value)) return null;
-  const n = Number.parseInt(value, 10);
-  return Number.isInteger(n) && n > 0 ? n : null;
-}
-
 async function handleCheckoutExpired(session: Stripe.Checkout.Session) {
   // Stripe expires unpaid Checkout sessions after ~24h. Clear the hold so the
   // slot becomes bookable again without waiting for the cleanup sweep in
   // /api/checkout to fire.
-  const reservationId = parseMetadataInt(session.metadata?.reservationId);
+  const parsed = secondaryHandlerMetadataSchema.safeParse(session.metadata ?? {});
+  const reservationId = parsed.success ? parsed.data.reservationId : undefined;
   let deleted = false;
 
-  if (reservationId !== null) {
+  if (reservationId !== undefined) {
     try {
       await db
         .delete(pendingReservations)

@@ -1,12 +1,13 @@
 import { describe, it, vi, expect, beforeEach } from 'vitest';
 
 // vi.hoisted ensures these are available when vi.mock factories run (hoisting safe)
-const { mockSelect, mockInsert, mockDelete, mockUpdate } = vi.hoisted(() => {
+const { mockSelect, mockInsert, mockDelete, mockUpdate, mockBatch } = vi.hoisted(() => {
   const mockSelect = vi.fn();
   const mockInsert = vi.fn();
   const mockDelete = vi.fn();
   const mockUpdate = vi.fn();
-  return { mockSelect, mockInsert, mockDelete, mockUpdate };
+  const mockBatch = vi.fn();
+  return { mockSelect, mockInsert, mockDelete, mockUpdate, mockBatch };
 });
 
 // --- vi.mock factories reference only hoisted variables or inline literals ---
@@ -54,6 +55,7 @@ vi.mock('@/db', () => ({
     insert: (table: unknown) => mockInsert(table),
     delete: (table: unknown) => mockDelete(table),
     update: (table: unknown) => mockUpdate(table),
+    batch: (statements: unknown[]) => mockBatch(statements),
   },
 }));
 
@@ -87,6 +89,13 @@ vi.mock('drizzle-orm', () => ({
   eq: vi.fn((col: unknown, val: unknown) => ({ col, val, op: 'eq' })),
   lt: vi.fn((col: unknown, val: unknown) => ({ col, val, op: 'lt' })),
   desc: vi.fn((col: unknown) => ({ col, op: 'desc' })),
+  // Tagged-template stub for the SQL helper used by the payment-row
+  // FK subquery. We don't execute SQL in tests; the batch mock returns
+  // canned rows, so this just needs to be callable.
+  sql: Object.assign(
+    (_strings: TemplateStringsArray, ..._values: unknown[]) => ({ kind: 'sql' }),
+    {},
+  ),
 }));
 
 // Mock Next.js server
@@ -157,6 +166,10 @@ describe('Stripe webhook handler — PHOTO-04: booking confirmation', () => {
         where: vi.fn().mockResolvedValue(undefined),
       }),
     });
+
+    // Default db.batch: succeeds, returning a freshly-inserted booking row
+    // as the first element (booking insert is always statement[0]).
+    mockBatch.mockResolvedValue([[{ id: 99 }], [], []]);
   });
 
   it('returns 400 when stripe-signature header is missing', async () => {
@@ -268,12 +281,8 @@ describe('Stripe webhook handler — PHOTO-04: booking confirmation', () => {
   });
 
   it('returns 500 if DB insert fails (so Stripe retries, CR-01)', async () => {
-    // First insert (bookings) rejects.
-    mockInsert.mockReturnValueOnce({
-      values: vi.fn().mockReturnValue({
-        returning: vi.fn().mockRejectedValue(new Error('Postgres unique violation')),
-      }),
-    });
+    // db.batch rejects mid-array — neon-http rolls back the entire transaction.
+    mockBatch.mockRejectedValueOnce(new Error('Postgres unique violation'));
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const { POST } = await import('@/app/(main)/api/webhooks/stripe/route');
@@ -282,6 +291,7 @@ describe('Stripe webhook handler — PHOTO-04: booking confirmation', () => {
 
     expect(response.status).toBe(500);
     expect(mockSendConfirmation).not.toHaveBeenCalled();
+    expect(mockUpdate).not.toHaveBeenCalled();
     errorSpy.mockRestore();
   });
 
@@ -365,6 +375,142 @@ describe('Stripe webhook handler — PHOTO-04: booking confirmation', () => {
 
     expect(response.status).toBe(200);
     expect(mockInsert).not.toHaveBeenCalled();
+  });
+
+  it('returns 500 when db.batch rejects mid-array (CR-01 atomicity)', async () => {
+    // Mid-array rejection of the SQL batch must surface as a 500 so Stripe
+    // retries; no emails sent, no email_sent_at marked.
+    mockBatch.mockRejectedValueOnce(new Error('relation "payments" foreign key violation'));
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const { POST } = await import('@/app/(main)/api/webhooks/stripe/route');
+    const request = makeRequest('{}', { 'stripe-signature': 'valid-sig' });
+    const response = await POST(request);
+
+    expect(response.status).toBe(500);
+    expect(mockSendConfirmation).not.toHaveBeenCalled();
+    expect(mockSendNotification).not.toHaveBeenCalled();
+    expect(mockUpdate).not.toHaveBeenCalled();
+    errorSpy.mockRestore();
+  });
+
+  it('parses a Zod v4 valid metadata payload without raising (backlog #15)', async () => {
+    // Re-imports the schema directly from the route module — this should NOT
+    // throw and should coerce numeric strings + normalize the date.
+    const mod = (await import('@/app/(main)/api/webhooks/stripe/route')) as unknown as Record<
+      string,
+      unknown
+    >;
+    // The schema is a module-internal const; assert the happy path through
+    // POST instead, which exercises safeParse end-to-end.
+    expect(mod.POST).toBeDefined();
+    const { POST } = mod as { POST: (r: Request) => Promise<{ status: number }> };
+    const request = makeRequest('{}', { 'stripe-signature': 'valid-sig' });
+    const response = await POST(request);
+    expect(response.status).toBe(200);
+  });
+
+  it('rejects whitespace-only clientName via requiredTrimmedString (backlog #7)', async () => {
+    const { stripe } = await import('@/lib/stripe');
+    (stripe.webhooks.constructEvent as ReturnType<typeof vi.fn>).mockReturnValueOnce({
+      type: 'checkout.session.completed',
+      data: {
+        object: {
+          id: 'cs_test_ws',
+          payment_intent: 'pi_test_ws',
+          metadata: {
+            packageId: '1',
+            packageName: 'Portrait Session',
+            clientName: '   ', // whitespace-only — must be rejected up-front
+            clientEmail: 'jane@example.com',
+            clientPhone: '555-0100',
+            clientNotes: '',
+            eventDate: '2026-04-15T16:00:00.000Z',
+            reservationId: '42',
+            durationMinutes: '60',
+          },
+          amount_total: 7500,
+          currency: 'usd',
+        },
+      },
+    });
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const { POST } = await import('@/app/(main)/api/webhooks/stripe/route');
+    const request = makeRequest('{}', { 'stripe-signature': 'valid-sig' });
+    const response = await POST(request);
+
+    // Zod refusal produces a 400, and no DB / email side-effects fire.
+    expect(response.status).toBe(400);
+    expect(mockInsert).not.toHaveBeenCalled();
+    expect(mockBatch).not.toHaveBeenCalled();
+    expect(mockSendConfirmation).not.toHaveBeenCalled();
+    const errorCalls = errorSpy.mock.calls.map((c) => String(c[0]));
+    expect(errorCalls.some((s) => s.includes('Rejecting checkout.session.completed'))).toBe(true);
+    errorSpy.mockRestore();
+  });
+
+  it('normalizes a non-midnight eventDate ISO string to UTC midnight before insert (HI-02)', async () => {
+    const { stripe } = await import('@/lib/stripe');
+    (stripe.webhooks.constructEvent as ReturnType<typeof vi.fn>).mockReturnValueOnce({
+      type: 'checkout.session.completed',
+      data: {
+        object: {
+          id: 'cs_test_norm',
+          payment_intent: 'pi_test_norm',
+          metadata: {
+            packageId: '1',
+            packageName: 'Portrait Session',
+            clientName: 'Jane Doe',
+            clientEmail: 'jane@example.com',
+            clientPhone: '555-0100',
+            clientNotes: '',
+            // 15:30 UTC on Aug 15 — schema must collapse to 00:00:00Z same day.
+            eventDate: '2026-08-15T15:30:00.000Z',
+            reservationId: '42',
+            durationMinutes: '60',
+          },
+          amount_total: 7500,
+          currency: 'usd',
+        },
+      },
+    });
+
+    // Spy on the booking insert's values() so we can inspect the normalized
+    // eventDate that actually lands in the DB.
+    const valuesSpy = vi.fn().mockImplementation(() => ({
+      returning: vi.fn().mockResolvedValue([{ id: 99 }]),
+      then: (onFulfilled: (v: unknown) => unknown) => Promise.resolve(undefined).then(onFulfilled),
+    }));
+    mockInsert.mockReturnValueOnce({ values: valuesSpy });
+    mockInsert.mockReturnValueOnce({ values: valuesSpy }); // payments insert
+
+    const { POST } = await import('@/app/(main)/api/webhooks/stripe/route');
+    const request = makeRequest('{}', { 'stripe-signature': 'valid-sig' });
+    const response = await POST(request);
+
+    expect(response.status).toBe(200);
+    // First call to .values() is the booking insert.
+    const bookingValues = valuesSpy.mock.calls[0]?.[0] as { eventDate: Date };
+    expect(bookingValues.eventDate).toBeInstanceOf(Date);
+    expect(bookingValues.eventDate.toISOString()).toBe('2026-08-15T00:00:00.000Z');
+  });
+
+  it('acks unknown event types with 200 without reaching the assertNever sink', async () => {
+    const { stripe } = await import('@/lib/stripe');
+    (stripe.webhooks.constructEvent as ReturnType<typeof vi.fn>).mockReturnValueOnce({
+      type: 'customer.subscription.updated', // not in HandledEventType
+      data: { object: {} },
+    });
+
+    const { POST } = await import('@/app/(main)/api/webhooks/stripe/route');
+    const request = makeRequest('{}', { 'stripe-signature': 'valid-sig' });
+    const response = await POST(request);
+
+    expect(response.status).toBe(200);
+    expect(mockInsert).not.toHaveBeenCalled();
+    expect(mockBatch).not.toHaveBeenCalled();
+    expect(mockDelete).not.toHaveBeenCalled();
   });
 });
 

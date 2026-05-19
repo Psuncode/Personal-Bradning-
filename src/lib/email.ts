@@ -3,12 +3,16 @@ import { generateICSContent } from '@/lib/icsService';
 import { siteConfig } from '@/data/site-config';
 import { format } from 'date-fns-tz';
 import { addMinutes } from 'date-fns';
+import { requireRuntimeEnv } from '@/lib/env';
 
-// Lazy singleton — avoids Resend throwing at build time when RESEND_API_KEY is not set.
+// Lazy singleton — avoids Resend throwing at build time when RESEND_API_KEY is
+// not set. `requireRuntimeEnv` defers the env lookup until first call and
+// throws an actionable error if the key is missing — matches the pattern in
+// `lib/stripe.ts` and `lib/session.ts`.
 let _resend: Resend | undefined;
 function getResend(): Resend {
   if (!_resend) {
-    _resend = new Resend(process.env.RESEND_API_KEY!);
+    _resend = new Resend(requireRuntimeEnv('RESEND_API_KEY'));
   }
   return _resend;
 }
