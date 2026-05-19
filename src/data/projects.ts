@@ -20,7 +20,7 @@ export const projects: Project[] = [
     featured: true,
     coverImage: {
       src: "/photography/landscape-1.svg",
-      alt: "Utah mountain sunset — cover image for the Inara Health Diagnostic case study",
+      alt: "Cover image for the Inara Health Diagnostic case study: founding a wearable continuous progesterone monitoring device for early pregnancy care, illustrated with a Utah mountain sunset placeholder until product imagery is ready",
       focalPoint: "center",
       layout: "overlay",
     },
@@ -44,7 +44,7 @@ export const projects: Project[] = [
     featured: true,
     coverImage: {
       src: "/photography/landscape-2.svg",
-      alt: "Desert red rock formation — cover image for the LDS Church enterprise PM case study",
+      alt: "Cover image for the LDS Church Enterprise Tech PM case study: coordinating zero-downtime migration of 1,200+ desk phones to Microsoft Teams Phone across 18 HQ departments, illustrated with a desert red rock formation placeholder until product imagery is ready",
       focalPoint: "center",
       layout: "beside",
     },
@@ -68,7 +68,7 @@ export const projects: Project[] = [
     featured: true,
     coverImage: {
       src: "/photography/landscape-3.svg",
-      alt: "Alpine lake reflection — cover image for the Nursa AI TB verification case study",
+      alt: "Cover image for the Nursa AI TB verification case study: an in-house machine learning model that replaced a third-party tuberculosis test verification vendor for clinician credentialing, illustrated with an alpine lake reflection placeholder until product imagery is ready",
       focalPoint: "center",
       layout: "overlay",
     },
@@ -93,7 +93,7 @@ export const projects: Project[] = [
     featured: false,
     coverImage: {
       src: "/photography/landscape-1.svg",
-      alt: "Mountain landscape — cover image for the Granger Medical RVU analytics case study",
+      alt: "Cover image for the Granger Medical RVU analytics case study: a web-based platform covering 7,000+ CPT codes to surface reimbursement gaps and strengthen payer contract negotiations, illustrated with a mountain landscape placeholder until product imagery is ready",
       focalPoint: "bottom",
       layout: "overlay",
     },
@@ -117,7 +117,7 @@ export const projects: Project[] = [
     featured: false,
     coverImage: {
       src: "/photography/landscape-2.svg",
-      alt: "Desert red rock formation — cover image for the Cocker Innovation Fellowship case study",
+      alt: "Cover image for the Cocker Innovation Fellowship case study: leading 0-to-1 product development, customer discovery, and go-to-market strategy for an early-stage synthetic biology startup, illustrated with a desert red rock formation placeholder until product imagery is ready",
       focalPoint: "top",
       layout: "beside",
     },
