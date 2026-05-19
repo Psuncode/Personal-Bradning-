@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface GridItem {
   type: "ai-project-hero" | "ai-project" | "healthcare" | "linkedin" | "photography" | "photography-cta";
@@ -98,7 +99,10 @@ const gridItems: GridItem[] = [
 ];
 
 function CardWrapper({ item, children }: { item: GridItem; children: React.ReactNode }) {
-  const className = `${item.span} rounded-2xl overflow-hidden group cursor-pointer hover:shadow-xl transition-all hover:-translate-y-1`;
+  const className = cn(
+    item.span,
+    "rounded-2xl overflow-hidden group cursor-pointer hover:shadow-xl transition-all hover:-translate-y-1",
+  );
   if (item.href?.startsWith("http")) {
     return (
       <a href={item.href} target="_blank" rel="noopener noreferrer" className={className}>
@@ -118,7 +122,7 @@ function CardWrapper({ item, children }: { item: GridItem; children: React.React
 
 export function ContentGrid() {
   return (
-    <section id="projects" className="bg-[#faf9f7] py-24 px-6 md:px-12 overflow-hidden">
+    <section id="projects" className="bg-[color:var(--color-paper)] py-24 px-6 md:px-12 overflow-hidden">
       <motion.div 
         className="max-w-7xl mx-auto"
         initial={{ opacity: 0, y: 30 }}
@@ -127,10 +131,10 @@ export function ContentGrid() {
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <div className="mb-16">
-          <h2 className="font-[family-name:var(--font-playfair)] text-5xl md:text-6xl text-gray-900 mb-4">
+          <h2 className="font-[family-name:var(--font-playfair)] text-5xl md:text-6xl text-[color:var(--color-ink)] mb-4">
             Projects &amp; Thought Leadership
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl">
+          <p className="text-xl text-[color:var(--color-ink-soft)] max-w-2xl">
             Healthcare innovation, side projects, and reflections on building products that matter.
           </p>
         </div>
@@ -174,30 +178,33 @@ export function ContentGrid() {
               )}
 
               {(item.type === "ai-project" || item.type === "healthcare") && (
-                <div className="bg-white h-full p-6 flex flex-col justify-between border-2 border-gray-200 group-hover:border-gray-900 transition-colors">
+                <div className="bg-[color:var(--color-paper-elevated)] h-full p-6 flex flex-col justify-between border-2 border-[color:var(--color-rule)] group-hover:border-[color:var(--color-ink)] transition-colors">
                   <div>
                     <div className="flex items-center gap-2 mb-3">
-                      <div className="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center">
+                      <div className="w-8 h-8 bg-[color:var(--color-ink)] rounded-full flex items-center justify-center">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M16 8V16M12 11V16M8 14V16M6 20H18C19.1046 20 20 19.1046 20 18V6C20 4.89543 19.1046 4 18 4H6C4.89543 4 4 4.89543 4 6V18C4 19.1046 4.89543 20 6 20Z" stroke="white" strokeWidth="2" strokeLinecap="round"/>
                         </svg>
                       </div>
-                      <span className="text-xs text-gray-500 uppercase tracking-wider">
+                      <span className="text-xs text-[color:var(--color-ink-soft)] uppercase tracking-wider">
                         {item.type === "healthcare" ? "Healthcare" : "Project"}
                       </span>
                     </div>
-                    <h3 className="font-[family-name:var(--font-playfair)] text-xl text-gray-900 mb-2">{item.title}</h3>
-                    <p className="text-sm text-gray-600 leading-relaxed">{item.description}</p>
+                    <h3 className="font-[family-name:var(--font-playfair)] text-xl text-[color:var(--color-ink)] mb-2">{item.title}</h3>
+                    <p className="text-sm text-[color:var(--color-ink-soft)] leading-relaxed">{item.description}</p>
                   </div>
                   <div className="flex flex-wrap gap-2 mt-3">
                     {item.tags?.map((tag) => (
-                      <span key={tag} className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">{tag}</span>
+                      <span key={tag} className="px-2 py-1 bg-[color:var(--color-paper)] text-[color:var(--color-ink-soft)] rounded-full text-xs">{tag}</span>
                     ))}
                   </div>
                 </div>
               )}
 
               {item.type === "linkedin" && (
+                // intentional: LinkedIn brand color (#0077B5) and on-brand light-blue
+                // body text — kept as exception to the editorial palette so the card
+                // reads unmistakably as a LinkedIn post preview
                 <div className="bg-[#0077B5] h-full p-6 flex flex-col justify-between text-white">
                   <div>
                     <div className="flex items-center gap-2 mb-3">

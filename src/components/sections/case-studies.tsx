@@ -96,7 +96,7 @@ export function CaseStudies() {
                         {outcomes.map((outcome, idx) => {
                           const match = outcome.match(/^([\$\d\.,%KMBT\+]+)\s*(.*)/i);
                           return (
-                            <div key={idx} className="editorial-card rounded-2xl p-4 transition-all hover:-translate-y-1 bg-white/50 border border-[color:var(--color-rule)] h-full flex flex-col justify-center">
+                            <div key={idx} className="editorial-card rounded-2xl p-4 transition-all hover:-translate-y-1 bg-[color:var(--color-paper-elevated)] border border-[color:var(--color-rule)] h-full flex flex-col justify-center">
                               {match ? (
                                 <>
                                   <div className="font-[family-name:var(--font-playfair)] text-3xl font-medium text-[color:var(--color-ink)] mb-1">

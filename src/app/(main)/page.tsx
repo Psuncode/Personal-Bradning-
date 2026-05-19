@@ -55,7 +55,7 @@ export default function HomePage() {
       <CurrentFocus />
       <PhotoBreak kicker="From the Archive" caption="Desert · Capitol Reef" />
       {recentPosts.length > 0 && (
-        <section className="px-6 py-24 md:px-12 bg-white/40">
+        <section className="px-6 py-24 md:px-12 bg-[color:var(--color-paper-elevated)]">
           <div className="editorial-shell editorial-rule pt-10">
             <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
