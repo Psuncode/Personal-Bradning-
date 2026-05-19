@@ -67,7 +67,7 @@ describe("SectionHeading Component", () => {
     const heading = container.querySelector("h2");
     expect(heading?.className).toContain("text-3xl");
     expect(heading?.className).toContain("font-bold");
-    expect(heading?.className).toContain("text-byu-navy");
+    expect(heading?.className).toContain("text-[color:var(--color-ink)]");
   });
 
   it("has responsive heading size", () => {
@@ -90,13 +90,13 @@ describe("SectionHeading Component", () => {
     );
     const subtitle = container.querySelector("p");
     expect(subtitle?.className).toContain("text-lg");
-    expect(subtitle?.className).toContain("text-byu-dark-gray");
+    expect(subtitle?.className).toContain("text-[color:var(--color-ink-soft)]");
   });
 
   it("underline has correct color", () => {
     const { container } = render(<SectionHeading title="Test" />);
     const underline = container.querySelector(".h-1");
-    expect(underline?.className).toContain("bg-byu-light-blue");
+    expect(underline?.className).toContain("bg-[color:var(--color-accent)]");
   });
 
   it("renders wrapper div with proper spacing", () => {

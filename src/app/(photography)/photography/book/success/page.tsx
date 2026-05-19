@@ -39,10 +39,10 @@ export default async function BookingSuccessPage({
     <div className="py-24 px-6">
       <div className="max-w-lg mx-auto text-center">
         <CheckCircle className="w-12 h-12 text-green-600 mx-auto mb-4" />
-        <h1 className="font-display text-4xl font-semibold text-byu-navy mb-2">
+        <h1 className="font-display text-4xl font-semibold text-[color:var(--color-ink)] mb-2">
           You&apos;re booked!
         </h1>
-        <p className="text-byu-dark-gray mb-8">
+        <p className="text-[color:var(--color-ink-soft)] mb-8">
           A confirmation email with your calendar invite is on its way.
         </p>
 
@@ -51,15 +51,15 @@ export default async function BookingSuccessPage({
         <div className="bg-[#F5F5F5] rounded-xl p-6 text-left">
           <div className="space-y-3">
             <div>
-              <p className="text-sm text-byu-dark-gray">Package</p>
+              <p className="text-sm text-[color:var(--color-ink-soft)]">Package</p>
               <p className="font-semibold">{meta.packageName}</p>
             </div>
             <div>
-              <p className="text-sm text-byu-dark-gray">Session Date</p>
+              <p className="text-sm text-[color:var(--color-ink-soft)]">Session Date</p>
               <p className="font-semibold">{formattedDate} at {formattedTime} (Mountain Time)</p>
             </div>
             <div>
-              <p className="text-sm text-byu-dark-gray">Deposit Paid</p>
+              <p className="text-sm text-[color:var(--color-ink-soft)]">Deposit Paid</p>
               <p className="font-semibold tabular-nums">{formattedDeposit}</p>
             </div>
           </div>
@@ -67,7 +67,7 @@ export default async function BookingSuccessPage({
 
         <div className="mt-8">
           <Link href="/photography">
-            <Button variant="outline" className="border-byu-navy text-byu-navy">
+            <Button variant="outline" className="border-[color:var(--color-ink)] text-[color:var(--color-ink)]">
               Back to Photography
             </Button>
           </Link>

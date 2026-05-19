@@ -162,7 +162,7 @@ describe("ProjectCard Component", () => {
 
   it("tech stack badges have correct styling", () => {
     const { container } = render(<ProjectCard project={mockProject} index={0} />);
-    const badges = container.querySelectorAll("[class*='bg-byu-sky']");
+    const badges = container.querySelectorAll("[class*='--color-rule']");
     expect(badges.length).toBeGreaterThanOrEqual(1);
   });
 

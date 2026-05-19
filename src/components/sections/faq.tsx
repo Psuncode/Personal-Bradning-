@@ -31,15 +31,15 @@ const faqs = [
 
 export function FAQ() {
   return (
-    <section className="border-b border-byu-sky/20 bg-gray-50 py-16">
+    <section className="border-b border-[color:var(--color-rule)]/20 bg-gray-50 py-16">
       <Container>
-        <h2 className="mb-8 text-2xl font-bold text-byu-navy">
+        <h2 className="mb-8 text-2xl font-bold text-[color:var(--color-ink)]">
           Frequently Asked Questions
         </h2>
         <Accordion type="single" collapsible className="max-w-2xl">
           {faqs.map((item, i) => (
             <AccordionItem key={i} value={`item-${i}`}>
-              <AccordionTrigger className="text-left text-byu-navy hover:text-byu-blue">
+              <AccordionTrigger className="text-left text-[color:var(--color-ink)] hover:text-[color:var(--color-accent)]">
                 {item.q}
               </AccordionTrigger>
               <AccordionContent className="text-gray-600">
