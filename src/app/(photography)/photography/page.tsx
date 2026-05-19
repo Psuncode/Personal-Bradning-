@@ -106,13 +106,41 @@ export default function PhotographyHome() {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(photographerJsonLd) }}
       />
 
+      <section
+        aria-label="Utah night sky"
+        className="relative h-[90vh] w-full overflow-hidden bg-black"
+      >
+        <Image
+          src="/hero/utah-night-sky.jpg"
+          alt=""
+          fill
+          priority
+          className="object-cover"
+          sizes="100vw"
+        />
+      </section>
+
+      <section className="px-6 py-20 lg:px-8">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.28em] text-gray-500">
+            Photography
+          </p>
+          <h2 className="font-[family-name:var(--font-playfair)] text-4xl font-bold leading-tight text-gray-900 md:text-5xl">
+            Philip Sun Photography
+          </h2>
+          <p className="mt-5 text-base leading-7 text-gray-600 md:text-lg">
+            Photography by Philip Sun. Utah-based. Available for portrait, event,
+            and commercial work.
+          </p>
+        </div>
+      </section>
+
       <section className="relative overflow-hidden bg-gray-950 text-white">
         {featuredPhotos[0] && (
           <Image
             src={featuredPhotos[0].src}
             alt=""
             fill
-            priority
             className="object-cover opacity-35"
             sizes="100vw"
           />
