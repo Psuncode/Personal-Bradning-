@@ -3,7 +3,19 @@ import { generateICSContent } from '@/lib/icsService';
 import { siteConfig } from '@/data/site-config';
 import { format } from 'date-fns-tz';
 import { addMinutes } from 'date-fns';
-import { requireRuntimeEnv } from '@/lib/env';
+import { optionalEnv, requireRuntimeEnv } from '@/lib/env';
+
+/**
+ * Defense-in-depth: strip CR/LF (and adjacent control chars) before any user-
+ * controlled value reaches the `Subject:` line. Boundary validation in
+ * `safeHeaderString` already rejects control chars at the webhook schema, but
+ * this guard means a future code path that bypasses the schema (e.g. a manual
+ * Resend call from a script) still can't produce an injectable subject.
+ * Collapses runs of CR/LF/tab to a single space so the surface stays readable.
+ */
+function sanitizeSubjectValue(value: string): string {
+  return value.replace(/[\r\n\t]+/g, ' ').trim();
+}
 
 // Lazy singleton — avoids Resend throwing at build time when RESEND_API_KEY is
 // not set. `requireRuntimeEnv` defers the env lookup until first call and
@@ -63,7 +75,10 @@ export function escapeHtml(value: unknown): string {
  * See WR-07 in .planning/phases/03-booking-and-payments/03-REVIEW.md.
  */
 export function getNotificationRecipient(): string | null {
-  const fromEnv = process.env.BOOKING_NOTIFICATION_EMAIL?.trim();
+  // `optionalEnv` with empty-string default preserves the original fallback
+  // semantics: unset / empty → fall back to siteConfig.email. Closes the
+  // remaining half of Backlog #17 (no bare `process.env.X` in production code).
+  const fromEnv = optionalEnv('BOOKING_NOTIFICATION_EMAIL', '').trim();
   if (fromEnv && isValidEmailAddress(fromEnv)) return fromEnv;
   if (isValidEmailAddress(siteConfig.email)) return siteConfig.email;
   return null;
@@ -152,7 +167,7 @@ export async function sendBookingConfirmationEmail(opts: BookingEmailOpts) {
   await getResend().emails.send({
     from: FROM_ADDRESS,
     to: clientEmail,
-    subject: `Your session is confirmed — ${packageName}`,
+    subject: sanitizeSubjectValue(`Your session is confirmed — ${packageName}`),
     html,
     attachments: [
       {
@@ -181,7 +196,7 @@ export async function sendPhilipNotificationEmail(opts: NotificationOpts) {
   const recipient = getNotificationRecipient();
   if (!recipient) {
     throw new InvalidEmailRecipientError(
-      process.env.BOOKING_NOTIFICATION_EMAIL ?? siteConfig.email,
+      optionalEnv('BOOKING_NOTIFICATION_EMAIL', siteConfig.email),
     );
   }
 
@@ -208,7 +223,7 @@ export async function sendPhilipNotificationEmail(opts: NotificationOpts) {
   await getResend().emails.send({
     from: FROM_ADDRESS,
     to: recipient,
-    subject: `New booking: ${clientName} — ${packageName}`,
+    subject: sanitizeSubjectValue(`New booking: ${clientName} — ${packageName}`),
     html,
   });
 }

@@ -126,6 +126,11 @@ describe('Stripe webhook handler — PHOTO-04: booking confirmation', () => {
 
   beforeEach(async () => {
     vi.clearAllMocks();
+    // The route now resolves STRIPE_WEBHOOK_SECRET via `requireRuntimeEnv`
+    // (Wave 7a follow-up: eliminate `process.env.X!`). The signature-verify
+    // call itself is mocked out — we only need a non-empty string so the env
+    // helper doesn't throw before reaching `constructEvent`.
+    vi.stubEnv('STRIPE_WEBHOOK_SECRET', 'whsec_test_dummy');
 
     // Re-get email mocks after clearAllMocks
     const emailMod = await import('@/lib/email');

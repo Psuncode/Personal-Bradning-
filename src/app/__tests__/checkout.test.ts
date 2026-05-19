@@ -261,25 +261,25 @@ describe('checkout route — CR-02 + CR-03 double-booking + date validation', ()
 
   // ---------- Wave 7a backend hardening ----------
 
-  it('returns 500 when NEXT_PUBLIC_PHOTOGRAPHY_URL is unset (#2 fail-fast)', async () => {
-    // Clear the env var the beforeEach planted. requireBuildEnv must throw
-    // when it goes to build the success/cancel URLs — no localhost fallback.
+  it('fails at module load when NEXT_PUBLIC_PHOTOGRAPHY_URL is unset (#2 fail-fast)', async () => {
+    // Wave 7a follow-up: `requireBuildEnv` is now resolved at module top so a
+    // missing var fails the import (= boot) instead of the first request.
+    // Reset the module cache so the import is re-executed against the empty
+    // stub planted below — without this, vitest would hand back the module
+    // already loaded by the surrounding describe's other tests.
+    vi.resetModules();
     vi.stubEnv('NEXT_PUBLIC_PHOTOGRAPHY_URL', '');
 
-    const { POST } = await import('@/app/(main)/api/checkout/route');
-    const res = await POST(
-      makeRequest({
-        packageId: 1,
-        clientName: 'Jane Doe',
-        clientEmail: 'jane@example.com',
-        eventDate: futureWeekdayISO(),
-      })
-    );
-    // The thrown error is caught by the route's top-level catch and surfaces
-    // as a 500. The important assertion is that stripe.create was NEVER
-    // called — we failed BEFORE leaking a half-formed Stripe session.
-    expect(res.status).toBe(500);
-    expect(mockStripeCreate).not.toHaveBeenCalled();
+    try {
+      await expect(import('@/app/(main)/api/checkout/route')).rejects.toThrow(
+        /NEXT_PUBLIC_PHOTOGRAPHY_URL/,
+      );
+      expect(mockStripeCreate).not.toHaveBeenCalled();
+    } finally {
+      // Reset modules again so the failed-import state doesn't leak into
+      // subsequent tests in this describe block.
+      vi.resetModules();
+    }
   });
 
   it('calls revalidateTag BEFORE the pending-reservation insert (#19)', async () => {

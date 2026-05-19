@@ -14,6 +14,12 @@ import { normalizeEventDate } from '@/lib/validation/event-date';
 import { fetchCalendarEventsForRange, SERVER_AVAILABILITY_TAG } from '@/lib/serverCalendar';
 import { requireBuildEnv } from '@/lib/env';
 
+// Backlog #2 (Wave 7a R1 finding): resolve the public photography URL at
+// module load so a missing env var fails the build/boot instead of throwing
+// inside the first request. The previous per-request `requireBuildEnv` call
+// would only have surfaced the misconfiguration at runtime as a 500.
+const PHOTOGRAPHY_URL = requireBuildEnv('NEXT_PUBLIC_PHOTOGRAPHY_URL');
+
 export async function POST(request: Request) {
   try {
     const rawBody = await request.json();
@@ -155,9 +161,9 @@ export async function POST(request: Request) {
     }
 
     // Backlog #2: NEXT_PUBLIC_PHOTOGRAPHY_URL is build-required — no localhost
-    // fallback. If unset, the build fails fast instead of silently routing
-    // production Stripe-success traffic to a dead URL (silent revenue loss).
-    const baseUrl = requireBuildEnv('NEXT_PUBLIC_PHOTOGRAPHY_URL');
+    // fallback. Resolved at module top (above) so a missing value fails fast
+    // at boot rather than only on the first request.
+    const baseUrl = PHOTOGRAPHY_URL;
 
     // Backlog #11: Stripe's native idempotency_key, derived deterministically
     // from (packageId, normalized eventDate, clientEmail). A retried request

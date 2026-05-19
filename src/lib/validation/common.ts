@@ -72,3 +72,24 @@ export function boundedString(max: number, fieldName: string) {
     .transform((v) => (v.length === 0 ? undefined : v))
     .optional();
 }
+
+/**
+ * Required, trimmed, non-empty string that ALSO rejects any ASCII control
+ * character (CR, LF, NUL, tab, DEL, …). Use this for values that flow into
+ * email subject lines, mail headers, or any other newline-terminated wire
+ * format — a `\r\n` smuggled into a Stripe metadata field would otherwise let
+ * an attacker inject extra headers into the operator notification email.
+ *
+ * Boundary-level defense; consumers may layer an inline replace as defense in
+ * depth (see `email.ts`). Wave 7a R2 H-1.
+ */
+export function safeHeaderString(fieldName: string) {
+  const requiredMessage = `${fieldName} is required.`;
+  const invalidMessage = `${fieldName} contains invalid characters.`;
+  return z
+    .string()
+    .min(1, { message: requiredMessage })
+    .refine((v) => !CONTROL_CHARS.test(v), { message: invalidMessage })
+    .transform((v) => v.trim())
+    .refine((v) => v.length > 0, { message: requiredMessage });
+}

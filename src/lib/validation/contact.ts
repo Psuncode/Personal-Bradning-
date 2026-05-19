@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { CONTROL_CHARS, boundedString } from './common';
 
 // Length caps, kept in module-level constants so tests can reference them.
 export const CONTACT_LIMITS = {
@@ -10,20 +11,9 @@ export const CONTACT_LIMITS = {
   referer: 2000,
 } as const;
 
-// Reject ASCII control characters (incl. newlines/tabs) — a common signal
-// of an obviously bogus or injected UTM value.
-const CONTROL_CHARS = /[\x00-\x1f\x7f]/;
-
-// Helper: trims, then treats empty as undefined so `.optional()` works cleanly.
-const optionalTrimmed = (max: number) =>
-  z
-    .string()
-    .max(max)
-    .transform((v) => v.trim())
-    .transform((v) => (v.length === 0 ? undefined : v))
-    .optional();
-
 // UTM values: cap length and reject anything containing control chars.
+// `CONTROL_CHARS` comes from `common.ts` — the formerly inlined regex literal
+// was a duplicate flagged in Wave 7a R1 #14.
 const utmField = z
   .string()
   .max(CONTACT_LIMITS.utm, { message: `Must be ${CONTACT_LIMITS.utm} characters or fewer.` })
@@ -51,7 +41,10 @@ export const contactFormSchema = z.object({
     })
     .transform((v) => v.trim()),
 
-  subject: optionalTrimmed(CONTACT_LIMITS.subject),
+  // `boundedString` lives in `common.ts` — same trim+empty→undefined semantics
+  // as the formerly inlined `optionalTrimmed(max)` factory but with a
+  // field-named error message. Closes Wave 7a R1 #14.
+  subject: boundedString(CONTACT_LIMITS.subject, 'Subject'),
 
   message: z
     .string()

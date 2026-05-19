@@ -12,17 +12,36 @@ import {
   sendPhilipNotificationEmail,
 } from '@/lib/email';
 import { SERVER_AVAILABILITY_TAG } from '@/lib/serverCalendar';
-import { requiredTrimmedString } from '@/lib/validation/common';
+import { safeHeaderString } from '@/lib/validation/common';
 import { normalizeEventDate } from '@/lib/validation/event-date';
+import { requireRuntimeEnv } from '@/lib/env';
 
 /**
- * Compile-time exhaustiveness sink. If a new variant is added to
- * `HandledEventType` without a matching switch arm in POST, TypeScript narrows
- * the parameter to a non-`never` type at the call site and the build fails —
- * closes backlog item #16.
+ * Compile-time exhaustiveness sink. Reached only via the
+ * `isHandledEventType` type-guard + switch pattern in POST: when a new variant
+ * is added to `HandledEventType` without a matching `case` in the switch,
+ * TypeScript narrows the leftover variant to a non-`never` type at the call
+ * site below and `tsc --noEmit` fails. Closes backlog item #16 / R2 H-1.
  */
-function assertNever(_: never): never {
-  throw new Error('Unexpected Stripe event type reached the exhaustiveness sink.');
+function assertNever(value: never): never {
+  throw new Error(
+    `Unexpected Stripe event type reached the exhaustiveness sink: ${String(value)}`,
+  );
+}
+
+/**
+ * Type guard over the `HandledEventType` union. Lets the switch below receive
+ * the literal `event.type` (not a widened `string`) so TypeScript can verify
+ * each case narrows correctly and the `default: assertNever(...)` arm receives
+ * `never`.
+ */
+function isHandledEventType(t: string): t is HandledEventType {
+  return (
+    t === 'checkout.session.completed' ||
+    t === 'checkout.session.expired' ||
+    t === 'charge.refunded' ||
+    t === 'payment_intent.payment_failed'
+  );
 }
 
 /**
@@ -35,9 +54,12 @@ function assertNever(_: never): never {
  * compares the same instant as the DB row — closes drizzle HI-02 + backlog
  * #5/#15.
  *
- * `clientName` and `packageName` use `requiredTrimmedString` so a
- * whitespace-only metadata value (e.g. `"   "`) is rejected up-front instead
- * of writing junk to the bookings row — backlog #7.
+ * `clientName` and `packageName` use `safeHeaderString` so a whitespace-only
+ * metadata value (e.g. `"   "`) is rejected up-front instead of writing junk
+ * to the bookings row — backlog #7 — AND so ASCII control characters
+ * (including CR/LF) are rejected at the boundary before they reach the
+ * `Subject:` line of the operator notification email. Defends against header
+ * injection (Wave 7a R2 H-1).
  *
  * See WR-01 in .planning/phases/03-booking-and-payments/03-REVIEW.md.
  */
@@ -47,8 +69,8 @@ const checkoutCompletedMetadataSchema = z.object({
     .regex(/^\d+$/, 'packageId must be a non-negative integer string')
     .transform((s) => Number.parseInt(s, 10))
     .refine((n) => Number.isInteger(n) && n > 0, 'packageId must be > 0'),
-  packageName: requiredTrimmedString('packageName'),
-  clientName: requiredTrimmedString('clientName'),
+  packageName: safeHeaderString('packageName'),
+  clientName: safeHeaderString('clientName'),
   clientEmail: z.email(),
   clientPhone: z.string().optional().default(''),
   clientNotes: z.string().optional().default(''),
@@ -124,19 +146,26 @@ export async function POST(request: Request) {
 
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
+    event = stripe.webhooks.constructEvent(
+      body,
+      sig,
+      requireRuntimeEnv('STRIPE_WEBHOOK_SECRET'),
+    );
   } catch (err) {
     console.error('[webhook] Signature verification failed:', err);
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
   }
 
-  // Narrow to the union of types we explicitly handle. Unknown types fall
-  // through to the default arm and ack with 200 — Stripe sends many event
-  // types we never opted into and we don't want a retry storm for them.
-  const handledType = event.type as HandledEventType | (string & {});
+  // Stripe types `event.type` as a discriminated union of every known event.
+  // We only commit to handling four of them via `HandledEventType`; every
+  // other type acks with 200 so Stripe doesn't enter a retry loop on events
+  // we never opted into.
+  if (!isHandledEventType(event.type)) {
+    return NextResponse.json({ received: true });
+  }
 
   try {
-    switch (handledType) {
+    switch (event.type) {
       case 'checkout.session.completed':
         return await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
       case 'checkout.session.expired':
@@ -145,21 +174,12 @@ export async function POST(request: Request) {
         return await handleChargeRefunded(event.data.object as Stripe.Charge);
       case 'payment_intent.payment_failed':
         return await handlePaymentFailed(event.data.object as Stripe.PaymentIntent);
-      default: {
-        // Exhaustiveness sink for the *declared* union. If `HandledEventType`
-        // ever grows a variant without a matching case above, the cast below
-        // ceases to compile — closes backlog item #16. Unknown event types
-        // (anything outside the union) fall through to the 200 ack.
-        if (
-          handledType === ('checkout.session.completed' satisfies HandledEventType) ||
-          handledType === ('checkout.session.expired' satisfies HandledEventType) ||
-          handledType === ('charge.refunded' satisfies HandledEventType) ||
-          handledType === ('payment_intent.payment_failed' satisfies HandledEventType)
-        ) {
-          return assertNever(handledType as never);
-        }
-        return NextResponse.json({ received: true });
-      }
+      default:
+        // Reached only if a new variant is added to `HandledEventType` (and to
+        // the type-guard above) without a matching `case` here. TypeScript
+        // narrows the leftover variant to a non-`never` type and `tsc` fails
+        // — that's the compile-time exhaustiveness guarantee. Closes #16.
+        return assertNever(event.type);
     }
   } catch (err) {
     // Unhandled errors from inside an event-type branch — 500 lets Stripe retry.
