@@ -3,6 +3,7 @@
 // The connection is created on first use (first db query at runtime).
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
+import { requireRuntimeEnv } from "../lib/env";
 import * as schema from "./schema";
 
 type DrizzleClient = ReturnType<typeof drizzle<typeof schema>>;
@@ -13,15 +14,11 @@ function getDb(): DrizzleClient {
   if (!_db) {
     // WR-08: surface a clear, actionable error instead of letting
     // @neondatabase/serverless throw an opaque "URL is not a string" from deep
-    // inside the driver. Trip-wires the first request in any env that's missing
-    // the var — typically a forgotten Vercel project setting.
-    const url = process.env.DATABASE_URL;
-    if (!url) {
-      throw new Error(
-        "DATABASE_URL is required to connect to Postgres but is not set. " +
-          "Set it in .env.local for local dev or in the deployment env (Vercel, etc.) before issuing DB queries."
-      );
-    }
+    // inside the driver. `requireRuntimeEnv` (Wave 7a tiered env registry)
+    // produces the standardised "set in .env.local for dev, or Vercel project
+    // settings…" message so this trip-wire matches every other secret in the
+    // app — typically a forgotten Vercel project setting.
+    const url = requireRuntimeEnv("DATABASE_URL");
     const sql = neon(url);
     _db = drizzle({ client: sql, schema });
   }

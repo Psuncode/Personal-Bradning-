@@ -88,4 +88,19 @@ describe('SESSION_SECRET validation (WR-02)', () => {
     const mod = await import('./session');
     expect(mod.sessionOptions.password).toBe('');
   });
+
+  it('surfaces the tiered env-registry diagnostic when SESSION_SECRET is missing', async () => {
+    // Wave 7a integration: session.ts now resolves SESSION_SECRET through
+    // `requireBuildEnv`, so a missing var produces the standardised message
+    // ("environment variable is required (set in .env.local for dev, or Vercel
+    // project settings for preview/production)") instead of the old ad-hoc
+    // wording. Pinning the phrasing keeps the developer-facing guidance
+    // consistent across the three migrated modules.
+    vi.resetModules();
+    process.env.NODE_ENV = 'production';
+    delete process.env.SESSION_SECRET;
+    await expect(import('./session')).rejects.toThrow(
+      /SESSION_SECRET environment variable is required.*\.env\.local.*Vercel project settings/s
+    );
+  });
 });

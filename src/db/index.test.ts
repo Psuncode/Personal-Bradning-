@@ -45,7 +45,19 @@ describe("db Proxy — WR-07/08", () => {
     // Real driver access (`db.select`) must surface the diagnostic — NOT the
     // opaque "URL must be a string" buried inside the neon client.
     expect(() => (db as unknown as Record<string, unknown>).select).toThrow(
-      /DATABASE_URL is required/
+      /DATABASE_URL/
+    );
+  });
+
+  it("surfaces the tiered env-registry message format on missing DATABASE_URL", async () => {
+    // Wave 7a integration: db/index.ts now resolves DATABASE_URL through
+    // `requireRuntimeEnv`, which produces a standardised diagnostic. Asserting
+    // the exact phrasing here pins the contract so future agents/devs see the
+    // same actionable guidance everywhere a runtime-required env var is missing.
+    delete process.env.DATABASE_URL;
+    const { db } = await import("./index");
+    expect(() => (db as unknown as Record<string, unknown>).select).toThrow(
+      /DATABASE_URL environment variable is required.*\.env\.local.*Vercel project settings/s
     );
   });
 });

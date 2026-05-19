@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { requireRuntimeEnv } from './env';
 
 // Pin Stripe API version so behavior doesn't silently change on a Stripe-side
 // rollover. Sourced from the SDK's typed `LatestApiVersion` so an `npm update`
@@ -12,7 +13,7 @@ let _stripe: Stripe | undefined;
 
 function getStripe(): Stripe {
   if (!_stripe) {
-    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    _stripe = new Stripe(requireRuntimeEnv('STRIPE_SECRET_KEY'), {
       apiVersion: STRIPE_API_VERSION,
       typescript: true,
     });

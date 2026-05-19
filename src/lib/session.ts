@@ -1,6 +1,7 @@
 // src/lib/session.ts
 import { getIronSession } from 'iron-session';
 import { cookies } from 'next/headers';
+import { optionalEnv, requireBuildEnv } from './env';
 
 export interface SessionData {
   isLoggedIn: boolean;
@@ -15,10 +16,10 @@ export interface SessionData {
  * Resolve SESSION_SECRET once at module load and fail fast on misconfig.
  *
  * iron-session requires a password ≥32 chars to produce safely-sealed cookies;
- * shorter values silently weaken sealing strength. Reading via `process.env.X!`
- * also lets `undefined` slip through and surface as opaque runtime 500s at the
- * first admin request. Validating here turns those latent failure modes into
- * a loud deploy-time error.
+ * shorter values silently weaken sealing strength. Routing presence through
+ * `requireBuildEnv` (Wave 7a tiered env registry) centralizes the "missing
+ * env var" error message so callers see the same actionable guidance
+ * everywhere; the length check stays local because it's iron-session-specific.
  *
  * In test runs we skip the strict check — `proxy.test.ts` and friends stub
  * SESSION_SECRET dynamically via `vi.stubEnv` after this module has loaded and
@@ -26,11 +27,11 @@ export interface SessionData {
  * those setups. Closes 02-REVIEW.md WR-02.
  */
 function resolveSessionSecret(): string {
-  const secret = process.env.SESSION_SECRET;
-  if (process.env.NODE_ENV === 'test') {
-    return secret ?? '';
+  if (optionalEnv('NODE_ENV', 'development') === 'test') {
+    return process.env.SESSION_SECRET ?? '';
   }
-  if (!secret || secret.length < 32) {
+  const secret = requireBuildEnv('SESSION_SECRET');
+  if (secret.length < 32) {
     throw new Error(
       'SESSION_SECRET environment variable must be set and at least 32 characters long'
     );
@@ -51,7 +52,7 @@ export const sessionOptions = {
 
 /** The version every newly-minted session is stamped with. */
 export function currentSessionVersion(): string {
-  return process.env.SESSION_VERSION ?? '1';
+  return optionalEnv('SESSION_VERSION', '1');
 }
 
 /**
