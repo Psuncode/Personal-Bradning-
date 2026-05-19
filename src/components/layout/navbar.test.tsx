@@ -60,6 +60,33 @@ describe("Navbar Component", () => {
     expect(screen.queryByText("Contact")).toBeNull();
   });
 
+  it("renders a top-level Photography link between Writing and Meet", () => {
+    const { container } = render(<Navbar />);
+    // The top-level desktop list (the first <ul> in the nav)
+    const topUl = container.querySelector("nav > ul");
+    expect(topUl).toBeDefined();
+    const topLabels = Array.from(topUl?.querySelectorAll("a") ?? [])
+      .map((a) => a.textContent?.trim())
+      .filter(Boolean);
+
+    const writingIdx = topLabels.indexOf("Writing");
+    const photographyIdx = topLabels.indexOf("Photography");
+    const bookIdx = topLabels.indexOf("Book a Call");
+
+    expect(writingIdx).toBeGreaterThanOrEqual(0);
+    expect(photographyIdx).toBeGreaterThan(writingIdx);
+    expect(bookIdx).toBeGreaterThan(photographyIdx);
+  });
+
+  it("Photography top-level link points to /photography", () => {
+    const { container } = render(<Navbar />);
+    const topUl = container.querySelector("nav > ul");
+    const link = Array.from(topUl?.querySelectorAll("a") ?? []).find(
+      (a) => a.textContent?.trim() === "Photography",
+    );
+    expect(link?.getAttribute("href")).toBe("/photography");
+  });
+
   it("navigation links have correct hrefs", () => {
     render(<Navbar />);
     const projectsLink = screen.getByText("Projects").closest("a");

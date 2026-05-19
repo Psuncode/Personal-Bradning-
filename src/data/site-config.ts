@@ -11,6 +11,14 @@ export const siteConfig = {
     linkedin: "https://www.linkedin.com/in/-philipsun/",
     email: "mailto:ps324@byu.edu",
   },
+  // Social / off-site presence. Used by the homepage "Elsewhere" strip and
+  // anywhere else the site needs to point to a canonical off-platform handle.
+  social: {
+    github: "https://github.com/Psuncode",
+    linkedin: "https://www.linkedin.com/in/-philipsun/",
+    photography: "https://photography.philipsun.com",
+    freelySweet: "https://freelysweet.com",
+  },
   // Cal.com integration (free tier — embed only, no API keys required).
   // Event types are configured in the Cal.com dashboard; we only reference
   // them here by username + slug. See `.env.local.example` for the

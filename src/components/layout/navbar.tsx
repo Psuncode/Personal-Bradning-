@@ -18,6 +18,7 @@ const venturesLabel = "Ventures";
 const navLinks = [
   { href: "/projects", label: "Projects" },
   { href: "/blog", label: "Writing" },
+  { href: "/photography", label: "Photography" },
   { href: "/meet", label: "Meet" },
 ];
 
