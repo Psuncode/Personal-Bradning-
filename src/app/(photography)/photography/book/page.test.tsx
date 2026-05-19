@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import BookingPage from '@/app/(photography)/photography/book/page';
+import { siteConfig } from '@/data/site-config';
 
 vi.mock('@/components/cal-embed', () => ({
   CalEmbed: ({ calLink }: { calLink: string }) => (
@@ -28,6 +29,10 @@ describe('Photography booking page', () => {
 
     const embed = screen.getByTestId('cal-embed');
     expect(embed).toBeDefined();
-    expect(embed.getAttribute('data-cal-link')).toMatch(/photography-session$/);
+    // Pulls from siteConfig.cal — test against the actual configured slug so
+    // changing the Cal.com event slug only touches site-config.ts.
+    expect(embed.getAttribute('data-cal-link')).toBe(
+      `${siteConfig.cal.username}/${siteConfig.cal.photographyEventSlug}`,
+    );
   });
 });
