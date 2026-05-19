@@ -1,5 +1,16 @@
 'use client';
 
+/**
+ * @deprecated Photography bookings now use the Cal.com embed at
+ * `/photography/book` (see `src/components/cal-embed.tsx` and
+ * `siteConfig.cal` in `src/data/site-config.ts`). Cal.com handles
+ * scheduling + Stripe deposit collection on the free tier.
+ *
+ * This custom form is preserved for reference and as a fallback if we
+ * outgrow Cal.com — the matching `/api/checkout` and
+ * `/api/webhooks/stripe` routes remain functional. Do not wire this
+ * component back into any user-facing page without a migration plan.
+ */
 import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';

@@ -147,6 +147,10 @@ The pre-portfolio images are still SVG placeholders with literal text labels —
 
 Animations: Framer Motion `motion.*` with `initial/animate/whileInView`. `useReducedMotion()` gates entrance animations — see `hero.tsx` for the canonical pattern.
 
+### Cal.com integration
+
+Photography bookings at `/photography/book` use a Cal.com **free-tier** embed (`<CalEmbed>` in `src/components/cal-embed.tsx`, powered by `@calcom/embed-react`) — Cal.com handles scheduling, deposit collection (via its built-in Stripe integration), and confirmation email. No env vars are required for the free tier. Config (Cal.com username + event slugs) lives in `src/data/site-config.ts` under `siteConfig.cal`, accessed via `calLinkFor(slug)`. When upgrading to Cal.com Pro to enable server-side webhooks, set `CAL_API_KEY` + `CAL_WEBHOOK_SECRET` (see `.env.local.example`) and add a `/api/cal-webhook` route to consume booking events.
+
 ### Calendar / meeting system
 
 `/meet` embeds Cal.com via `@calcom/embed-react`. Custom availability logic in `src/lib/`:
