@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - feat/blog-system-v2
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      # Excludes the four CLAUDE.md "Known carve-outs (don't try to fix these)"
+      # test files — home/about/case-studies/current-focus assert against old
+      # chrome that was refactored and are explicitly out of scope.
+      - name: Test (vitest run-once)
+        run: npm run test -- --run --exclude '**/{home,about,case-studies,current-focus}.test.tsx'
+
+      - name: Build
+        run: npm run build
