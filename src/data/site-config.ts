@@ -16,13 +16,12 @@ export const siteConfig = {
   // them here by username + slug. See `.env.local.example` for the
   // forward-compat path to Cal.com Pro (webhooks / server API).
   cal: {
-    // TODO: verify this matches the user's Cal.com username
-    username: "philipsun",
+    username: "philip-sun-lrwiqb",
     // Generic intro call — also used by /meet when it migrates to the embed
     meetEventSlug: "30min",
-    // Photography session — must be created in the Cal.com dashboard with
-    // Stripe payment integration enabled to collect the deposit.
-    photographyEventSlug: "photography-session",
+    // Photography session — created in Cal.com dashboard; wire the Stripe
+    // payment app to this event type to collect the deposit.
+    photographyEventSlug: "photoshoot-session",
   },
 };
 
