@@ -96,7 +96,7 @@ export const bookings = pgTable(
   "bookings",
   {
     id: serial("id").primaryKey(),
-    packageId: integer("package_id").references(() => packages.id),
+    packageId: integer("package_id").references(() => packages.id).notNull(),
     clientName: text("client_name").notNull(),
     clientEmail: text("client_email").notNull(),
     clientPhone: text("client_phone"),
@@ -138,7 +138,7 @@ export const payments = pgTable(
   "payments",
   {
     id: serial("id").primaryKey(),
-    bookingId: integer("booking_id").references(() => bookings.id),
+    bookingId: integer("booking_id").references(() => bookings.id).notNull(),
     stripePaymentIntentId: text("stripe_payment_intent_id").notNull().unique(),
     amountInCents: integer("amount_in_cents").notNull(),
     currency: text("currency").default("usd").notNull(),
