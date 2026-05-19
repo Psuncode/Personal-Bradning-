@@ -117,7 +117,7 @@ describe("proxy subdomain routing", () => {
 
     it("passes through /admin when admin_session cookie is a valid sealed isLoggedIn=true session", async () => {
       const sealed = await sealData(
-        { isLoggedIn: true },
+        { isLoggedIn: true, sessionVersion: "1" },
         { password: TEST_SESSION_SECRET }
       );
       const request = new NextRequest("https://philipsun.com/admin", {
@@ -129,6 +129,45 @@ describe("proxy subdomain routing", () => {
 
       // Valid session — should not redirect
       expect(response.headers.get("location")).toBeNull();
+    });
+
+    it("redirects /admin when sealed cookie sessionVersion does not match SESSION_VERSION env — CR-03 kill switch", async () => {
+      // Cookie was sealed under SESSION_VERSION=1, but the env was rotated to 2.
+      // The edge guard must invalidate the stale cookie immediately rather than
+      // waiting for the admin page route handler to re-check.
+      vi.stubEnv("SESSION_VERSION", "2");
+      const sealed = await sealData(
+        { isLoggedIn: true, sessionVersion: "1" },
+        { password: TEST_SESSION_SECRET }
+      );
+      const request = new NextRequest("https://philipsun.com/admin", {
+        headers: {
+          cookie: `admin_session=${sealed}`,
+        },
+      });
+      const response = await proxy(request);
+
+      expect(response.status).toBeGreaterThanOrEqual(300);
+      expect(response.status).toBeLessThan(400);
+      expect(response.headers.get("location")).toContain("/admin/login");
+    });
+
+    it("redirects /admin when sealed cookie has no sessionVersion field (pre-kill-switch cookie) — CR-03", async () => {
+      // Cookies minted before CR-03 landed don't have a sessionVersion. They
+      // must be rejected so users get a fresh, version-stamped session on next
+      // login.
+      const sealed = await sealData(
+        { isLoggedIn: true },
+        { password: TEST_SESSION_SECRET }
+      );
+      const request = new NextRequest("https://philipsun.com/admin", {
+        headers: {
+          cookie: `admin_session=${sealed}`,
+        },
+      });
+      const response = await proxy(request);
+
+      expect(response.headers.get("location")).toContain("/admin/login");
     });
 
     it("redirects /admin when admin_session cookie is a bogus non-sealed value (bypass attempt)", async () => {

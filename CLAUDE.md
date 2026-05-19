@@ -22,12 +22,14 @@ npx vitest run src/lib/blog.test.ts
 ## Known carve-outs (don't try to fix these)
 
 - **TS errors in test files only:** `src/app/__tests__/{contact,meet}.test.tsx` have pre-existing `Property 'className' does not exist on type 'ChildNode'` errors. These are not in scope for current branches.
-- **Pre-existing test failures (~16 tests):** `home.test.tsx`, `about.test.tsx`, `case-studies.test.tsx`, `current-focus.test.tsx` assert against old chrome that's since been refactored. Not regressions from new work — verify by stashing and re-running before claiming new breakage.
+- **Pre-existing test failures (~16 tests):** `home.test.tsx`, `about.test.tsx`, `case-studies.test.tsx`, `current-focus.test.tsx` assert against old chrome that's since been refactored. Not regressions from new work — verify by stashing and re-running before claiming new breakage. CI (`.github/workflows/ci.yml`) excludes these four files via vitest `--exclude` glob, so `npm run test` is dirty locally but green in CI.
 - **`/resume` route removed** during the portfolio beautification refactor (commit `8dcb863` on `feat/portfolio-beautification`). Don't reintroduce.
 
 ## Architecture
 
 **Next.js 16 App Router** with React 19 and TypeScript 5. All pages live in `src/app/`. Routes are grouped: `(main)` for the portfolio surfaces, `(photography)` for the photography sub-site, `(ecommerce)` placeholder.
+
+**Canonical root-layout pattern:** `src/app/layout.tsx` is the sole owner of `<html>` and `<body>` (plus fonts, grain overlay, Person JSON-LD). Group layouts (`(main)/layout.tsx`, `(photography)/layout.tsx`, `(ecommerce)/layout.tsx`) render plain `<div>` wrappers — never another `<html>`/`<body>`. Subdomain routing through `src/proxy.ts` rewrites e.g. `photography.philipsun.com/` → `/photography`, so all groups share the single root layout.
 
 ### Editorial design system (the "look")
 
@@ -41,7 +43,7 @@ The site is intentionally **image-forward, magazine-style**. Tokens live in `src
 - `--color-accent` `#5f2f2a` (kickers, focus rings, links)
 - `--color-rule` `#d9cfc1` (borders, dividers)
 
-The old `byu-*` color names are deprecated — if you see them in legacy code, replace with editorial tokens when touching the file.
+The old `byu-*` color names have been fully removed from production code — editorial tokens are the only palette.
 
 **Fonts:** Inter (`--font-inter`, sans default), Playfair Display (`--font-playfair`, all display/heading type), Geist Mono (`--font-mono`).
 
@@ -69,6 +71,38 @@ Use `cn()` from `src/lib/utils.ts` for conditional classes.
 | `src/data/photography.ts` | Photography gallery + packages + testimonials |
 | `content/blog/<slug>/index.mdx` | Folder-based blog posts (see below) |
 | `content/blog/AUTHORING.md` | Authoring guide for future-self / contributors |
+
+### Persistence + schema (Drizzle + Postgres)
+
+Schema lives in `src/db/schema.ts`; migrations in `drizzle/`:
+- `0001_*` — `email_sent_at` on contact submissions
+- `0002_*` — booking uniqueness constraint, hot-path indexes, NOT NULL tightening
+- `0003_*` — `packages.active` migrated from text to boolean, `paymentStatus` + `bookingStatus` pgEnums, more indexes, `$onUpdate` timestamps
+
+Run/inspect via standard Drizzle Kit commands. Migrations are forward-only; never edit a landed migration.
+
+### Validation + security libs
+
+- `src/lib/validation/contact.ts` and `src/lib/validation/booking.ts` — Zod schemas, used by API routes for request parsing
+- `src/lib/rate-limit.ts` — in-memory + DB-backed rate limiter for public endpoints
+- `src/lib/session.ts` — iron-session helpers. Use `isSessionValid(session)` (NOT bare `session.isLoggedIn`) — it also enforces the `SESSION_VERSION` env kill switch. `currentSessionVersion()` is the value to stamp on fresh logins. `src/proxy.ts` enforces this at the edge so bumping `SESSION_VERSION` instantly revokes every previously-sealed cookie.
+- `src/lib/email.ts` — Resend wrapper with `isValidEmailAddress()` + `escapeHtml()` helpers; always escape user-supplied content before interpolating into HTML email bodies
+- `src/lib/json-ld.ts` — `safeJsonLd()` strips control chars and `</script>` payloads before serializing structured data
+- `src/lib/stripe.ts` — Stripe client + price/product helpers
+
+### Auth / payments / CRM routes
+
+- `src/app/(main)/admin/{page,login,LogoutButton}.tsx` — gated admin surface. Server-only checks via `isSessionValid()`; `src/proxy.ts` runs the same check at the edge so `/admin` is locked on production, previews, and localhost alike.
+- `src/app/(main)/api/checkout/route.ts` — creates Stripe Checkout sessions for photography packages
+- `src/app/(main)/api/webhooks/stripe/route.ts` — Stripe webhook receiver; verifies signature, updates `paymentStatus` + `bookingStatus`
+- Existing contact / booking API routes use the Zod validators + rate limiter above; bookings notify `BOOKING_NOTIFICATION_EMAIL` (falls back to `siteConfig.email`).
+
+### Required env vars
+
+In addition to the standard set (Stripe keys, Resend key, `DATABASE_URL`, `NEXT_PUBLIC_DOMAIN`, etc.):
+- `SESSION_SECRET` — ≥32 chars; iron-session sealing password (fail-fast at module load outside test)
+- `SESSION_VERSION` — defaults to `"1"`. Bump to instantly invalidate every issued cookie.
+- `BOOKING_NOTIFICATION_EMAIL` — optional; falls back to `siteConfig.email` if unset.
 
 ### Blog system v2 (folder-based, see `content/blog/AUTHORING.md`)
 
@@ -135,6 +169,10 @@ Animations: Framer Motion `motion.*` with `initial/animate/whileInView`. `useRed
 Vitest + React Testing Library + jsdom. Setup file: `src/test/setup.ts`. Tests are co-located (`foo.tsx` + `foo.test.tsx`) and a few page-level tests live in `src/app/__tests__/`.
 
 TDD is the norm for new components — every editorial component and MDX shortcode in `src/components/{editorial,mdx}/` ships with a failing-test-first commit, see `git log --oneline --grep="^feat(editorial)\|^feat(mdx)"`.
+
+### CI
+
+`.github/workflows/ci.yml` runs lint → vitest (run-once, with the carve-out test files excluded) → `npm run build` on every PR and on pushes to `main` / `feat/blog-system-v2`. Keep this workflow green; the local `npm run test` will still show the known carve-out failures, but CI's `--exclude` glob filters them out.
 
 ## Workflow conventions
 
