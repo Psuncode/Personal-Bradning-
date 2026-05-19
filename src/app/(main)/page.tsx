@@ -9,8 +9,8 @@ export default function HomePage() {
     <>
       <Hero />
       <HeadlineProject />
-      <SelectedWriting />
       <ToolsGrid />
+      <SelectedWriting />
       <Elsewhere />
     </>
   );

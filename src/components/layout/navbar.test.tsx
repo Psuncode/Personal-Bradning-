@@ -60,31 +60,19 @@ describe("Navbar Component", () => {
     expect(screen.queryByText("Contact")).toBeNull();
   });
 
-  it("renders a top-level Photography link between Writing and Meet", () => {
+  it("does NOT have a top-level Photography link (Photography lives in the Ventures dropdown only)", () => {
     const { container } = render(<Navbar />);
-    // The top-level desktop list (the first <ul> in the nav)
+    // Only the direct <li> children of the top desktop <ul> are top-level links.
+    // Anything nested inside the Ventures dropdown panel is excluded by :scope.
     const topUl = container.querySelector("nav > ul");
     expect(topUl).toBeDefined();
-    const topLabels = Array.from(topUl?.querySelectorAll("a") ?? [])
+    const topLabels = Array.from(
+      topUl?.querySelectorAll(":scope > li > a") ?? [],
+    )
       .map((a) => a.textContent?.trim())
       .filter(Boolean);
 
-    const writingIdx = topLabels.indexOf("Writing");
-    const photographyIdx = topLabels.indexOf("Photography");
-    const bookIdx = topLabels.indexOf("Book a Call");
-
-    expect(writingIdx).toBeGreaterThanOrEqual(0);
-    expect(photographyIdx).toBeGreaterThan(writingIdx);
-    expect(bookIdx).toBeGreaterThan(photographyIdx);
-  });
-
-  it("Photography top-level link points to /photography", () => {
-    const { container } = render(<Navbar />);
-    const topUl = container.querySelector("nav > ul");
-    const link = Array.from(topUl?.querySelectorAll("a") ?? []).find(
-      (a) => a.textContent?.trim() === "Photography",
-    );
-    expect(link?.getAttribute("href")).toBe("/photography");
+    expect(topLabels).not.toContain("Photography");
   });
 
   it("navigation links have correct hrefs", () => {

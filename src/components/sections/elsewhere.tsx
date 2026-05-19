@@ -38,18 +38,33 @@ export function Elsewhere() {
         Elsewhere
       </p>
 
-      <ul className="flex flex-col leading-loose">
-        {links.map((link) => (
-          <li key={link.label} className="text-base text-[color:var(--color-ink-soft)]">
-            <span className="text-[color:var(--color-ink)]">{link.label}</span>
-            <span className="mx-3 text-[color:var(--color-ink-soft)]">&rarr;</span>
+      <ul className="flex flex-col border-t border-[color:var(--color-rule)]">
+        {links.map((link, i) => (
+          <li
+            key={link.label}
+            className="border-b border-[color:var(--color-rule)]"
+          >
             <a
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[color:var(--color-ink-soft)] no-underline transition-[font-style,color] duration-150 hover:italic hover:text-[color:var(--color-accent)]"
+              className="group flex items-baseline gap-6 py-6 transition-[font-style] duration-150 hover:italic md:gap-10 md:py-8"
             >
-              {link.destination}
+              <span className="w-10 shrink-0 font-[family-name:var(--font-playfair)] text-lg text-[color:var(--color-ink-soft)] tabular-nums md:text-xl">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="flex-1 font-[family-name:var(--font-playfair)] text-2xl text-[color:var(--color-ink)] md:text-3xl">
+                {link.label}
+              </span>
+              <span className="hidden text-sm text-[color:var(--color-ink-soft)] sm:inline">
+                {link.destination}
+              </span>
+              <span
+                aria-hidden
+                className="text-base text-[color:var(--color-ink-soft)] transition-transform duration-150 group-hover:translate-x-1"
+              >
+                &nbsp;&rarr;
+              </span>
             </a>
           </li>
         ))}
