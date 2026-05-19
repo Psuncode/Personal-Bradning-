@@ -459,46 +459,44 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
           )}
 
           <div className="space-y-4">
-            {sessionPackages.map((pkg) => (
-              <div
-                key={pkg.id}
-                role="button"
-                tabIndex={0}
-                onClick={() => setSelectedPackage(pkg)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setSelectedPackage(pkg);
-                  }
-                }}
-                className={cn(
-                  'border rounded-xl p-6 cursor-pointer transition-all duration-150',
-                  selectedPackage?.id === pkg.id
-                    ? 'border-[color:var(--color-ink)] ring-2 ring-[color:var(--color-ink)]/20'
-                    : 'border-gray-200 hover:border-[color:var(--color-accent)] hover:shadow-sm'
-                )}
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <h3 className="text-base font-semibold text-[color:var(--color-ink)]">{pkg.name}</h3>
-                    <p className="text-sm text-gray-600 mt-1">{pkg.description}</p>
+            {sessionPackages.map((pkg) => {
+              const isSelected = selectedPackage?.id === pkg.id;
+              return (
+                <button
+                  key={pkg.id}
+                  type="button"
+                  aria-pressed={isSelected}
+                  onClick={() => setSelectedPackage(pkg)}
+                  className={cn(
+                    'w-full text-left border rounded-xl p-6 cursor-pointer transition-all duration-150',
+                    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-accent)]',
+                    isSelected
+                      ? 'border-[color:var(--color-ink)] ring-2 ring-[color:var(--color-ink)]/20'
+                      : 'border-gray-200 hover:border-[color:var(--color-accent)] hover:shadow-sm'
+                  )}
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <h3 className="text-base font-semibold text-[color:var(--color-ink)]">{pkg.name}</h3>
+                      <p className="text-sm text-gray-600 mt-1">{pkg.description}</p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-lg font-semibold text-[color:var(--color-ink)] tabular-nums">
+                        {formatPrice(pkg.priceInCents)}
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-right shrink-0">
-                    <p className="text-lg font-semibold text-[color:var(--color-ink)] tabular-nums">
-                      {formatPrice(pkg.priceInCents)}
-                    </p>
+                  <div className="flex items-center gap-2 mt-4">
+                    <Badge variant="secondary">
+                      {formatDuration(pkg.durationMinutes)}
+                    </Badge>
+                    <Badge variant="outline">
+                      {formatPrice(pkg.depositInCents)} deposit
+                    </Badge>
                   </div>
-                </div>
-                <div className="flex items-center gap-2 mt-4">
-                  <Badge variant="secondary">
-                    {formatDuration(pkg.durationMinutes)}
-                  </Badge>
-                  <Badge variant="outline">
-                    {formatPrice(pkg.depositInCents)} deposit
-                  </Badge>
-                </div>
-              </div>
-            ))}
+                </button>
+              );
+            })}
           </div>
 
           <div className="flex justify-end">

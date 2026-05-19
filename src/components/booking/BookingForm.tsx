@@ -369,10 +369,14 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
           <h3 className="text-2xl font-semibold text-[color:var(--color-ink)]">Your Details</h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-[color:var(--color-ink)] mb-2">
+              <label
+                htmlFor="meet-name"
+                className="block text-sm font-medium text-[color:var(--color-ink)] mb-2"
+              >
                 Name *
               </label>
               <input
+                id="meet-name"
                 type="text"
                 name="name"
                 value={formData.name}
@@ -383,10 +387,14 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[color:var(--color-ink)] mb-2">
+              <label
+                htmlFor="meet-email"
+                className="block text-sm font-medium text-[color:var(--color-ink)] mb-2"
+              >
                 Email *
               </label>
               <input
+                id="meet-email"
                 type="email"
                 name="email"
                 value={formData.email}
@@ -397,10 +405,14 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-[color:var(--color-ink)] mb-2">
+              <label
+                htmlFor="meet-description"
+                className="block text-sm font-medium text-[color:var(--color-ink)] mb-2"
+              >
                 Description (Optional)
               </label>
               <textarea
+                id="meet-description"
                 name="description"
                 value={formData.description}
                 onChange={handleFormChange}
