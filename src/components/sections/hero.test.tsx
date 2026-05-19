@@ -46,46 +46,62 @@ afterEach(() => {
 });
 
 describe("Hero Component", () => {
-  it("renders the editorial kicker and card copy", () => {
+  it("renders the type-only H1 with name and Inara Health", () => {
     render(<Hero />);
 
-    expect(screen.getByText("Philip Sun")).toBeDefined();
-    expect(screen.getByText("Current Positioning")).toBeDefined();
-    expect(
-      screen.getByText(/16M\+ users influenced across enterprise and healthcare systems/i),
-    ).toBeDefined();
-    expect(
-      screen.getByText(/Open to the right full-time PM role where product judgment matters/i),
-    ).toBeDefined();
+    const h1 = screen.getByRole("heading", { level: 1 });
+    expect(h1.textContent).toMatch(/Philip Sun/i);
+    expect(h1.textContent).toMatch(/Inara Health/i);
   });
 
-  it("renders the new thesis-led headline", () => {
+  it("renders the sub-copy paragraph", () => {
     render(<Hero />);
 
     expect(
-      screen.getByRole("heading", {
-        name: /I build product strategy, operating leverage, and trust/i,
-      }),
+      screen.getByText(
+        /Healthcare operations, medtech, and the boring parts of building software that holds up under scrutiny/i,
+      ),
     ).toBeDefined();
   });
 
-  it("supports the reduced-motion branch", () => {
+  it("renders a single 'See Inara' text link pointing to /projects/inara-health", () => {
+    render(<Hero />);
+
+    const link = screen.getByText(/See Inara/i).closest("a");
+    expect(link?.getAttribute("href")).toBe("/projects/inara-health");
+  });
+
+  it("does not render a 'Book a Call' CTA", () => {
+    render(<Hero />);
+
+    expect(screen.queryByText(/Book a Call/i)).toBeNull();
+  });
+
+  it("does not render the 'Current Positioning' card", () => {
+    render(<Hero />);
+
+    expect(screen.queryByText(/Current Positioning/i)).toBeNull();
+  });
+
+  it("does not render an image element", () => {
+    const { container } = render(<Hero />);
+
+    expect(container.querySelector("img")).toBeNull();
+  });
+
+  it("does not repeat the 'Philip Sun' eyebrow kicker outside the H1", () => {
+    render(<Hero />);
+
+    // The H1 contains the name; there should be no separate kicker paragraph.
+    expect(screen.queryByText("Philip Sun", { selector: "p" })).toBeNull();
+  });
+
+  it("supports the reduced-motion branch on the H1", () => {
     motionState.reduceMotion = true;
 
     const { container } = render(<Hero />);
 
-    expect(container.querySelectorAll("[data-initial='false']").length).toBeGreaterThanOrEqual(3);
-  });
-
-  it("renders the primary CTA", () => {
-    render(<Hero />);
-
-    expect(screen.getByText(/Book a Call/i).closest("a")?.getAttribute("href")).toBe("/meet");
-  });
-
-  it("does not use the old dark hero treatment", () => {
-    const { container } = render(<Hero />);
-
-    expect(container.querySelector("section")?.className).not.toContain("bg-[#0a0a0a]");
+    const h1 = container.querySelector("h1");
+    expect(h1?.getAttribute("data-initial")).toBe("false");
   });
 });
