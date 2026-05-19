@@ -1,6 +1,8 @@
 export interface BlogPostFrontmatter {
   title: string;
   date: string;
+  /** Optional explicit modification date (ISO string). Falls back to `date`. */
+  dateModified?: string;
   excerpt: string;
   tags: string[];
   published: boolean;

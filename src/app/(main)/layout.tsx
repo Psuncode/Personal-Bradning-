@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono, Playfair_Display } from "next/font/google";
-import "../globals.css";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { GrainOverlay } from "@/components/editorial/grain-overlay";
@@ -95,27 +94,25 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} ${geistMono.variable} ${playfairDisplay.variable} min-h-screen flex flex-col font-sans antialiased`}
+    <div
+      className={`${inter.variable} ${geistMono.variable} ${playfairDisplay.variable} flex flex-col flex-1`}
+    >
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-gray-900 focus:text-white focus:rounded-lg focus:text-sm focus:font-medium"
       >
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-gray-900 focus:text-white focus:rounded-lg focus:text-sm focus:font-medium"
-        >
-          Skip to content
-        </a>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: safeJsonLd(personJsonLd) }}
-        />
-        <Navbar />
-        <main id="main-content" className="flex-1">{children}</main>
-        <GrainOverlay />
-        <Footer />
-        <Analytics />
-        <SpeedInsights />
-      </body>
-    </html>
+        Skip to content
+      </a>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(personJsonLd) }}
+      />
+      <Navbar />
+      <main id="main-content" className="flex-1">{children}</main>
+      <GrainOverlay />
+      <Footer />
+      <Analytics />
+      <SpeedInsights />
+    </div>
   );
 }

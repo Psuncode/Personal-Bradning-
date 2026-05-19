@@ -53,7 +53,13 @@ export default async function BlogPostPage({
     "@type": "Article",
     headline: post.frontmatter.title,
     description: post.frontmatter.excerpt,
+    image: [`${siteConfig.url}/blog/${slug}/og`],
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${siteConfig.url}/blog/${slug}`,
+    },
     datePublished: post.frontmatter.date,
+    dateModified: post.frontmatter.dateModified ?? post.frontmatter.date,
     author: {
       "@type": "Person",
       name: "Philip Sun",

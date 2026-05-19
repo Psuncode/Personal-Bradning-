@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Globe, Factory, Handshake, Ruler, Package, Building2, ArrowRight } from "lucide-react";
 import { siteConfig } from "@/data/site-config";
+import { ecommerceConfig } from "@/data/ecommerce";
 
 export const metadata: Metadata = {
   title: "B2B Products — Philip Sun Global Trading",
@@ -13,7 +14,7 @@ export default function EcommerceHome() {
       {/* SECTION 1 — Header / Nav */}
       <header className="sticky top-0 z-50 bg-white border-b border-slate-200">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <span className="text-base font-semibold text-[color:var(--color-ink)]">Philip Sun — Global Trading</span>
+          <span className="text-base font-semibold text-[color:var(--color-ink)]">{ecommerceConfig.brandName}</span>
           <a
             href={`mailto:${siteConfig.email}`}
             className="bg-[color:var(--color-ink)] text-[color:var(--color-paper)] px-5 py-2 rounded-lg text-sm font-medium hover:bg-[color:var(--color-accent)] transition-colors focus-visible:ring-2 focus-visible:ring-[color:var(--color-accent)] focus-visible:outline-none"
@@ -212,7 +213,7 @@ export default function EcommerceHome() {
         <div className="max-w-6xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold text-[color:var(--color-paper)]">Ready to source at scale?</h2>
           <p className="text-lg text-[color:var(--color-rule)] mt-4 max-w-xl mx-auto">
-            Get in touch and Philip will respond within 24 hours to discuss your requirements.
+            {ecommerceConfig.slaCopy}
           </p>
           <a
             href={`mailto:${siteConfig.email}`}
@@ -226,7 +227,7 @@ export default function EcommerceHome() {
       {/* SECTION 8 — Footer */}
       <footer className="py-8 border-t border-slate-200 bg-white">
         <p className="text-sm text-slate-500 text-center">
-          Philip Sun &middot; Global Trading &nbsp;|&nbsp; &copy; {new Date().getFullYear()} &nbsp;|&nbsp; ecommerce.philipsun.com
+          {ecommerceConfig.brandShort} &middot; {ecommerceConfig.brandLineSuffix} &nbsp;|&nbsp; &copy; {new Date().getFullYear()} &nbsp;|&nbsp; {ecommerceConfig.host}
         </p>
       </footer>
     </div>
