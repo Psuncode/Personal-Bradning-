@@ -5,6 +5,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { GrainOverlay } from "@/components/editorial/grain-overlay";
 import { siteConfig } from "@/data/site-config";
+import { safeJsonLd } from "@/lib/json-ld";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -106,7 +107,7 @@ export default function RootLayout({
         </a>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(personJsonLd) }}
         />
         <Navbar />
         <main id="main-content" className="flex-1">{children}</main>

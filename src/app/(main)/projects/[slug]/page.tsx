@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { projects } from "@/data/projects";
 import { ProjectDetailView } from "@/components/sections/project-detail-view";
 import { siteConfig } from "@/data/site-config";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export function generateStaticParams() {
   return projects
@@ -53,7 +54,7 @@ export default async function ProjectDetailPage({
     <div className="pb-24">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       <ProjectDetailView project={project} allProjects={projects} numeral={numeral} />
     </div>

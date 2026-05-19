@@ -4,6 +4,7 @@ import { getAllPosts, getPostBySlug } from "@/lib/blog";
 import { BlogPostView, buildMdxComponents } from "@/components/sections/blog-post-view";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { siteConfig } from "@/data/site-config";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
@@ -98,18 +99,18 @@ export default async function BlogPostPage({
     <div className="pb-24 pt-8">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
       {faqJsonLd && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(faqJsonLd) }}
         />
       )}
       {howToJsonLd && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: safeJsonLd(howToJsonLd) }}
         />
       )}
       <BlogPostView post={post} Content={Content as React.ComponentType} allPosts={getAllPosts()} />
