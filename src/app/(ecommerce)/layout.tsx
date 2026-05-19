@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "../globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -19,10 +18,8 @@ export default function EcommerceLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} min-h-screen flex flex-col font-sans antialiased bg-[#F8FAFC]`}>
-        <main className="flex-1">{children}</main>
-      </body>
-    </html>
+    <div className={`${inter.variable} flex flex-col flex-1 bg-[#F8FAFC]`}>
+      <main className="flex-1">{children}</main>
+    </div>
   );
 }

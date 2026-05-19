@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { projects } from "@/data/projects";
 import { ProjectDetailView } from "@/components/sections/project-detail-view";
 import { siteConfig } from "@/data/site-config";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export function generateStaticParams() {
   return projects
@@ -21,6 +22,9 @@ export async function generateMetadata({
   return {
     title: project.title,
     description: project.description,
+    alternates: {
+      canonical: `${siteConfig.url}/projects/${slug}`,
+    },
   };
 }
 
@@ -32,6 +36,9 @@ export default async function ProjectDetailPage({
   const { slug } = await params;
   const project = projects.find((p) => p.slug === slug);
   if (!project) notFound();
+
+  const index = projects.findIndex((p) => (p.slug ?? p.id) === slug);
+  const numeral = index >= 0 ? String(index + 1).padStart(2, "0") : undefined;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -47,12 +54,12 @@ export default async function ProjectDetailPage({
   };
 
   return (
-    <div className="pb-24 pt-8">
+    <div className="pb-24">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jsonLd) }}
       />
-      <ProjectDetailView project={project} />
+      <ProjectDetailView project={project} allProjects={projects} numeral={numeral} />
     </div>
   );
 }

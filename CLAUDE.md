@@ -6,71 +6,226 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 npm run dev          # Start dev server (localhost:3000)
-npm run build        # Production build — run this before committing to catch type errors
+npm run build        # Production build — runs `prebuild` first (blog asset pipeline)
 npm run lint         # ESLint
 npm run test         # Vitest (watch mode)
-npm run test:ui      # Vitest with browser UI
+npm run test -- --run         # Vitest run-once (use this in scripts/CI)
+npm run test:ui
 npm run test:coverage
 ```
 
-Run a single test file:
+Single test file:
 ```bash
-npx vitest src/app/__tests__/home.test.tsx
+npx vitest run src/lib/blog.test.ts
 ```
+
+## Known carve-outs (don't try to fix these)
+
+- **TS errors in test files only:** `src/app/__tests__/{contact,meet}.test.tsx` have pre-existing `Property 'className' does not exist on type 'ChildNode'` errors. These are not in scope for current branches.
+- **Pre-existing test failures (~16 tests):** `home.test.tsx`, `about.test.tsx`, `case-studies.test.tsx`, `current-focus.test.tsx` assert against old chrome that's since been refactored. Not regressions from new work — verify by stashing and re-running before claiming new breakage. CI (`.github/workflows/ci.yml`) excludes these four files via vitest `--exclude` glob, so `npm run test` is dirty locally but green in CI.
+- **`/resume` route removed** during the portfolio beautification refactor (commit `8dcb863` on `feat/portfolio-beautification`). Don't reintroduce.
 
 ## Architecture
 
-**Next.js 16 App Router** with React 19 and TypeScript 5. All pages live in `src/app/` using file-based routing.
+**Next.js 16 App Router** with React 19 and TypeScript 5. All pages live in `src/app/`. Routes are grouped: `(main)` for the portfolio surfaces, `(photography)` for the photography sub-site, `(ecommerce)` placeholder.
 
-### Data layer
+**Canonical root-layout pattern:** `src/app/layout.tsx` is the sole owner of `<html>` and `<body>` (plus fonts, grain overlay, Person JSON-LD). Group layouts (`(main)/layout.tsx`, `(photography)/layout.tsx`, `(ecommerce)/layout.tsx`) render plain `<div>` wrappers — never another `<html>`/`<body>`. Subdomain routing through `src/proxy.ts` rewrites e.g. `photography.philipsun.com/` → `/photography`, so all groups share the single root layout.
 
-All content is static — no database. Edit these files to update site content:
+### Editorial design system (the "look")
+
+The site is intentionally **image-forward, magazine-style**. Tokens live in `src/app/globals.css` via Tailwind 4's `@theme inline` (no `tailwind.config.ts`).
+
+**Color tokens** — cream paper, ink text, accent rust. Always reference via CSS variables, not hex literals:
+- `--color-paper` `#f4efe6` (page background)
+- `--color-paper-elevated` `#fbf7f1` (cards, forms)
+- `--color-ink` `#201c1a` (primary text)
+- `--color-ink-soft` `#5f5851` (secondary text)
+- `--color-accent` `#5f2f2a` (kickers, focus rings, links)
+- `--color-rule` `#d9cfc1` (borders, dividers)
+
+The old `byu-*` color names have been fully removed from production code — editorial tokens are the only palette.
+
+**Fonts:** Inter (`--font-inter`, sans default), Playfair Display (`--font-playfair`, all display/heading type), Geist Mono (`--font-mono`).
+
+**Utility classes** (defined in `globals.css`):
+- `.editorial-shell` — `max-w-6xl px-6 md:px-12` page container
+- `.editorial-kicker` — uppercase tracked accent-color label
+- `.editorial-display` — `hanging-punctuation: first last` for big Playfair headings
+- `.editorial-prose > p:first-of-type::first-letter` — auto drop cap on blog posts
+- `.editorial-asym-left` / `.editorial-asym-right` — 12-col asymmetric grid helpers
+- `.editorial-card` — cream-elevated surface with rule border
+- `.grain-overlay` — fixed overlay applied once at the layout level
+
+**Component family** in `src/components/editorial/`:
+- `EditorialPageHeader`, `EditorialEntry`, `ProjectCover`, `ProjectNavLinks`, `RelatedPosts`, `BlogCover`, `SeriesHeader`, `GrainOverlay`
+
+Use `cn()` from `src/lib/utils.ts` for conditional classes.
+
+### Data layer (static, file-based)
 
 | File | Controls |
 |---|---|
 | `src/data/site-config.ts` | Site title, description, URL, social links |
-| `src/data/projects.ts` | All projects (home featured + /projects grid + /projects/[slug]) |
-| `src/data/resume.ts` | Roles, education, skills for /resume |
-| `src/data/current-focus.ts` | Three "What I'm working on" cards on homepage |
-| `content/blog/*.mdx` | Blog posts (gray-matter frontmatter: title, date, excerpt, tags, published) |
+| `src/data/projects.ts` | All projects (every project has a required `coverImage: { src, alt, focalPoint?, layout: "overlay"\|"beside" }`) |
+| `src/data/current-focus.ts` | Homepage "What I'm working on" cards |
+| `src/data/photography.ts` | Photography gallery + packages + testimonials |
+| `content/blog/<slug>/index.mdx` | Folder-based blog posts (see below) |
+| `content/blog/AUTHORING.md` | Authoring guide for future-self / contributors |
 
-### Key types
+### Persistence + schema (Drizzle + Postgres)
 
-`src/types/index.ts` — `Project` interface (id, title, description, techStack, metrics[], slug, problem, solution, results, lessonsLearned, featured)
+Schema lives in `src/db/schema.ts`; migrations in `drizzle/`:
+- `0001_*` — `email_sent_at` on contact submissions
+- `0002_*` — booking uniqueness constraint, hot-path indexes, NOT NULL tightening
+- `0003_*` — `packages.active` migrated from text to boolean, `paymentStatus` + `bookingStatus` pgEnums, more indexes, `$onUpdate` timestamps
 
-`src/types/blog.ts` — `BlogPost` / `BlogPostFrontmatter`
+Run/inspect via standard Drizzle Kit commands. Migrations are forward-only; never edit a landed migration.
 
-`src/data/resume.ts` — `Role` (company, title, period, location, type, bullets[]) and `Education`
+### Validation + security libs
 
-### Styling
+- `src/lib/validation/contact.ts` and `src/lib/validation/booking.ts` — Zod schemas, used by API routes for request parsing
+- `src/lib/rate-limit.ts` — in-memory + DB-backed rate limiter for public endpoints
+- `src/lib/session.ts` — iron-session helpers. Use `isSessionValid(session)` (NOT bare `session.isLoggedIn`) — it also enforces the `SESSION_VERSION` env kill switch. `currentSessionVersion()` is the value to stamp on fresh logins. `src/proxy.ts` enforces this at the edge so bumping `SESSION_VERSION` instantly revokes every previously-sealed cookie.
+- `src/lib/email.ts` — Resend wrapper with `isValidEmailAddress()` + `escapeHtml()` helpers; always escape user-supplied content before interpolating into HTML email bodies
+- `src/lib/json-ld.ts` — `safeJsonLd()` strips control chars and `</script>` payloads before serializing structured data
+- `src/lib/stripe.ts` — Stripe client + price/product helpers
 
-**Tailwind CSS 4** — config is in `src/app/globals.css` via `@theme inline` (no separate `tailwind.config.ts`). Custom colors are BYU-branded: `byu-navy` (#002E5D), `byu-blue`, `byu-light-blue`, `byu-sky`. Use `cn()` from `src/lib/utils.ts` for conditional classes.
+### Auth / payments / CRM routes
 
-Three fonts loaded in layout: **Inter** (`--font-inter`, sans-serif default), **Geist Mono** (`--font-mono`), **Playfair Display** (`--font-playfair`, used only on hero H1).
+- `src/app/(main)/admin/{page,login,LogoutButton}.tsx` — gated admin surface. Server-only checks via `isSessionValid()`; `src/proxy.ts` runs the same check at the edge so `/admin` is locked on production, previews, and localhost alike.
+- `src/app/(main)/api/checkout/route.ts` — creates Stripe Checkout sessions for photography packages
+- `src/app/(main)/api/webhooks/stripe/route.ts` — Stripe webhook receiver; verifies signature, updates `paymentStatus` + `bookingStatus`
+- Existing contact / booking API routes use the Zod validators + rate limiter above; bookings notify `BOOKING_NOTIFICATION_EMAIL` (falls back to `siteConfig.email`).
+
+### Required env vars
+
+In addition to the standard set (Stripe keys, Resend key, `DATABASE_URL`, `NEXT_PUBLIC_DOMAIN`, etc.):
+- `SESSION_SECRET` — ≥32 chars; iron-session sealing password (fail-fast at module load outside test)
+- `SESSION_VERSION` — defaults to `"1"`. Bump to instantly invalidate every issued cookie.
+- `BOOKING_NOTIFICATION_EMAIL` — optional; falls back to `siteConfig.email` if unset.
+
+### Blog system v2 (folder-based, see `content/blog/AUTHORING.md`)
+
+Every post is a folder: `content/blog/<slug>/index.mdx` + co-located `cover.{jpg,png,webp}` (auto-detected hero) + any other images referenced as `./image.png` in MDX.
+
+**Discovery:** `src/lib/blog.ts` walks `content/blog/`. Folders containing `index.mdx` are posts; loose `.mdx` files at the root still work (legacy). Folder beats `.mdx` of the same slug.
+
+**Frontmatter:** standard `title, date, excerpt, tags, published, featured` plus optional `series, seriesOrder` (groups posts), `coverAlt` (alt text for cover), `faq, howTo` (generate JSON-LD).
+
+**Six MDX shortcodes** registered globally — no imports needed in MDX:
+- `<Figure src="./..." caption="..." alt="..." />`
+- `<FullBleed src="./..." alt="..." />`
+- `<Gallery columns={3} images={[{src, alt}, ...]} />`
+- `<PullQuote attribution="...">quote</PullQuote>`
+- `<TwoColumn>{left}{right}</TwoColumn>`
+- `<Aside>margin note</Aside>`
+
+Implementations live under `src/components/mdx/`. Each has its own TDD test. Slug is bound per-render via `buildMdxComponents(slug)` exported from `src/components/sections/blog-post-view.tsx`.
+
+**Asset pipeline (the `prebuild` hook):** `scripts/build-blog-assets.ts` runs before every `next build` and `next dev` start. It:
+1. Mirrors every non-MDX file from `content/blog/<slug>/` into `public/_blog-assets/<slug>/`.
+2. Generates LQIP blur placeholders (base64) into `public/_blog-assets/<slug>/__blur.json` via `plaiceholder`.
+
+`public/_blog-assets/` is **gitignored** — it's a build artifact. Source images live in `content/blog/<slug>/`. The helper `src/lib/blog-assets.ts:resolveBlogAsset(slug, "./img.jpg")` rewrites paths and attaches blur data.
+
+**Routes:**
+- `/blog` index, `/blog/<slug>` post, `/blog/tag/<tag>` static-params per unique tag, `/blog/<slug>/og` per-post 1200×630 OG card (nodejs runtime — needs `getPostBySlug` filesystem access).
+
+### Project covers + view-transitions
+
+Every project carries a `coverImage` with `layout: "overlay"` (full-bleed 16:9 with title overlaid) or `"beside"` (4:3 image + title in adjacent column). `<ProjectCover>` and the homepage `<EditorialEntry>` share a `viewTransitionName` of `cover-<slug>` so navigation between `/projects` and `/projects/<slug>` morphs in supported browsers. Same pattern for blog: `blog-cover-<slug>`.
+
+The pre-portfolio images are still SVG placeholders with literal text labels — `<ProjectCover>` detects SVG paths and falls back to typography plates instead of letting the placeholder text show through. See `docs/IMAGES_TO_UPLOAD.md` for the prioritized list of real images that still need to be uploaded.
 
 ### Component conventions
 
-- `src/components/ui/` — shadcn/ui components (copy-paste, do not modify structure)
-- `src/components/sections/` — full-page sections (Hero, CurrentFocus, ProjectsGrid, FAQ, ContactSection, etc.)
-- `src/components/layout/` — Navbar, Footer, Container (`max-w-6xl` with responsive padding)
-- Animations: Framer Motion `motion.*` with `initial/animate/whileInView` — see hero.tsx for the standard pattern
+- `src/components/ui/` — shadcn/ui copy-paste primitives; don't modify their structure
+- `src/components/sections/` — homepage / page-level sections (Hero, CaseStudies, About, CurrentFocus, etc.)
+- `src/components/editorial/` — the editorial design-system family (see above)
+- `src/components/mdx/` — the six blog shortcodes
+- `src/components/layout/` — Navbar, Footer, Container
+
+Animations: Framer Motion `motion.*` with `initial/animate/whileInView`. `useReducedMotion()` gates entrance animations — see `hero.tsx` for the canonical pattern.
+
+### Cal.com integration
+
+Photography bookings at `/photography/book` use a Cal.com **free-tier** embed (`<CalEmbed>` in `src/components/cal-embed.tsx`, powered by `@calcom/embed-react`) — Cal.com handles scheduling, deposit collection (via its built-in Stripe integration), and confirmation email. No env vars are required for the free tier. Config (Cal.com username + event slugs) lives in `src/data/site-config.ts` under `siteConfig.cal`, accessed via `calLinkFor(slug)`. When upgrading to Cal.com Pro to enable server-side webhooks, set `CAL_API_KEY` + `CAL_WEBHOOK_SECRET` (see `.env.local.example`) and add a `/api/cal-webhook` route to consume booking events.
 
 ### Calendar / meeting system
 
-`/meet` embeds Cal.com via `@calcom/embed-react`. The custom availability logic in `src/lib/` is a separate booking flow:
-- `availabilityService.ts` — generates 30-min slots (9 AM–5 PM Mountain, weekdays only)
-- `icalendarService.ts` — fetches busy times from `/api/calendar`
-- `icsService.ts` — generates `.ics` files for download
-- `src/app/api/calendar/route.ts` — server route that calls iCloud CalDAV via `tsdav`
+`/meet` embeds Cal.com via `@calcom/embed-react`. Custom availability logic in `src/lib/`:
+- `availabilityService.ts` generates 30-min slots, 9 AM–5 PM Mountain, weekdays
+- `icalendarService.ts` fetches busy times from `/api/calendar`
+- `icsService.ts` generates `.ics` files
+- `src/app/api/calendar/route.ts` server route calling iCloud CalDAV via `tsdav`
 
 ### SEO infrastructure
 
-- `src/app/og/route.tsx` — edge-runtime dynamic OG image (1200×630)
-- `src/app/layout.tsx` — Person JSON-LD schema, OG + Twitter metadata (all sourced from `siteConfig`)
-- `src/app/blog/[slug]/page.tsx` — Article JSON-LD per post
-- `src/app/projects/[slug]/page.tsx` — SoftwareApplication JSON-LD per project
+- `src/app/(main)/og/route.tsx` — main edge-runtime OG card, cream/ink editorial palette
+- `src/app/(main)/blog/[slug]/og/route.tsx` — per-post OG (nodejs runtime — reads fs)
+- `src/app/layout.tsx` — Person JSON-LD, OG + Twitter metadata sourced from `siteConfig`
+- `src/app/(main)/blog/[slug]/page.tsx` — Article + optional FAQ/HowTo JSON-LD per post
+- `src/app/(main)/projects/[slug]/page.tsx` — SoftwareApplication JSON-LD per project
 - `src/app/sitemap.ts` / `robots.ts` / `feed.xml/route.ts` — auto-generated
 
 ### Testing
 
-Vitest + React Testing Library + jsdom. Setup file: `src/test/setup.ts`. Tests live in `src/app/__tests__/`.
+Vitest + React Testing Library + jsdom. Setup file: `src/test/setup.ts`. Tests are co-located (`foo.tsx` + `foo.test.tsx`) and a few page-level tests live in `src/app/__tests__/`.
+
+TDD is the norm for new components — every editorial component and MDX shortcode in `src/components/{editorial,mdx}/` ships with a failing-test-first commit, see `git log --oneline --grep="^feat(editorial)\|^feat(mdx)"`.
+
+### CI
+
+`.github/workflows/ci.yml` runs lint → vitest (run-once, with the carve-out test files excluded) → `npm run build` on every PR and on pushes to `main` / `feat/blog-system-v2`. Keep this workflow green; the local `npm run test` will still show the known carve-out failures, but CI's `--exclude` glob filters them out.
+
+## Workflow conventions
+
+### Branches + specs/plans
+
+Active work uses long-lived feature branches (`feat/portfolio-beautification`, `feat/blog-system-v2`). Each major feature has a paired:
+
+- **Spec** at `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
+- **Plan** at `docs/superpowers/plans/YYYY-MM-DD-<topic>.md` (numbered atomic tasks, each ending in a literal commit message)
+
+Plans are designed to be executable by `/ralph-loop` overnight — every task ends in a commit with the exact message shown.
+
+### Skills
+
+Project-scoped skills live under `skills/<name>/SKILL.md` (source of truth, tracked in git). The Claude harness picks them up via a `.claude/skills/` symlink — on fresh clones, see `skills/<name>/README.md` for activation. Currently shipped: `write-blog-post` (drafts a post via short interview → `/storyteller-writing-assistant` handoff → MDX on disk).
+
+### What goes in `.gitignore` (don't accidentally commit)
+
+`public/_blog-assets/`, `.next/`, `.workspace/`, `memory/`, `.claude/` (symlink), `.planning/`, `.claude-flow/`, `.agents/`, `.vscode/`, `skills-lock.json`. Stage explicitly (`git add <path>`) instead of `git add -A` — the workspace and worktree dirs above should never enter commits.
+
+---
+
+## Team Lead Rules (GSD orchestration)
+
+You orchestrate side-project work via GSD. On top of GSD's defaults:
+
+### Token discipline
+- Never paste raw subagent output. Synthesize.
+- Prefer Grep over Read when searching.
+- Don't pre-load context for subagents — trust the fresh-context model.
+
+### Ralph loop rule
+Use tight retry loops ONLY for deterministic signals:
+- "All tests pass" ✅
+- "Lint clean" ✅
+- "Snapshot matches" ✅
+- Anything requiring judgment ❌ — decompose instead.
+
+### Decision policy
+- Ambiguous tradeoffs → stop, ask the user.
+- Tech choices with lock-in (DBs, hosts, paid APIs) → flag before adopting.
+
+### Standard GSD workflow
+```
+/gsd-new-project         # first time
+/gsd-discuss-phase N     # capture decisions (don't skip)
+/gsd-plan-phase N        # atomic plans
+/gsd-execute-phase N     # parallel waves, fresh contexts
+/gsd-verify-work N       # walk through what got built
+/gsd-ship N              # PR from verified work
+```
+Returning after a break: `/gsd-map-codebase` then `/gsd-progress`.

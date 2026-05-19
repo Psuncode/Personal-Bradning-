@@ -1,5 +1,7 @@
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 const competencies = [
   {
@@ -18,8 +20,14 @@ const competencies = [
 
 export function About() {
   return (
-    <section id="about" className="py-24">
-      <div className="editorial-shell grid gap-12 md:grid-cols-12">
+    <section id="about" className="pt-32 pb-24 overflow-hidden">
+      <motion.div 
+        className="editorial-shell grid gap-12 md:grid-cols-12"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         <div className="md:col-span-7">
           <p className="editorial-kicker mb-4">Profile</p>
           <h2 className="font-[family-name:var(--font-playfair)] text-4xl leading-tight text-[color:var(--color-ink)] md:text-6xl">
@@ -72,18 +80,25 @@ export function About() {
 
         <div className="md:col-span-5">
           <div className="editorial-card sticky top-28 overflow-hidden rounded-[2rem] p-4">
-            <div className="relative h-[560px] overflow-hidden rounded-[1.5rem]">
-              <Image
-                src="https://images.unsplash.com/photo-1700619663094-be321751b545?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
-                alt="Philip Sun workspace editorial portrait"
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 40vw"
-              />
+            <div className="relative flex h-[560px] flex-col justify-between overflow-hidden rounded-[1.5rem] bg-[color:var(--color-paper-elevated)] p-10">
+              <div className="flex items-center justify-between">
+                <span className="text-xs uppercase tracking-[0.28em] text-[color:var(--color-accent)]">
+                  Portrait
+                </span>
+                <span className="text-xs uppercase tracking-[0.22em] text-[color:var(--color-ink-soft)]">
+                  No. 01
+                </span>
+              </div>
+              <p className="font-[family-name:var(--font-playfair)] text-6xl leading-[0.95] tracking-[-0.02em] text-[color:var(--color-ink)]">
+                Philip<br />Sun
+              </p>
+              <p className="max-w-xs text-xs leading-6 text-[color:var(--color-ink-soft)]">
+                Provo, Utah. Product, healthcare hardware, and editorial photography. Portrait plate — image forthcoming.
+              </p>
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

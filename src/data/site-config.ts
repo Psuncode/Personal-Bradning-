@@ -1,8 +1,8 @@
 export const siteConfig = {
   name: "Philip Sun",
-  title: "Philip Sun | PM · Founder · Photographer",
+  title: "Philip Sun — Selected Work",
   description:
-    "Philip Sun — product manager, healthcare founder (Inara Health), and photographer. Shipping PM strategy at enterprise scale, building medtech diagnostics, and capturing portraits, landscapes, and events.",
+    "Portfolio of Philip Sun — product, hardware, AI, and analytics work, alongside writing and photography.",
   url: "https://philipsun.com",
   ogImage: "/og-image.png",
   email: "ps324@byu.edu",
@@ -11,4 +11,24 @@ export const siteConfig = {
     linkedin: "https://www.linkedin.com/in/-philipsun/",
     email: "mailto:ps324@byu.edu",
   },
+  // Cal.com integration (free tier — embed only, no API keys required).
+  // Event types are configured in the Cal.com dashboard; we only reference
+  // them here by username + slug. See `.env.local.example` for the
+  // forward-compat path to Cal.com Pro (webhooks / server API).
+  cal: {
+    username: "philip-sun-lrwiqb",
+    // Generic intro call — also used by /meet when it migrates to the embed
+    meetEventSlug: "30min",
+    // Photography session — created in Cal.com dashboard; wire the Stripe
+    // payment app to this event type to collect the deposit.
+    photographyEventSlug: "photoshoot-session",
+  },
 };
+
+/**
+ * Build a Cal.com link of the form `<username>/<event-slug>`, suitable for
+ * passing to `<CalEmbed calLink={...} />` or `https://cal.com/<link>`.
+ */
+export function calLinkFor(slug: string): string {
+  return `${siteConfig.cal.username}/${slug}`;
+}

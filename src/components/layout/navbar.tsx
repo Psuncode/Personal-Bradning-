@@ -18,14 +18,17 @@ const venturesLabel = "Ventures";
 const navLinks = [
   { href: "/projects", label: "Projects" },
   { href: "/blog", label: "Writing" },
-  { href: "/resume", label: "Resume" },
   { href: "/meet", label: "Meet" },
-  { href: "/contact", label: "Contact" },
 ];
 
-const businessLinks = [
+type BusinessLink = { href: string; label: string; external?: boolean };
+
+const businessLinks: BusinessLink[] = [
   { href: "/photography", label: "Photography" },
   { href: "/ecommerce", label: "Ecommerce" },
+  { href: "https://trader.psunproduction.com/scanner", label: "Stock Scanner", external: true },
+  { href: "https://rvu.psunproduction.com/app/", label: "RVU Calculator", external: true },
+  { href: "https://freelysweet.com/", label: "Freely Sweet", external: true },
 ];
 
 export function Navbar() {
@@ -39,8 +42,8 @@ export function Navbar() {
   const isActiveRoute = (href: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
 
-  const isVenturesActive = businessLinks.some(({ href }) =>
-    isActiveRoute(href),
+  const isVenturesActive = businessLinks.some(
+    ({ href, external }) => !external && isActiveRoute(href),
   );
 
   useEffect(() => {
@@ -130,22 +133,37 @@ export function Navbar() {
                   surfacePanel,
                 )}
               >
-                {businessLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setBusinessOpen(false)}
-                    aria-current={isActiveRoute(link.href) ? "page" : undefined}
-                    className={cn(
-                      "block px-4 py-2 text-sm transition-colors",
-                      isActiveRoute(link.href)
-                        ? "bg-[rgba(95,47,42,0.08)] font-medium text-[color:var(--color-ink)]"
-                        : "text-[color:var(--color-ink-soft)] hover:bg-[rgba(95,47,42,0.04)] hover:text-[color:var(--color-ink)]",
-                    )}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                {businessLinks.map((link) => {
+                  const active = !link.external && isActiveRoute(link.href);
+                  const className = cn(
+                    "block px-4 py-2 text-sm transition-colors",
+                    active
+                      ? "bg-[rgba(95,47,42,0.08)] font-medium text-[color:var(--color-ink)]"
+                      : "text-[color:var(--color-ink-soft)] hover:bg-[rgba(95,47,42,0.04)] hover:text-[color:var(--color-ink)]",
+                  );
+                  return link.external ? (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setBusinessOpen(false)}
+                      className={className}
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setBusinessOpen(false)}
+                      aria-current={active ? "page" : undefined}
+                      className={className}
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                })}
               </div>
             )}
           </li>
@@ -234,25 +252,41 @@ export function Navbar() {
                 </button>
                 {businessMobileOpen && (
                   <div className="mt-1 flex flex-col gap-1">
-                    {businessLinks.map((link) => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        onClick={() => {
-                          setOpen(false);
-                          setBusinessMobileOpen(false);
-                        }}
-                        aria-current={isActiveRoute(link.href) ? "page" : undefined}
-                        className={cn(
-                          "rounded-md pl-6 pr-3 py-2 text-sm font-medium transition-colors",
-                          isActiveRoute(link.href)
-                            ? "bg-[rgba(95,47,42,0.08)] text-[color:var(--color-ink)]"
-                            : "text-[color:var(--color-ink-soft)] hover:bg-[rgba(95,47,42,0.04)] hover:text-[color:var(--color-ink)]",
-                        )}
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
+                    {businessLinks.map((link) => {
+                      const active = !link.external && isActiveRoute(link.href);
+                      const className = cn(
+                        "rounded-md pl-6 pr-3 py-2 text-sm font-medium transition-colors",
+                        active
+                          ? "bg-[rgba(95,47,42,0.08)] text-[color:var(--color-ink)]"
+                          : "text-[color:var(--color-ink-soft)] hover:bg-[rgba(95,47,42,0.04)] hover:text-[color:var(--color-ink)]",
+                      );
+                      const onClick = () => {
+                        setOpen(false);
+                        setBusinessMobileOpen(false);
+                      };
+                      return link.external ? (
+                        <a
+                          key={link.href}
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={onClick}
+                          className={className}
+                        >
+                          {link.label}
+                        </a>
+                      ) : (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          onClick={onClick}
+                          aria-current={active ? "page" : undefined}
+                          className={className}
+                        >
+                          {link.label}
+                        </Link>
+                      );
+                    })}
                   </div>
                 )}
               </div>

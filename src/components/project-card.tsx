@@ -27,9 +27,9 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
     >
-      <Card className="group h-full overflow-hidden border-byu-sky/30 transition-all duration-300 hover:border-byu-light-blue hover:shadow-lg hover:shadow-byu-light-blue/10">
+      <Card className="group h-full overflow-hidden border-[color:var(--color-rule)]/30 transition-all duration-300 hover:border-[color:var(--color-accent)] hover:shadow-lg hover:shadow-[color:var(--color-accent)]/10">
         <CardHeader>
-          <CardTitle className="text-byu-navy">{project.title}</CardTitle>
+          <CardTitle className="text-[color:var(--color-ink)]">{project.title}</CardTitle>
           <CardDescription>{project.description}</CardDescription>
         </CardHeader>
 
@@ -39,7 +39,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
               {project.metrics.map((metric) => (
                 <Badge
                   key={metric}
-                  className="bg-byu-navy/10 text-byu-navy border border-byu-navy/20"
+                  className="bg-[color:var(--color-ink)]/10 text-[color:var(--color-ink)] border border-[color:var(--color-ink)]/20"
                 >
                   {metric}
                 </Badge>
@@ -52,7 +52,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
               <Badge
                 key={tech}
                 variant="secondary"
-                className="bg-byu-sky/30 text-byu-navy"
+                className="bg-[color:var(--color-rule)]/30 text-[color:var(--color-ink)]"
               >
                 {tech}
               </Badge>
@@ -71,7 +71,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
               <Button
                 asChild
                 size="sm"
-                className="bg-byu-navy hover:bg-byu-blue"
+                className="bg-[color:var(--color-ink)] hover:bg-[color:var(--color-accent)]"
               >
                 <Link href={project.liveUrl} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="mr-1 size-4" /> Live Demo
@@ -83,7 +83,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
             <div className="mt-3">
               <Link
                 href={`/projects/${project.slug}`}
-                className="text-sm text-byu-blue hover:text-byu-navy underline underline-offset-2 transition-colors"
+                className="text-sm text-[color:var(--color-accent)] hover:text-[color:var(--color-ink)] underline underline-offset-2 transition-colors"
               >
                 View Details →
               </Link>

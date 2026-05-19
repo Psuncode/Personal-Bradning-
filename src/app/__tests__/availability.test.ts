@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { getAvailableSlots } from '@/lib/availabilityService';
+import { validateBookingDate } from '@/lib/validation/booking';
 import { fromZonedTime } from 'date-fns-tz';
 
 const TIMEZONE = 'America/Denver';
@@ -56,5 +57,31 @@ describe('getAvailableSlots — BUG-01: all-day event blocking', () => {
     const sunday = mtDate(2026, 3, 22);
     const sundaySlots = getAvailableSlots(sunday, []);
     expect(sundaySlots).toHaveLength(0);
+  });
+});
+
+// CR-03 (03-REVIEW.md): server-side validation must agree with availability.
+describe('validateBookingDate — server-side gates agree with availability', () => {
+  // Tuesday 2026-05-19 09:00 MT as the anchor "now".
+  const now = mtDate(2026, 5, 19, 9, 0);
+
+  it('rejects a Saturday date that getAvailableSlots also blocks', () => {
+    const saturday = mtDate(2026, 5, 23, 10, 0);
+    expect(getAvailableSlots(saturday, [])).toHaveLength(0);
+    const result = validateBookingDate(saturday, 1, { now });
+    expect(result.ok).toBe(false);
+  });
+
+  it('accepts a 10 AM weekday slot inside the same window getAvailableSlots offers', () => {
+    const wed = mtDate(2026, 5, 20, 10, 0);
+    expect(getAvailableSlots(mtDate(2026, 5, 20), []).length).toBeGreaterThan(0);
+    const result = validateBookingDate(wed, 1, { now });
+    expect(result.ok).toBe(true);
+  });
+
+  it('rejects a 6 PM slot — outside the 9-5 window both functions enforce', () => {
+    const wedEvening = mtDate(2026, 5, 20, 18, 0);
+    const result = validateBookingDate(wedEvening, 1, { now });
+    expect(result.ok).toBe(false);
   });
 });

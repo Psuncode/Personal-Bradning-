@@ -8,6 +8,34 @@
       "when": 1773805693529,
       "tag": "0000_stale_longshot",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1779174968568,
+      "tag": "0001_clear_betty_ross",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1779175188868,
+      "tag": "0002_dusty_fat_cobra",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1779176391937,
+      "tag": "0003_phase01_warnings",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1779219901492,
+      "tag": "0004_spooky_strong_guy",
+      "breakpoints": true
     }
   ]
 }

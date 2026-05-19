@@ -127,6 +127,18 @@
   html {
     scroll-behavior: smooth;
   }
+  /* WCAG 2.4.11 Focus Not Obscured — keep skip-link / in-page anchor targets
+     below the 64px sticky navbar so keyboard focus lands in view. */
+  :target,
+  h1[id],
+  h2[id],
+  h3[id],
+  h4[id],
+  h5[id],
+  h6[id],
+  section[id] {
+    scroll-margin-top: 5rem;
+  }
   * {
     @apply border-border outline-ring/50;
   }
@@ -171,5 +183,61 @@
     border: 1px solid var(--color-rule);
     box-shadow: 0 18px 50px rgba(32, 28, 26, 0.06);
     @apply backdrop-blur-sm;
+  }
+}
+
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url("/grain.svg");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  opacity: 0.04;
+  mix-blend-mode: multiply;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Grain is static; nothing to disable, but keep this comment as a marker
+     for the view-transition reduced-motion fallback added later. */
+}
+
+/* Drop cap — applied to the first child paragraph of a prose container */
+.editorial-prose > p:first-of-type::first-letter {
+  font-family: var(--font-playfair), serif;
+  float: left;
+  font-size: 4.5em;
+  line-height: 0.9;
+  padding-right: 0.08em;
+  padding-top: 0.06em;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+/* Hung punctuation — applied to display headings */
+.editorial-display {
+  hanging-punctuation: first last;
+}
+
+/* Oldstyle figures — applied to body copy where supported */
+.editorial-numerals {
+  font-variant-numeric: oldstyle-nums;
+}
+
+/* Asymmetric layout helpers (used by EditorialEntry, project body) */
+.editorial-asym-left { grid-column: 1 / span 8; }
+.editorial-asym-right { grid-column: 5 / span 8; }
+@media (max-width: 768px) {
+  .editorial-asym-left,
+  .editorial-asym-right { grid-column: 1 / -1; }
+}
+
+/* View-transition reduced-motion fallback */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0s !important;
   }
 }

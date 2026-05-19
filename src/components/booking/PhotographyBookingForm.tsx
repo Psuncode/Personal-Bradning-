@@ -1,5 +1,16 @@
 'use client';
 
+/**
+ * @deprecated Photography bookings now use the Cal.com embed at
+ * `/photography/book` (see `src/components/cal-embed.tsx` and
+ * `siteConfig.cal` in `src/data/site-config.ts`). Cal.com handles
+ * scheduling + Stripe deposit collection on the free tier.
+ *
+ * This custom form is preserved for reference and as a fallback if we
+ * outgrow Cal.com — the matching `/api/checkout` and
+ * `/api/webhooks/stripe` routes remain functional. Do not wire this
+ * component back into any user-facing page without a migration plan.
+ */
 import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -86,8 +97,8 @@ function StepIndicator({ currentStep }: { currentStep: BookingStep }) {
                 }
                 className={cn(
                   'w-7 h-7 rounded-full flex items-center justify-center text-sm font-semibold transition-colors',
-                  isCompleted && 'bg-byu-navy text-white',
-                  isCurrent && 'bg-byu-light-blue text-white ring-2 ring-byu-navy/30',
+                  isCompleted && 'bg-[color:var(--color-ink)] text-[color:var(--color-paper)]',
+                  isCurrent && 'bg-[color:var(--color-accent)] text-[color:var(--color-paper)] ring-2 ring-[color:var(--color-ink)]/30',
                   !isCompleted && !isCurrent && 'bg-gray-200 text-gray-500'
                 )}
               >
@@ -101,7 +112,7 @@ function StepIndicator({ currentStep }: { currentStep: BookingStep }) {
               <div
                 className={cn(
                   'flex-1 h-px mx-2',
-                  s < currentStep ? 'bg-byu-navy' : 'bg-gray-200'
+                  s < currentStep ? 'bg-[color:var(--color-ink)]' : 'bg-gray-200'
                 )}
               />
             )}
@@ -363,7 +374,7 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
 
       let cellClass = 'p-2 rounded-lg text-sm font-medium transition-colors ';
       if (isSelected) {
-        cellClass += 'bg-byu-navy text-white ';
+        cellClass += 'bg-[color:var(--color-ink)] text-[color:var(--color-paper)] ';
       } else if (isDisabled) {
         if (isBusy && !isPast && !isWeekend) {
           cellClass += 'text-gray-400 bg-gray-50 cursor-not-allowed ';
@@ -371,10 +382,10 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
           cellClass += 'text-gray-300 cursor-not-allowed ';
         }
       } else {
-        cellClass += 'text-byu-navy hover:bg-byu-sky/20 cursor-pointer ';
+        cellClass += 'text-[color:var(--color-ink)] hover:bg-[color:var(--color-rule)]/40 cursor-pointer ';
       }
       if (isTodayDate && !isSelected) {
-        cellClass += 'ring-1 ring-byu-navy ';
+        cellClass += 'ring-1 ring-[color:var(--color-ink)] ';
       }
 
       cells.push(
@@ -396,18 +407,18 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
           <button
             onClick={() => setCurrentMonth((prev) => addMonths(prev, -1))}
             disabled={currentMonth.getTime() <= todayMonth.getTime()}
-            className="p-2 rounded-lg text-byu-navy hover:bg-byu-sky/20 disabled:text-gray-300 disabled:cursor-not-allowed transition-colors"
+            className="p-2 rounded-lg text-[color:var(--color-ink)] hover:bg-[color:var(--color-rule)]/40 disabled:text-gray-300 disabled:cursor-not-allowed transition-colors"
             aria-label="Previous month"
           >
             ←
           </button>
-          <span className="font-semibold text-byu-navy">
+          <span className="font-semibold text-[color:var(--color-ink)]">
             {format(currentMonth, 'MMMM yyyy')}
           </span>
           <button
             onClick={() => setCurrentMonth((prev) => addMonths(prev, 1))}
             disabled={currentMonth.getTime() >= maxMonth.getTime()}
-            className="p-2 rounded-lg text-byu-navy hover:bg-byu-sky/20 disabled:text-gray-300 disabled:cursor-not-allowed transition-colors"
+            className="p-2 rounded-lg text-[color:var(--color-ink)] hover:bg-[color:var(--color-rule)]/40 disabled:text-gray-300 disabled:cursor-not-allowed transition-colors"
             aria-label="Next month"
           >
             →
@@ -449,7 +460,7 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
       {/* Step 1 — Package Selection */}
       {step === 1 && (
         <div className="space-y-6">
-          <h2 className="text-2xl font-semibold text-byu-navy">Choose Your Package</h2>
+          <h2 className="text-2xl font-semibold text-[color:var(--color-ink)]">Choose Your Package</h2>
 
           {availabilityWarning && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg px-4 py-3 text-sm text-yellow-800 space-y-1">
@@ -459,46 +470,44 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
           )}
 
           <div className="space-y-4">
-            {sessionPackages.map((pkg) => (
-              <div
-                key={pkg.id}
-                role="button"
-                tabIndex={0}
-                onClick={() => setSelectedPackage(pkg)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setSelectedPackage(pkg);
-                  }
-                }}
-                className={cn(
-                  'border rounded-xl p-6 cursor-pointer transition-all duration-150',
-                  selectedPackage?.id === pkg.id
-                    ? 'border-byu-navy ring-2 ring-byu-navy/20'
-                    : 'border-gray-200 hover:border-byu-light-blue hover:shadow-sm'
-                )}
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <h3 className="text-base font-semibold text-byu-navy">{pkg.name}</h3>
-                    <p className="text-sm text-gray-600 mt-1">{pkg.description}</p>
+            {sessionPackages.map((pkg) => {
+              const isSelected = selectedPackage?.id === pkg.id;
+              return (
+                <button
+                  key={pkg.id}
+                  type="button"
+                  aria-pressed={isSelected}
+                  onClick={() => setSelectedPackage(pkg)}
+                  className={cn(
+                    'w-full text-left border rounded-xl p-6 cursor-pointer transition-all duration-150',
+                    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-accent)]',
+                    isSelected
+                      ? 'border-[color:var(--color-ink)] ring-2 ring-[color:var(--color-ink)]/20'
+                      : 'border-gray-200 hover:border-[color:var(--color-accent)] hover:shadow-sm'
+                  )}
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <h3 className="text-base font-semibold text-[color:var(--color-ink)]">{pkg.name}</h3>
+                      <p className="text-sm text-gray-600 mt-1">{pkg.description}</p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-lg font-semibold text-[color:var(--color-ink)] tabular-nums">
+                        {formatPrice(pkg.priceInCents)}
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-right shrink-0">
-                    <p className="text-lg font-semibold text-byu-navy tabular-nums">
-                      {formatPrice(pkg.priceInCents)}
-                    </p>
+                  <div className="flex items-center gap-2 mt-4">
+                    <Badge variant="secondary">
+                      {formatDuration(pkg.durationMinutes)}
+                    </Badge>
+                    <Badge variant="outline">
+                      {formatPrice(pkg.depositInCents)} deposit
+                    </Badge>
                   </div>
-                </div>
-                <div className="flex items-center gap-2 mt-4">
-                  <Badge variant="secondary">
-                    {formatDuration(pkg.durationMinutes)}
-                  </Badge>
-                  <Badge variant="outline">
-                    {formatPrice(pkg.depositInCents)} deposit
-                  </Badge>
-                </div>
-              </div>
-            ))}
+                </button>
+              );
+            })}
           </div>
 
           <div className="flex justify-end">
@@ -506,7 +515,7 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
               onClick={() => setStep(2)}
               disabled={selectedPackage === null}
               className={cn(
-                'bg-byu-navy text-white hover:bg-byu-blue',
+                'bg-[color:var(--color-ink)] text-[color:var(--color-paper)] hover:bg-[color:var(--color-accent)]',
                 selectedPackage === null && 'opacity-50 cursor-not-allowed'
               )}
             >
@@ -519,7 +528,7 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
       {/* Step 2 — Date Selection */}
       {step === 2 && (
         <div className="space-y-6">
-          <h2 className="text-2xl font-semibold text-byu-navy">Select a Date</h2>
+          <h2 className="text-2xl font-semibold text-[color:var(--color-ink)]">Select a Date</h2>
           <p className="text-gray-600">
             Choose a weekday for your session. All times are Mountain Time.
           </p>
@@ -537,7 +546,7 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
             <Button
               onClick={() => setStep(1)}
               variant="outline"
-              className="border-byu-navy text-byu-navy"
+              className="border-[color:var(--color-ink)] text-[color:var(--color-ink)]"
             >
               Back
             </Button>
@@ -548,7 +557,7 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
       {/* Step 3 — Time Slot Selection */}
       {step === 3 && (
         <div className="space-y-6">
-          <h2 className="text-2xl font-semibold text-byu-navy">Pick a Time</h2>
+          <h2 className="text-2xl font-semibold text-[color:var(--color-ink)]">Pick a Time</h2>
           {selectedDate && (
             <p className="text-gray-600">
               {format(selectedDate, 'MMMM d, yyyy', { timeZone: 'America/Denver' })} — Mountain Time
@@ -564,8 +573,8 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
                   className={cn(
                     'p-3 rounded-lg border-2 transition-colors font-medium text-sm',
                     selectedSlot === slot
-                      ? 'border-byu-navy bg-byu-navy text-white'
-                      : 'border-byu-sky/30 hover:border-byu-navy text-byu-navy'
+                      ? 'border-[color:var(--color-ink)] bg-[color:var(--color-ink)] text-[color:var(--color-paper)]'
+                      : 'border-[color:var(--color-rule)] hover:border-[color:var(--color-ink)] text-[color:var(--color-ink)]'
                   )}
                 >
                   {slot.display}
@@ -582,7 +591,7 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
             <Button
               onClick={() => setStep(2)}
               variant="outline"
-              className="border-byu-navy text-byu-navy"
+              className="border-[color:var(--color-ink)] text-[color:var(--color-ink)]"
             >
               Back
             </Button>
@@ -590,7 +599,7 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
               onClick={() => setStep(4)}
               disabled={selectedSlot === null}
               className={cn(
-                'bg-byu-navy text-white hover:bg-byu-blue',
+                'bg-[color:var(--color-ink)] text-[color:var(--color-paper)] hover:bg-[color:var(--color-accent)]',
                 selectedSlot === null && 'opacity-50 cursor-not-allowed'
               )}
             >
@@ -603,25 +612,25 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
       {/* Step 4 — Client Details */}
       {step === 4 && (
         <div className="space-y-6">
-          <h2 className="text-2xl font-semibold text-byu-navy">Your Details</h2>
+          <h2 className="text-2xl font-semibold text-[color:var(--color-ink)]">Your Details</h2>
 
           {/* Booking summary */}
           {selectedPackage && selectedDate && selectedSlot && (
             <div className="bg-gray-50 rounded-xl p-4 text-sm space-y-1">
               <p>
-                <span className="font-medium text-byu-navy">Package:</span>{' '}
+                <span className="font-medium text-[color:var(--color-ink)]">Package:</span>{' '}
                 {selectedPackage.name}
               </p>
               <p>
-                <span className="font-medium text-byu-navy">Date:</span>{' '}
+                <span className="font-medium text-[color:var(--color-ink)]">Date:</span>{' '}
                 {format(selectedDate, 'MMMM d, yyyy', { timeZone: 'America/Denver' })}
               </p>
               <p>
-                <span className="font-medium text-byu-navy">Time:</span>{' '}
+                <span className="font-medium text-[color:var(--color-ink)]">Time:</span>{' '}
                 {selectedSlot.display} (Mountain Time)
               </p>
               <p>
-                <span className="font-medium text-byu-navy">Deposit:</span>{' '}
+                <span className="font-medium text-[color:var(--color-ink)]">Deposit:</span>{' '}
                 {formatPrice(selectedPackage.depositInCents)}
               </p>
             </div>
@@ -632,7 +641,7 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
             <div>
               <label
                 htmlFor="booking-name"
-                className="block text-sm font-medium text-byu-navy mb-1"
+                className="block text-sm font-medium text-[color:var(--color-ink)] mb-1"
               >
                 Your Name{' '}
                 <span aria-hidden="true">*</span>
@@ -646,7 +655,7 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
                 onChange={handleFormChange}
                 onBlur={handleBlur}
                 placeholder="Jane Smith"
-                className="w-full px-4 py-2 border border-byu-sky/30 rounded-lg focus:outline-none focus:border-byu-navy text-base"
+                className="w-full px-4 py-2 border border-[color:var(--color-rule)] rounded-lg focus:outline-none focus:border-[color:var(--color-ink)] text-base"
                 required
               />
               {errors.name && (
@@ -660,7 +669,7 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
             <div>
               <label
                 htmlFor="booking-email"
-                className="block text-sm font-medium text-byu-navy mb-1"
+                className="block text-sm font-medium text-[color:var(--color-ink)] mb-1"
               >
                 Email Address{' '}
                 <span aria-hidden="true">*</span>
@@ -674,7 +683,7 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
                 onChange={handleFormChange}
                 onBlur={handleBlur}
                 placeholder="jane@example.com"
-                className="w-full px-4 py-2 border border-byu-sky/30 rounded-lg focus:outline-none focus:border-byu-navy text-base"
+                className="w-full px-4 py-2 border border-[color:var(--color-rule)] rounded-lg focus:outline-none focus:border-[color:var(--color-ink)] text-base"
                 required
               />
               {errors.email && (
@@ -688,7 +697,7 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
             <div>
               <label
                 htmlFor="booking-notes"
-                className="block text-sm font-medium text-byu-navy mb-1"
+                className="block text-sm font-medium text-[color:var(--color-ink)] mb-1"
               >
                 Notes (optional)
               </label>
@@ -699,7 +708,7 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
                 onChange={handleFormChange}
                 placeholder="Shoot goals, preferred location, or anything else to know"
                 rows={4}
-                className="w-full px-4 py-2 border border-byu-sky/30 rounded-lg focus:outline-none focus:border-byu-navy text-base"
+                className="w-full px-4 py-2 border border-[color:var(--color-rule)] rounded-lg focus:outline-none focus:border-[color:var(--color-ink)] text-base"
               />
             </div>
           </div>
@@ -718,14 +727,14 @@ export function PhotographyBookingForm({ initialData }: PhotographyBookingFormPr
             <Button
               onClick={() => setStep(3)}
               variant="outline"
-              className="border-byu-navy text-byu-navy"
+              className="border-[color:var(--color-ink)] text-[color:var(--color-ink)]"
             >
               Back
             </Button>
             <Button
               onClick={handleProceedToPayment}
               disabled={isSubmitting}
-              className="bg-byu-navy text-white hover:bg-byu-blue disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-[color:var(--color-ink)] text-[color:var(--color-paper)] hover:bg-[color:var(--color-accent)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <>

@@ -37,15 +37,15 @@ export interface PhotographyFaq {
 
 // Local fallback assets keep the photography funnel rendering until real client galleries are wired in.
 export const galleryPhotos: GalleryPhoto[] = [
-  { id: 'p1', src: '/photography/couples-session-1.svg', alt: 'Relaxed couples session at golden hour', category: 'couples', width: 1200, height: 800 },
-  { id: 'p2', src: '/photography/couples-session-2.svg', alt: 'Outdoor engagement portraits in natural light', category: 'couples', width: 800, height: 1200 },
-  { id: 'p3', src: '/photography/portrait-session-1.svg', alt: 'Professional headshot', category: 'portrait', width: 1200, height: 800 },
-  { id: 'l1', src: '/photography/landscape-1.svg', alt: 'Utah mountain sunset', category: 'landscape', width: 1600, height: 900 },
-  { id: 'l2', src: '/photography/landscape-2.svg', alt: 'Desert red rock formation', category: 'landscape', width: 1600, height: 900 },
-  { id: 'l3', src: '/photography/landscape-3.svg', alt: 'Alpine lake reflection', category: 'landscape', width: 1600, height: 900 },
-  { id: 'e1', src: '/photography/event-1.svg', alt: 'Corporate event keynote', category: 'event', width: 1200, height: 800 },
-  { id: 'e2', src: '/photography/event-2.svg', alt: 'Wedding ceremony moment', category: 'event', width: 1200, height: 800 },
-  { id: 'e3', src: '/photography/event-3.svg', alt: 'Graduation celebration', category: 'event', width: 800, height: 1200 },
+  { id: 'p1', src: '/photography/couples-session-1.svg', alt: 'Couples session photograph at golden hour: two people walking together outdoors in warm late-afternoon light, relaxed body language, natural Utah backdrop', category: 'couples', width: 1200, height: 800 },
+  { id: 'p2', src: '/photography/couples-session-2.svg', alt: 'Outdoor engagement portrait in soft natural light: a couple sharing a candid moment against a muted landscape, vertical composition', category: 'couples', width: 800, height: 1200 },
+  { id: 'p3', src: '/photography/portrait-session-1.svg', alt: 'Professional headshot portrait: subject framed from the shoulders up against a neutral background, even studio-style lighting suited for personal branding or LinkedIn', category: 'portrait', width: 1200, height: 800 },
+  { id: 'l1', src: '/photography/landscape-1.svg', alt: 'Landscape photograph of a Utah mountain ridge at sunset, warm orange and purple sky over silhouetted peaks, wide horizontal composition', category: 'landscape', width: 1600, height: 900 },
+  { id: 'l2', src: '/photography/landscape-2.svg', alt: 'Landscape photograph of a southern Utah desert red rock formation, sandstone cliffs in golden hour light against a clear sky', category: 'landscape', width: 1600, height: 900 },
+  { id: 'l3', src: '/photography/landscape-3.svg', alt: 'Landscape photograph of a still alpine lake mirroring surrounding mountains and evergreen trees, calm morning light', category: 'landscape', width: 1600, height: 900 },
+  { id: 'e1', src: '/photography/event-1.svg', alt: 'Corporate event photograph: a keynote speaker on stage addressing a seated audience, stage lighting and presentation screen behind them', category: 'event', width: 1200, height: 800 },
+  { id: 'e2', src: '/photography/event-2.svg', alt: 'Wedding ceremony photograph capturing a candid moment between the couple at the altar, soft ambient venue light', category: 'event', width: 1200, height: 800 },
+  { id: 'e3', src: '/photography/event-3.svg', alt: 'Graduation celebration photograph: a graduate in cap and gown smiling outdoors after the ceremony, vertical portrait composition', category: 'event', width: 800, height: 1200 },
 ];
 
 export const photoCategories: { value: PhotoCategory; label: string }[] = [

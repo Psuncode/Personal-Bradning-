@@ -7,6 +7,7 @@ import { Mail, MapPin, Github, Linkedin } from 'lucide-react';
 import { siteConfig } from '@/data/site-config';
 import { saveContact } from '@/app/actions/contact';
 import type { ContactFormState } from '@/app/actions/contact';
+import { EditorialPageHeader } from '@/components/editorial/editorial-page-header';
 
 export function ContactSection() {
   const shouldReduceMotion = useReducedMotion();
@@ -33,21 +34,26 @@ export function ContactSection() {
     { success: false }
   );
 
+  const inputClass =
+    "w-full bg-[color:var(--color-paper-elevated)] border border-[color:var(--color-rule)] rounded-md px-4 py-3 text-[color:var(--color-ink)] placeholder:text-[color:var(--color-ink-soft)] focus:outline-none focus:border-[color:var(--color-accent)] focus:ring-1 focus:ring-[color:var(--color-accent)]";
+
   return (
-    <section className="bg-white py-24 px-6 md:px-12">
-      <div className="max-w-5xl mx-auto">
+    <>
+      <EditorialPageHeader
+        kicker="Contact"
+        title="Send a Message"
+        sub="A quiet inbox for the right conversations — product, hardware, AI, photography, and writing."
+      />
+
+      <section className="editorial-shell pb-24">
         <div className="grid md:grid-cols-2 gap-16">
-          {/* Left column */}
           <motion.div
             initial={shouldReduceMotion ? false : { opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.35 }}
           >
-            <h1 className="font-[family-name:var(--font-playfair)] text-5xl md:text-6xl text-gray-900 mb-6">
-              Get in Touch
-            </h1>
-            <p className="text-gray-600 leading-relaxed mb-10">
+            <p className="text-[color:var(--color-ink-soft)] leading-8 mb-10">
               Recruiting for a PM role, building something in healthcare, or want to talk shop? I keep my calendar open for the right conversations.
             </p>
 
@@ -56,17 +62,17 @@ export function ContactSection() {
                 href={siteConfig.links.email}
                 className="flex items-center gap-4 group"
               >
-                <span className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 group-hover:bg-gray-900 group-hover:text-white transition-colors">
+                <span className="w-12 h-12 flex items-center justify-center rounded-full border border-[color:var(--color-rule)] text-[color:var(--color-ink-soft)] group-hover:bg-[color:var(--color-ink)] group-hover:text-[color:var(--color-paper-elevated)] group-hover:border-[color:var(--color-ink)] transition-colors">
                   <Mail className="size-5" />
                 </span>
-                <span className="text-gray-700">{siteConfig.email}</span>
+                <span className="text-[color:var(--color-ink)]">{siteConfig.email}</span>
               </a>
 
               <div className="flex items-center gap-4">
-                <span className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100">
+                <span className="w-12 h-12 flex items-center justify-center rounded-full border border-[color:var(--color-rule)] text-[color:var(--color-ink-soft)]">
                   <MapPin className="size-5" />
                 </span>
-                <span className="text-gray-700">Provo, UT</span>
+                <span className="text-[color:var(--color-ink)]">Provo, UT</span>
               </div>
 
               <a
@@ -75,10 +81,10 @@ export function ContactSection() {
                 rel="noopener noreferrer"
                 className="flex items-center gap-4 group"
               >
-                <span className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 group-hover:bg-gray-900 group-hover:text-white transition-colors">
+                <span className="w-12 h-12 flex items-center justify-center rounded-full border border-[color:var(--color-rule)] text-[color:var(--color-ink-soft)] group-hover:bg-[color:var(--color-ink)] group-hover:text-[color:var(--color-paper-elevated)] group-hover:border-[color:var(--color-ink)] transition-colors">
                   <Linkedin className="size-5" />
                 </span>
-                <span className="text-gray-700">LinkedIn</span>
+                <span className="text-[color:var(--color-ink)]">LinkedIn</span>
               </a>
 
               <a
@@ -87,22 +93,22 @@ export function ContactSection() {
                 rel="noopener noreferrer"
                 className="flex items-center gap-4 group"
               >
-                <span className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 group-hover:bg-gray-900 group-hover:text-white transition-colors">
+                <span className="w-12 h-12 flex items-center justify-center rounded-full border border-[color:var(--color-rule)] text-[color:var(--color-ink-soft)] group-hover:bg-[color:var(--color-ink)] group-hover:text-[color:var(--color-paper-elevated)] group-hover:border-[color:var(--color-ink)] transition-colors">
                   <Github className="size-5" />
                 </span>
-                <span className="text-gray-700">GitHub</span>
+                <span className="text-[color:var(--color-ink)]">GitHub</span>
               </a>
             </div>
 
-            <div className="bg-gray-50 rounded-2xl p-6">
-              <p className="text-sm text-gray-600">
-                <span className="font-semibold text-gray-900">Response time:</span>{' '}
+            <div className="border border-[color:var(--color-rule)] bg-[color:var(--color-paper-elevated)] rounded-md p-6">
+              <p className="text-sm text-[color:var(--color-ink-soft)]">
+                <span className="font-semibold text-[color:var(--color-ink)]">Response time:</span>{' '}
                 I typically respond within 24-48 hours on weekdays.
               </p>
               <div className="mt-4">
                 <Link
                   href="/meet"
-                  className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:underline"
+                  className="inline-flex items-center gap-2 text-sm font-medium text-[color:var(--color-ink)] hover:text-[color:var(--color-accent)] underline underline-offset-4"
                 >
                   Or book a meeting directly &rarr;
                 </Link>
@@ -110,39 +116,48 @@ export function ContactSection() {
             </div>
           </motion.div>
 
-          {/* Right column: form */}
           <motion.div
             initial={shouldReduceMotion ? false : { opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.35, delay: 0.1 }}
-            className="bg-[#faf9f7] rounded-2xl p-8"
+            className="border border-[color:var(--color-rule)] bg-[color:var(--color-paper-elevated)] rounded-md p-8"
           >
-            <h2 className="font-[family-name:var(--font-playfair)] text-3xl text-gray-900 mb-6">
-              Send a Message
-            </h2>
-
             {state.success && (
-              <div role="alert" aria-live="polite" className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm">
+              <div role="alert" aria-live="polite" className="mb-6 p-4 bg-green-50 border border-green-200 rounded-md text-green-800 text-sm">
                 Message sent! I&apos;ll get back to you soon.
               </div>
             )}
             {state.error && (
-              <div role="alert" aria-live="polite" className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-800 text-sm">
-                {state.error} You can also email me at{' '}
-                <a href={siteConfig.links.email} className="underline">{siteConfig.email}</a> directly.
+              <div role="alert" aria-live="polite" className="mb-6 p-4 bg-red-50 border border-red-200 rounded-md text-red-800 text-sm">
+                {state.error}
+                {state.fieldErrors && (
+                  <ul className="mt-2 list-disc pl-5 space-y-1">
+                    {(Object.entries(state.fieldErrors) as [string, string[] | undefined][])
+                      .filter(([, msgs]) => Array.isArray(msgs) && msgs.length > 0)
+                      .map(([field, msgs]) => (
+                        <li key={field}>
+                          <span className="font-medium capitalize">{field.replace(/_/g, ' ')}:</span>{' '}
+                          {msgs![0]}
+                        </li>
+                      ))}
+                  </ul>
+                )}
+                <p className="mt-2">
+                  You can also email me at{' '}
+                  <a href={siteConfig.links.email} className="underline">{siteConfig.email}</a> directly.
+                </p>
               </div>
             )}
 
             <form action={formAction} className="space-y-4">
-              {/* Hidden UTM inputs — populated from URL on mount */}
               <input type="hidden" name="utm_source" value={utmParams.utm_source} />
               <input type="hidden" name="utm_medium" value={utmParams.utm_medium} />
               <input type="hidden" name="utm_campaign" value={utmParams.utm_campaign} />
 
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                  Name <span aria-hidden="true" className="text-red-500">*</span>
+                <label htmlFor="name" className="block text-sm font-medium text-[color:var(--color-ink)] mb-1">
+                  Name <span aria-hidden="true" className="text-[color:var(--color-accent)]">*</span>
                 </label>
                 <input
                   id="name"
@@ -150,13 +165,13 @@ export function ContactSection() {
                   type="text"
                   required
                   autoComplete="name"
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900"
+                  className={inputClass}
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  Email <span aria-hidden="true" className="text-red-500">*</span>
+                <label htmlFor="email" className="block text-sm font-medium text-[color:var(--color-ink)] mb-1">
+                  Email <span aria-hidden="true" className="text-[color:var(--color-accent)]">*</span>
                 </label>
                 <input
                   id="email"
@@ -164,12 +179,12 @@ export function ContactSection() {
                   type="email"
                   required
                   autoComplete="email"
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900"
+                  className={inputClass}
                 />
               </div>
 
               <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="subject" className="block text-sm font-medium text-[color:var(--color-ink)] mb-1">
                   Subject
                 </label>
                 <input
@@ -177,34 +192,34 @@ export function ContactSection() {
                   name="subject"
                   type="text"
                   autoComplete="off"
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900"
+                  className={inputClass}
                 />
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                  Message <span aria-hidden="true" className="text-red-500">*</span>
+                <label htmlFor="message" className="block text-sm font-medium text-[color:var(--color-ink)] mb-1">
+                  Message <span aria-hidden="true" className="text-[color:var(--color-accent)]">*</span>
                 </label>
                 <textarea
                   id="message"
                   name="message"
                   required
                   rows={6}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900 resize-none"
+                  className={`${inputClass} resize-none`}
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isPending}
-                className="w-full py-4 bg-gray-900 text-white rounded-full font-medium hover:bg-gray-700 transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
+                className="w-full py-4 bg-[color:var(--color-ink)] text-[color:var(--color-paper-elevated)] rounded-full font-medium hover:bg-[color:var(--color-accent)] transition-colors disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
               >
                 {isPending ? 'Sending...' : 'Send Message'}
               </button>
             </form>
           </motion.div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

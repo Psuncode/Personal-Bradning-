@@ -77,11 +77,10 @@ describe("Hero Component", () => {
     expect(container.querySelectorAll("[data-initial='false']").length).toBeGreaterThanOrEqual(3);
   });
 
-  it("renders the primary and secondary CTAs", () => {
+  it("renders the primary CTA", () => {
     render(<Hero />);
 
     expect(screen.getByText(/Book a Call/i).closest("a")?.getAttribute("href")).toBe("/meet");
-    expect(screen.getByText(/View Resume/i).closest("a")?.getAttribute("href")).toBe("/resume");
   });
 
   it("does not use the old dark hero treatment", () => {

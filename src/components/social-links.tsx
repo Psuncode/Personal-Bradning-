@@ -21,7 +21,7 @@ export function SocialLinks({ className }: { className?: string }) {
             href={link.url}
             target={link.url.startsWith("mailto:") ? undefined : "_blank"}
             rel="noopener noreferrer"
-            className="rounded-full border border-byu-navy/20 p-3 text-byu-navy transition-colors hover:bg-byu-navy hover:text-white"
+            className="rounded-full border border-[color:var(--color-ink)]/20 p-3 text-[color:var(--color-ink)] transition-colors hover:bg-[color:var(--color-ink)] hover:text-[color:var(--color-paper)]"
             aria-label={link.name}
           >
             <Icon className="size-5" />

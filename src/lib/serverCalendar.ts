@@ -189,11 +189,26 @@ async function _fetchServerAvailability(): Promise<ServerAvailabilityResult> {
 }
 
 /**
+ * Cache tag for the server-availability cache. Exported so write paths
+ * (`/api/checkout`, future booking-cancel routes) can `revalidateTag` after a
+ * mutation and immediately bust the cached view.
+ *
+ * See WR-06 in .planning/phases/03-booking-and-payments/03-REVIEW.md.
+ */
+export const SERVER_AVAILABILITY_TAG = 'server-calendar-availability';
+
+/**
  * Server-side availability for the current month + next 2 months.
- * Cached for 15 minutes so page refreshes don't hit iCloud on every request.
+ *
+ * TTL was lowered from 15 minutes (WR-06) to 2 minutes to shrink the window
+ * during which a freshly-added iCloud event still shows as bookable in the UI.
+ * Mutating paths should also call `revalidateTag(SERVER_AVAILABILITY_TAG)` so
+ * the next read is forced fresh; `/api/checkout` additionally re-fetches
+ * directly via `fetchCalendarEventsForRange` for the requested date (CR-03)
+ * and bypasses this cache entirely on the write path.
  */
 export const getServerAvailability = unstable_cache(
   _fetchServerAvailability,
-  ['server-calendar-availability'],
-  { revalidate: 900 }
+  [SERVER_AVAILABILITY_TAG],
+  { revalidate: 120, tags: [SERVER_AVAILABILITY_TAG] }
 );

@@ -28,12 +28,12 @@ vi.mock("next/link", () => ({
 describe("ContactSection Component", () => {
   it("renders the contact section", () => {
     render(<ContactSection />);
-    expect(screen.getByText("Get in Touch")).toBeDefined();
+    expect(screen.getByText("Send a Message")).toBeDefined();
   });
 
   it("renders section heading", () => {
     render(<ContactSection />);
-    expect(screen.getByText("Get in Touch")).toBeDefined();
+    expect(screen.getByText("Send a Message")).toBeDefined();
   });
 
   it("renders Send a Message heading", () => {
@@ -82,7 +82,7 @@ describe("ContactSection Component", () => {
   it("has proper layout classes", () => {
     const { container } = render(<ContactSection />);
     const section = container.querySelector("section");
-    expect(section?.className).toContain("py-24");
+    expect(section?.className).toContain("pb-24");
   });
 
   it("content is centered", () => {
@@ -93,7 +93,7 @@ describe("ContactSection Component", () => {
 
   it("has max-width constraint on content", () => {
     const { container } = render(<ContactSection />);
-    const contentDiv = container.querySelector(".max-w-5xl");
+    const contentDiv = container.querySelector(".editorial-shell");
     expect(contentDiv).toBeDefined();
   });
 
@@ -123,7 +123,7 @@ describe("ContactSection Component", () => {
   it("has proper container padding", () => {
     const { container } = render(<ContactSection />);
     const section = container.querySelector("section");
-    expect(section?.className).toContain("py-24");
+    expect(section?.className).toContain("pb-24");
   });
 
   it("form has correct structure", () => {

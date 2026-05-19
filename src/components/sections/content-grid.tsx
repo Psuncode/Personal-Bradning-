@@ -1,8 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface GridItem {
-  type: "ai-project-hero" | "ai-project" | "healthcare" | "linkedin" | "photography" | "resume" | "photography-cta";
+  type: "ai-project-hero" | "ai-project" | "healthcare" | "linkedin" | "photography" | "photography-cta";
   title: string;
   description?: string;
   excerpt?: string;
@@ -36,13 +40,6 @@ const gridItems: GridItem[] = [
     href: "https://www.linkedin.com/in/-philipsun/",
   },
   {
-    type: "resume",
-    title: "View Full Resume",
-    description: "Healthcare PM experience across MedTech, Faith Tech, and AI diagnostics.",
-    span: "md:col-span-1",
-    href: "/resume",
-  },
-  {
     type: "ai-project-hero",
     title: "TB Detection Neural Network",
     description: "Managed the development of an AI-powered TB verification model that replaced an external vendor, deployed to production with real-world impact on clinician onboarding.",
@@ -57,7 +54,7 @@ const gridItems: GridItem[] = [
   {
     type: "photography",
     title: "Design & Space",
-    image: "https://images.unsplash.com/photo-1647368890626-7e9e59c05a55?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    image: "/images/photography/design-space.jpg",
     span: "md:col-span-1 md:row-span-1",
     href: "/photography",
   },
@@ -88,7 +85,7 @@ const gridItems: GridItem[] = [
   {
     type: "photography",
     title: "Urban Studies",
-    image: "https://images.unsplash.com/photo-1762436933065-fe6d7f51d4f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    image: "/images/photography/urban-studies.jpg",
     span: "md:col-span-1 md:row-span-1",
     href: "/photography",
   },
@@ -102,7 +99,10 @@ const gridItems: GridItem[] = [
 ];
 
 function CardWrapper({ item, children }: { item: GridItem; children: React.ReactNode }) {
-  const className = `${item.span} rounded-2xl overflow-hidden group cursor-pointer hover:shadow-xl transition-all hover:-translate-y-1`;
+  const className = cn(
+    item.span,
+    "rounded-2xl overflow-hidden group cursor-pointer hover:shadow-xl transition-all hover:-translate-y-1",
+  );
   if (item.href?.startsWith("http")) {
     return (
       <a href={item.href} target="_blank" rel="noopener noreferrer" className={className}>
@@ -122,13 +122,19 @@ function CardWrapper({ item, children }: { item: GridItem; children: React.React
 
 export function ContentGrid() {
   return (
-    <section id="projects" className="bg-[#faf9f7] py-24 px-6 md:px-12">
-      <div className="max-w-7xl mx-auto">
+    <section id="projects" className="bg-[color:var(--color-paper)] py-24 px-6 md:px-12 overflow-hidden">
+      <motion.div 
+        className="max-w-7xl mx-auto"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         <div className="mb-16">
-          <h2 className="font-[family-name:var(--font-playfair)] text-5xl md:text-6xl text-gray-900 mb-4">
+          <h2 className="font-[family-name:var(--font-playfair)] text-5xl md:text-6xl text-[color:var(--color-ink)] mb-4">
             Projects &amp; Thought Leadership
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl">
+          <p className="text-xl text-[color:var(--color-ink-soft)] max-w-2xl">
             Healthcare innovation, side projects, and reflections on building products that matter.
           </p>
         </div>
@@ -172,30 +178,33 @@ export function ContentGrid() {
               )}
 
               {(item.type === "ai-project" || item.type === "healthcare") && (
-                <div className="bg-white h-full p-6 flex flex-col justify-between border-2 border-gray-200 group-hover:border-gray-900 transition-colors">
+                <div className="bg-[color:var(--color-paper-elevated)] h-full p-6 flex flex-col justify-between border-2 border-[color:var(--color-rule)] group-hover:border-[color:var(--color-ink)] transition-colors">
                   <div>
                     <div className="flex items-center gap-2 mb-3">
-                      <div className="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center">
+                      <div className="w-8 h-8 bg-[color:var(--color-ink)] rounded-full flex items-center justify-center">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M16 8V16M12 11V16M8 14V16M6 20H18C19.1046 20 20 19.1046 20 18V6C20 4.89543 19.1046 4 18 4H6C4.89543 4 4 4.89543 4 6V18C4 19.1046 4.89543 20 6 20Z" stroke="white" strokeWidth="2" strokeLinecap="round"/>
                         </svg>
                       </div>
-                      <span className="text-xs text-gray-500 uppercase tracking-wider">
+                      <span className="text-xs text-[color:var(--color-ink-soft)] uppercase tracking-wider">
                         {item.type === "healthcare" ? "Healthcare" : "Project"}
                       </span>
                     </div>
-                    <h3 className="font-[family-name:var(--font-playfair)] text-xl text-gray-900 mb-2">{item.title}</h3>
-                    <p className="text-sm text-gray-600 leading-relaxed">{item.description}</p>
+                    <h3 className="font-[family-name:var(--font-playfair)] text-xl text-[color:var(--color-ink)] mb-2">{item.title}</h3>
+                    <p className="text-sm text-[color:var(--color-ink-soft)] leading-relaxed">{item.description}</p>
                   </div>
                   <div className="flex flex-wrap gap-2 mt-3">
                     {item.tags?.map((tag) => (
-                      <span key={tag} className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">{tag}</span>
+                      <span key={tag} className="px-2 py-1 bg-[color:var(--color-paper)] text-[color:var(--color-ink-soft)] rounded-full text-xs">{tag}</span>
                     ))}
                   </div>
                 </div>
               )}
 
               {item.type === "linkedin" && (
+                // intentional: LinkedIn brand color (#0077B5) and on-brand light-blue
+                // body text — kept as exception to the editorial palette so the card
+                // reads unmistakably as a LinkedIn post preview
                 <div className="bg-[#0077B5] h-full p-6 flex flex-col justify-between text-white">
                   <div>
                     <div className="flex items-center gap-2 mb-3">
@@ -226,16 +235,6 @@ export function ContentGrid() {
                 </div>
               )}
 
-              {item.type === "resume" && (
-                <div className="bg-gradient-to-br from-gray-100 to-gray-200 h-full p-6 flex flex-col justify-center items-center text-center group-hover:from-gray-900 group-hover:to-gray-800 transition-all">
-                  <svg className="w-12 h-12 mb-3 text-gray-900 group-hover:text-white transition-colors" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 12H15M9 16H15M17 21H7C5.89543 21 5 20.1046 5 19V5C5 3.89543 5.89543 3 7 3H12.5858C12.851 3 13.1054 3.10536 13.2929 3.29289L18.7071 8.70711C18.8946 8.89464 19 9.149 19 9.41421V19C19 20.1046 18.1046 21 17 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                  <h3 className="font-[family-name:var(--font-playfair)] text-xl mb-2 group-hover:text-white transition-colors">{item.title}</h3>
-                  <p className="text-sm text-gray-600 group-hover:text-gray-300 transition-colors opacity-70">{item.description}</p>
-                </div>
-              )}
-
               {item.type === "photography-cta" && (
                 <div className="bg-gradient-to-br from-[#002E5D] to-[#0057B8] h-full p-6 flex flex-col justify-between text-white">
                   <div>
@@ -260,7 +259,7 @@ export function ContentGrid() {
             </CardWrapper>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -14,6 +14,8 @@ export function CalEmbed({ calLink }: CalEmbedProps) {
       cal("ui", {
         theme: "light",
         styles: {
+          // intentional: Cal.com brand color — required for embed branding API,
+          // not a candidate for the editorial token system
           branding: { brandColor: "#003DA5" },
         },
         hideEventTypeDetails: false,

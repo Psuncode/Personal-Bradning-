@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono, Playfair_Display } from "next/font/google";
-import "../globals.css";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { GrainOverlay } from "@/components/editorial/grain-overlay";
 import { siteConfig } from "@/data/site-config";
-import { roles, education } from "@/data/resume";
+import { safeJsonLd } from "@/lib/json-ld";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -53,9 +53,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const founderRole = roles.find((r) => r.company === "Inara Health Diagnostic");
-  const pmRole = roles.find((r) => r.title.includes("Product Manager"));
-
   const personJsonLd = {
     "@context": "https://schema.org",
     "@type": "Person",
@@ -63,10 +60,6 @@ export default function RootLayout({
     url: siteConfig.url,
     jobTitle: "Product Manager & Founder",
     email: siteConfig.email,
-    alumniOf: {
-      "@type": "EducationalOrganization",
-      name: education[0]?.school ?? "Brigham Young University",
-    },
     sameAs: [siteConfig.links.linkedin, siteConfig.links.github],
     knowsAbout: [
       "Product Management",
@@ -81,11 +74,11 @@ export default function RootLayout({
     hasOccupation: [
       {
         "@type": "Occupation",
-        name: pmRole?.title ?? "Product Manager",
+        name: "Product Manager",
       },
       {
         "@type": "Occupation",
-        name: founderRole?.title ?? "Founder & CEO",
+        name: "Founder & CEO",
         occupationalCategory: "Medical Device Startup",
       },
       {
@@ -101,26 +94,25 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${inter.variable} ${geistMono.variable} ${playfairDisplay.variable} min-h-screen flex flex-col font-sans antialiased`}
+    <div
+      className={`${inter.variable} ${geistMono.variable} ${playfairDisplay.variable} flex flex-col flex-1`}
+    >
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-gray-900 focus:text-white focus:rounded-lg focus:text-sm focus:font-medium"
       >
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-gray-900 focus:text-white focus:rounded-lg focus:text-sm focus:font-medium"
-        >
-          Skip to content
-        </a>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
-        />
-        <Navbar />
-        <main id="main-content" className="flex-1">{children}</main>
-        <Footer />
-        <Analytics />
-        <SpeedInsights />
-      </body>
-    </html>
+        Skip to content
+      </a>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(personJsonLd) }}
+      />
+      <Navbar />
+      <main id="main-content" className="flex-1">{children}</main>
+      <GrainOverlay />
+      <Footer />
+      <Analytics />
+      <SpeedInsights />
+    </div>
   );
 }

@@ -28,12 +28,12 @@ vi.mock("framer-motion", () => ({
 describe("Contact Page", () => {
   it("renders the contact page", () => {
     render(<ContactPage />);
-    expect(screen.getByText("Get in Touch")).toBeDefined();
+    expect(screen.getByText("Send a Message")).toBeDefined();
   });
 
   it("renders page heading", () => {
     render(<ContactPage />);
-    const heading = screen.getByText("Get in Touch");
+    const heading = screen.getByText("Send a Message");
     expect(heading).toBeDefined();
   });
 
@@ -126,9 +126,9 @@ describe("Contact Page", () => {
     expect(submitBtn?.className).toContain("w-full");
   });
 
-  it("submit button has dark styling", () => {
+  it("submit button has dark ink styling", () => {
     const { container } = render(<ContactPage />);
     const submitBtn = container.querySelector("button[type='submit']");
-    expect(submitBtn?.className).toContain("bg-gray-900");
+    expect(submitBtn?.className).toContain("bg-[color:var(--color-ink)]");
   });
 });

@@ -25,10 +25,9 @@ Philip Sun is a product manager, healthcare founder, photographer, and B2B ecomm
 - philipsun.com/photography — Photography portfolio, pricing, and session booking
 - philipsun.com/photography/gallery — Photo gallery
 - philipsun.com/photography/book — Book a photography session
-- philipsun.com/ecommerce — B2B product landing page (Puno Filter, Smart Sync)
+- ecommerce.philipsun.com — B2B product landing page (Puno Filter, Smart Sync)
 - philipsun.com/projects — Case studies (Inara Health, Church PM, Nursa AI)
 - philipsun.com/blog — Writing on healthcare PM, founding, and photography
-- philipsun.com/resume — Full resume and work history
 - philipsun.com/meet — Book a 30-minute call
 
 ## Featured Projects

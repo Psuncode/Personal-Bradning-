@@ -228,7 +228,7 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
 
       let cellClass = 'p-2 rounded-lg text-sm font-medium transition-colors ';
       if (isSelected) {
-        cellClass += 'bg-byu-navy text-white ';
+        cellClass += 'bg-[color:var(--color-ink)] text-[color:var(--color-paper)] ';
       } else if (isDisabled) {
         if (isBusy && !isPast && !isWeekend) {
           cellClass += 'text-gray-400 bg-gray-50 cursor-not-allowed ';
@@ -236,11 +236,11 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
           cellClass += 'text-gray-300 cursor-not-allowed ';
         }
       } else {
-        cellClass += 'text-byu-navy hover:bg-byu-sky/20 cursor-pointer ';
+        cellClass += 'text-[color:var(--color-ink)] hover:bg-[color:var(--color-rule)]/40 cursor-pointer ';
       }
 
       if (isTodayDate && !isSelected) {
-        cellClass += 'ring-1 ring-byu-navy ';
+        cellClass += 'ring-1 ring-[color:var(--color-ink)] ';
       }
 
       cells.push(
@@ -262,18 +262,18 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
           <button
             onClick={() => setCurrentMonth((prev) => addMonths(prev, -1))}
             disabled={currentMonth.getTime() <= todayMonth.getTime()}
-            className="p-2 rounded-lg text-byu-navy hover:bg-byu-sky/20 disabled:text-gray-300 disabled:cursor-not-allowed transition-colors"
+            className="p-2 rounded-lg text-[color:var(--color-ink)] hover:bg-[color:var(--color-rule)]/40 disabled:text-gray-300 disabled:cursor-not-allowed transition-colors"
             aria-label="Previous month"
           >
             ←
           </button>
-          <span className="font-semibold text-byu-navy">
+          <span className="font-semibold text-[color:var(--color-ink)]">
             {format(currentMonth, 'MMMM yyyy')}
           </span>
           <button
             onClick={() => setCurrentMonth((prev) => addMonths(prev, 1))}
             disabled={currentMonth.getTime() >= maxMonth.getTime()}
-            className="p-2 rounded-lg text-byu-navy hover:bg-byu-sky/20 disabled:text-gray-300 disabled:cursor-not-allowed transition-colors"
+            className="p-2 rounded-lg text-[color:var(--color-ink)] hover:bg-[color:var(--color-rule)]/40 disabled:text-gray-300 disabled:cursor-not-allowed transition-colors"
             aria-label="Next month"
           >
             →
@@ -303,8 +303,8 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
     <div className="w-full max-w-2xl mx-auto">
       {step === 'date' && (
         <div className="space-y-6">
-          <h3 className="text-2xl font-semibold text-byu-navy">Select a Date</h3>
-          <p className="text-byu-dark-gray">
+          <h3 className="text-2xl font-semibold text-[color:var(--color-ink)]">Select a Date</h3>
+          <p className="text-[color:var(--color-ink-soft)]">
             Choose a weekday (Monday – Friday) to meet. All times are in Mountain Time.
           </p>
           {calendarError && (
@@ -318,8 +318,8 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
 
       {step === 'time' && selectedDate && (
         <div className="space-y-6">
-          <h3 className="text-2xl font-semibold text-byu-navy">Select a Time</h3>
-          <p className="text-byu-dark-gray">
+          <h3 className="text-2xl font-semibold text-[color:var(--color-ink)]">Select a Time</h3>
+          <p className="text-[color:var(--color-ink-soft)]">
             {format(selectedDate, 'MMMM d, yyyy')} – Available slots (Mountain Time):
           </p>
 
@@ -331,15 +331,15 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
                   onClick={() => handleTimeSelect(slot)}
                   className={`p-3 rounded-lg border-2 transition-colors font-medium ${
                     selectedSlot === slot
-                      ? 'border-byu-navy bg-byu-navy text-white'
-                      : 'border-byu-sky/30 hover:border-byu-navy text-byu-navy'
+                      ? 'border-[color:var(--color-ink)] bg-[color:var(--color-ink)] text-[color:var(--color-paper)]'
+                      : 'border-[color:var(--color-rule)] hover:border-[color:var(--color-ink)] text-[color:var(--color-ink)]'
                   }`}
                 >
                   {slot.display}
                 </button>
               ))
             ) : (
-              <p className="col-span-3 text-byu-dark-gray">
+              <p className="col-span-3 text-[color:var(--color-ink-soft)]">
                 No available slots for this day
               </p>
             )}
@@ -349,14 +349,14 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
             <Button
               onClick={() => setStep('date')}
               variant="outline"
-              className="border-byu-navy text-byu-navy"
+              className="border-[color:var(--color-ink)] text-[color:var(--color-ink)]"
             >
               Back
             </Button>
             <Button
               onClick={() => setStep('details')}
               disabled={!selectedSlot}
-              className="bg-byu-navy hover:bg-byu-blue"
+              className="bg-[color:var(--color-ink)] text-[color:var(--color-paper)] hover:bg-[color:var(--color-accent)]"
             >
               Continue
             </Button>
@@ -366,47 +366,59 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
 
       {step === 'details' && (
         <div className="space-y-6">
-          <h3 className="text-2xl font-semibold text-byu-navy">Your Details</h3>
+          <h3 className="text-2xl font-semibold text-[color:var(--color-ink)]">Your Details</h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-byu-navy mb-2">
+              <label
+                htmlFor="meet-name"
+                className="block text-sm font-medium text-[color:var(--color-ink)] mb-2"
+              >
                 Name *
               </label>
               <input
+                id="meet-name"
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleFormChange}
                 placeholder="Your name"
-                className="w-full px-4 py-2 border border-byu-sky/30 rounded-lg focus:outline-none focus:border-byu-navy"
+                className="w-full px-4 py-2 border border-[color:var(--color-rule)] rounded-lg focus:outline-none focus:border-[color:var(--color-ink)]"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-byu-navy mb-2">
+              <label
+                htmlFor="meet-email"
+                className="block text-sm font-medium text-[color:var(--color-ink)] mb-2"
+              >
                 Email *
               </label>
               <input
+                id="meet-email"
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleFormChange}
                 placeholder="your@email.com"
-                className="w-full px-4 py-2 border border-byu-sky/30 rounded-lg focus:outline-none focus:border-byu-navy"
+                className="w-full px-4 py-2 border border-[color:var(--color-rule)] rounded-lg focus:outline-none focus:border-[color:var(--color-ink)]"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-byu-navy mb-2">
+              <label
+                htmlFor="meet-description"
+                className="block text-sm font-medium text-[color:var(--color-ink)] mb-2"
+              >
                 Description (Optional)
               </label>
               <textarea
+                id="meet-description"
                 name="description"
                 value={formData.description}
                 onChange={handleFormChange}
                 placeholder="What would you like to discuss?"
                 rows={4}
-                className="w-full px-4 py-2 border border-byu-sky/30 rounded-lg focus:outline-none focus:border-byu-navy"
+                className="w-full px-4 py-2 border border-[color:var(--color-rule)] rounded-lg focus:outline-none focus:border-[color:var(--color-ink)]"
               />
             </div>
           </div>
@@ -414,13 +426,13 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
             <Button
               onClick={() => setStep('time')}
               variant="outline"
-              className="border-byu-navy text-byu-navy"
+              className="border-[color:var(--color-ink)] text-[color:var(--color-ink)]"
             >
               Back
             </Button>
             <Button
               onClick={handleConfirmBooking}
-              className="bg-byu-navy hover:bg-byu-blue"
+              className="bg-[color:var(--color-ink)] text-[color:var(--color-paper)] hover:bg-[color:var(--color-accent)]"
             >
               Confirm Booking
             </Button>
@@ -434,7 +446,7 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
             <h3 className="text-2xl font-semibold text-green-700 mb-4">
               ✓ Booking Confirmed
             </h3>
-            <div className="space-y-3 text-byu-dark-gray mb-6">
+            <div className="space-y-3 text-[color:var(--color-ink-soft)] mb-6">
               <p>
                 <strong>Name:</strong> {formData.name}
               </p>
@@ -459,14 +471,14 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
           <div className="flex gap-4">
             <Button
               onClick={handleDownloadICS}
-              className="bg-byu-blue hover:bg-byu-navy"
+              className="bg-[color:var(--color-ink)] text-[color:var(--color-paper)] hover:bg-[color:var(--color-accent)]"
             >
               Download Calendar File (ICS)
             </Button>
             <Button
               onClick={handleEmailBooking}
               variant="outline"
-              className="border-byu-navy text-byu-navy"
+              className="border-[color:var(--color-ink)] text-[color:var(--color-ink)]"
             >
               Email Confirmation
             </Button>
@@ -480,7 +492,7 @@ export function BookingForm({ onBooking, initialData }: BookingFormProps) {
               setFormData({ name: '', email: '', description: '' });
             }}
             variant="outline"
-            className="w-full border-byu-navy text-byu-navy"
+            className="w-full border-[color:var(--color-ink)] text-[color:var(--color-ink)]"
           >
             Book Another Meeting
           </Button>

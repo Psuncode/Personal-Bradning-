@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Hero } from "@/components/sections/hero";
 import { CurrentFocus } from "@/components/sections/current-focus";
@@ -7,24 +8,60 @@ import { ContentGrid } from "@/components/sections/content-grid";
 import { getAllPosts } from "@/lib/blog";
 import { formatDate } from "@/lib/utils";
 
+// When real photography is uploaded (see docs/IMAGES_TO_UPLOAD.md P2),
+// set `src` to the new file path. Empty `src` renders an editorial plate.
+function PhotoBreak({
+  src,
+  alt,
+  kicker,
+  caption,
+}: {
+  src?: string;
+  alt?: string;
+  kicker: string;
+  caption: string;
+}) {
+  return (
+    <section className="px-6 py-12 md:px-12">
+      <div className="editorial-shell">
+        <div className="relative w-full aspect-[21/9] overflow-hidden border-y border-[color:var(--color-rule)] bg-[color:var(--color-paper-elevated)]">
+          {src ? (
+            <Image src={src} alt={alt ?? ""} fill sizes="100vw" className="object-cover" />
+          ) : (
+            <div className="flex h-full w-full items-center justify-between px-10 md:px-16">
+              <span className="text-xs uppercase tracking-[0.28em] text-[color:var(--color-accent)]">
+                {kicker}
+              </span>
+              <span className="font-[family-name:var(--font-playfair)] text-2xl text-[color:var(--color-ink)] md:text-4xl">
+                {caption}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function HomePage() {
   const recentPosts = getAllPosts().slice(0, 2);
 
   return (
     <>
       <Hero />
-      <CurrentFocus />
-      <About />
       <CaseStudies />
-      <ContentGrid />
+      <PhotoBreak kicker="Field Notes" caption="Utah · Wasatch Front" />
+      <About />
+      <CurrentFocus />
+      <PhotoBreak kicker="From the Archive" caption="Desert · Capitol Reef" />
       {recentPosts.length > 0 && (
-        <section className="px-6 py-24 md:px-12">
+        <section className="px-6 py-24 md:px-12 bg-[color:var(--color-paper-elevated)]">
           <div className="editorial-shell editorial-rule pt-10">
             <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
-                <p className="editorial-kicker mb-3">Latest Writing</p>
+                <p className="editorial-kicker mb-3">Writing</p>
                 <h2 className="font-[family-name:var(--font-playfair)] text-4xl text-[color:var(--color-ink)] md:text-5xl">
-                  Latest Writing
+                  Notes & Essays
                 </h2>
                 <p className="mt-3 max-w-2xl text-base leading-7 text-[color:var(--color-ink-soft)]">
                   Notes, essays, and field reports on product, systems, and building well.
@@ -61,6 +98,7 @@ export default function HomePage() {
           </div>
         </section>
       )}
+      <ContentGrid />
     </>
   );
 }

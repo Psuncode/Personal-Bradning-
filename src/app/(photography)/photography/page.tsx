@@ -7,6 +7,7 @@ import {
   photographyPackages,
   photographyTestimonials,
 } from "@/data/photography";
+import { safeJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "Philip Sun Photography | Utah Couples & Portrait Photographer",
@@ -102,7 +103,7 @@ export default function PhotographyHome() {
     <div className="bg-white text-gray-900">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(photographerJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(photographerJsonLd) }}
       />
 
       <section className="relative overflow-hidden bg-gray-950 text-white">

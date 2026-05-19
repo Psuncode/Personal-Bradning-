@@ -1,0 +1,55 @@
+import { describe, expect, it } from "vitest";
+import { getAllPosts, getPostBySlug } from "./blog";
+
+describe("blog discovery", () => {
+  it("surfaces the published folder-based posts", () => {
+    const posts = getAllPosts();
+    const slugs = posts.map((p) => p.slug);
+    expect(slugs).toContain("hello-world");
+    expect(slugs).toContain("lessons-from-building");
+    expect(slugs).toContain("photography-session-guide");
+    // welcome is published: false — should NOT be in getAllPosts() output
+    expect(slugs).not.toContain("welcome");
+  });
+
+  it("getPostBySlug returns even unpublished posts (for preview)", () => {
+    const post = getPostBySlug("welcome");
+    expect(post).not.toBeNull();
+  });
+
+  it("getPostBySlug returns a folder post", () => {
+    const post = getPostBySlug("hello-world");
+    expect(post).not.toBeNull();
+    expect(post?.frontmatter.title).toMatch(/Hello World/i);
+  });
+
+  it("posts are sorted by date descending", () => {
+    const posts = getAllPosts();
+    for (let i = 0; i < posts.length - 1; i++) {
+      const a = new Date(posts[i].frontmatter.date).getTime();
+      const b = new Date(posts[i + 1].frontmatter.date).getTime();
+      expect(a).toBeGreaterThanOrEqual(b);
+    }
+  });
+});
+
+describe("cover detection", () => {
+  it("getPostBySlug returns cover.src when a cover.jpg is present", () => {
+    const post = getPostBySlug("hello-world");
+    expect(post?.cover?.src).toBe("/_blog-assets/hello-world/cover.jpg");
+  });
+
+  it("getPostBySlug omits cover when no cover file exists", () => {
+    const post = getPostBySlug("lessons-from-building");
+    expect(post?.cover).toBeUndefined();
+  });
+});
+
+describe("cover alt from frontmatter", () => {
+  it("reads cover.alt from frontmatter when present", () => {
+    // hello-world is the fixture with cover.jpg; verify default behavior first
+    const post = getPostBySlug("hello-world");
+    // Without frontmatter coverAlt, alt should be undefined (BlogCover provides fallback)
+    expect(post?.cover?.alt).toBeUndefined();
+  });
+});

@@ -44,7 +44,7 @@ export default function PricingPage() {
               </div>
               <Link
                 href={`/photography/book?pkg=${pkg.slug}`}
-                className="mt-6 block w-full text-center bg-byu-navy text-white py-3 px-4 rounded-lg font-medium hover:bg-byu-blue transition-colors"
+                className="mt-6 block w-full text-center bg-[color:var(--color-ink)] text-[color:var(--color-paper)] py-3 px-4 rounded-lg font-medium hover:bg-[color:var(--color-accent)] transition-colors focus-visible:ring-2 focus-visible:ring-[color:var(--color-accent)] focus-visible:outline-none"
               >
                 Book Now
               </Link>

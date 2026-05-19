@@ -39,3 +39,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# blog system v2 build artifact (regenerated via prebuild hook)
+/public/_blog-assets/
+.env*.local
+
+# autoskills-installed per-machine IDE configs (regenerated via `npx autoskills`)
+.cline/
+.continue/
+.codebuddy/
+.junie/
+.kiro/
