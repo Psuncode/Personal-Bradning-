@@ -61,6 +61,15 @@ vi.mock('@/db', () => ({
 vi.mock('@/lib/email', () => ({
   sendBookingConfirmationEmail: vi.fn().mockResolvedValue(undefined),
   sendPhilipNotificationEmail: vi.fn().mockResolvedValue(undefined),
+  isValidEmailAddress: vi.fn().mockReturnValue(true),
+  InvalidEmailRecipientError: class InvalidEmailRecipientError extends Error {
+    recipient: unknown;
+    constructor(recipient: unknown) {
+      super(`Invalid recipient email address: ${JSON.stringify(recipient)}`);
+      this.name = 'InvalidEmailRecipientError';
+      this.recipient = recipient;
+    }
+  },
 }));
 
 // Mock icsService — inline literal only
@@ -125,16 +134,28 @@ describe('Stripe webhook handler — PHOTO-04: booking confirmation', () => {
       }),
     });
 
-    // Default db.insert: returns new booking on first call, and on second call
+    // Default db.insert: returns new booking on first call, and on second call.
+    // payments.insert path has no .returning(); .values() resolves directly.
     mockInsert.mockReturnValue({
-      values: vi.fn().mockReturnValue({
-        returning: vi.fn().mockResolvedValue([{ id: 99 }]),
+      values: vi.fn().mockImplementation(() => {
+        const chain = {
+          returning: vi.fn().mockResolvedValue([{ id: 99 }]),
+          then: (onFulfilled: (v: unknown) => unknown) => Promise.resolve(undefined).then(onFulfilled),
+        };
+        return chain;
       }),
     });
 
     // Default db.delete: no-op
     mockDelete.mockReturnValue({
       where: vi.fn().mockResolvedValue(undefined),
+    });
+
+    // Default db.update: no-op (used to mark emailSentAt)
+    mockUpdate.mockReturnValue({
+      set: vi.fn().mockReturnValue({
+        where: vi.fn().mockResolvedValue(undefined),
+      }),
     });
   });
 
@@ -216,6 +237,134 @@ describe('Stripe webhook handler — PHOTO-04: booking confirmation', () => {
     expect(mockSendNotification).toHaveBeenCalledTimes(1);
     // It should be called with an object containing to: siteConfig.email
     // (the function handles routing to siteConfig.email internally)
+  });
+
+  it('marks email_sent_at on bookings after successful email delivery (CR-01)', async () => {
+    const { POST } = await import('@/app/(main)/api/webhooks/stripe/route');
+    const request = makeRequest('{}', { 'stripe-signature': 'valid-sig' });
+    await POST(request);
+    // db.update(bookings) is the email_sent_at marker.
+    expect(mockUpdate).toHaveBeenCalled();
+  });
+
+  it('returns 200 even if confirmation email fails after DB insert (no Stripe retry, CR-01)', async () => {
+    // Email throws — webhook must still 200, must NOT call db.update to mark sent.
+    mockSendConfirmation.mockRejectedValueOnce(new Error('Resend timeout'));
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const { POST } = await import('@/app/(main)/api/webhooks/stripe/route');
+    const request = makeRequest('{}', { 'stripe-signature': 'valid-sig' });
+    const response = await POST(request);
+
+    expect(response.status).toBe(200);
+    // DB row was inserted...
+    expect(mockInsert).toHaveBeenCalled();
+    // ...but email_sent_at was NOT marked (since email failed).
+    expect(mockUpdate).not.toHaveBeenCalled();
+    // Manual-followup log marker is emitted.
+    const errorCalls = errorSpy.mock.calls.map((c) => String(c[0]));
+    expect(errorCalls.some((s) => s.includes('MANUAL_FOLLOWUP_REQUIRED'))).toBe(true);
+    errorSpy.mockRestore();
+  });
+
+  it('returns 500 if DB insert fails (so Stripe retries, CR-01)', async () => {
+    // First insert (bookings) rejects.
+    mockInsert.mockReturnValueOnce({
+      values: vi.fn().mockReturnValue({
+        returning: vi.fn().mockRejectedValue(new Error('Postgres unique violation')),
+      }),
+    });
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const { POST } = await import('@/app/(main)/api/webhooks/stripe/route');
+    const request = makeRequest('{}', { 'stripe-signature': 'valid-sig' });
+    const response = await POST(request);
+
+    expect(response.status).toBe(500);
+    expect(mockSendConfirmation).not.toHaveBeenCalled();
+    errorSpy.mockRestore();
+  });
+
+  it('retries email send when existing booking has email_sent_at = NULL (CR-01)', async () => {
+    // Existing booking row, but email_sent_at is null — retry the email.
+    mockSelect.mockReturnValueOnce({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockReturnValue({
+          limit: vi.fn().mockResolvedValue([{ id: 55, emailSentAt: null }]),
+        }),
+      }),
+    });
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    const { POST } = await import('@/app/(main)/api/webhooks/stripe/route');
+    const request = makeRequest('{}', { 'stripe-signature': 'valid-sig' });
+    const response = await POST(request);
+
+    expect(response.status).toBe(200);
+    // No new insert (row already exists)...
+    expect(mockInsert).not.toHaveBeenCalled();
+    // ...but emails were re-sent.
+    expect(mockSendConfirmation).toHaveBeenCalledTimes(1);
+    expect(mockUpdate).toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+
+  it('skips email retry when existing booking has email_sent_at set (CR-01)', async () => {
+    mockSelect.mockReturnValueOnce({
+      from: vi.fn().mockReturnValue({
+        where: vi.fn().mockReturnValue({
+          limit: vi.fn().mockResolvedValue([
+            { id: 55, emailSentAt: new Date('2026-01-01T00:00:00Z') },
+          ]),
+        }),
+      }),
+    });
+
+    const { POST } = await import('@/app/(main)/api/webhooks/stripe/route');
+    const request = makeRequest('{}', { 'stripe-signature': 'valid-sig' });
+    const response = await POST(request);
+
+    expect(response.status).toBe(200);
+    expect(mockInsert).not.toHaveBeenCalled();
+    expect(mockSendConfirmation).not.toHaveBeenCalled();
+    expect(mockUpdate).not.toHaveBeenCalled();
+  });
+
+  it('handles checkout.session.expired by deleting the pending reservation', async () => {
+    const { stripe } = await import('@/lib/stripe');
+    (stripe.webhooks.constructEvent as ReturnType<typeof vi.fn>).mockReturnValueOnce({
+      type: 'checkout.session.expired',
+      data: {
+        object: {
+          id: 'cs_test_expired',
+          metadata: { reservationId: '77' },
+        },
+      },
+    });
+
+    const { POST } = await import('@/app/(main)/api/webhooks/stripe/route');
+    const request = makeRequest('{}', { 'stripe-signature': 'valid-sig' });
+    const response = await POST(request);
+
+    expect(response.status).toBe(200);
+    expect(mockDelete).toHaveBeenCalled();
+    // No booking insert for an expired session.
+    expect(mockInsert).not.toHaveBeenCalled();
+  });
+
+  it('acknowledges unhandled event types with 200 (no retry storm)', async () => {
+    const { stripe } = await import('@/lib/stripe');
+    (stripe.webhooks.constructEvent as ReturnType<typeof vi.fn>).mockReturnValueOnce({
+      type: 'charge.refunded',
+      data: { object: {} },
+    });
+
+    const { POST } = await import('@/app/(main)/api/webhooks/stripe/route');
+    const request = makeRequest('{}', { 'stripe-signature': 'valid-sig' });
+    const response = await POST(request);
+
+    expect(response.status).toBe(200);
+    expect(mockInsert).not.toHaveBeenCalled();
   });
 });
 

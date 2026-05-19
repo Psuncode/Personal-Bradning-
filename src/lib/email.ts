@@ -16,6 +16,22 @@ function getResend(): Resend {
 const FROM_ADDRESS = 'Philip Sun Photography <bookings@photography.psunproduction.com>';
 const TIMEZONE = 'America/Denver';
 
+// Lightweight RFC-5322-ish email validator — catches obvious garbage before
+// we burn a Resend API call on it. Not a perfect parser, deliberately.
+// Matches: local@domain.tld with at least one dot in the domain.
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export function isValidEmailAddress(value: unknown): value is string {
+  return typeof value === 'string' && value.length <= 254 && EMAIL_REGEX.test(value.trim());
+}
+
+export class InvalidEmailRecipientError extends Error {
+  constructor(public recipient: unknown) {
+    super(`Invalid recipient email address: ${JSON.stringify(recipient)}`);
+    this.name = 'InvalidEmailRecipientError';
+  }
+}
+
 export interface BookingEmailOpts {
   clientName: string;
   clientEmail: string;
@@ -27,6 +43,10 @@ export interface BookingEmailOpts {
 
 export async function sendBookingConfirmationEmail(opts: BookingEmailOpts) {
   const { clientName, clientEmail, packageName, eventDate, depositPaidInCents, durationMinutes = 60 } = opts;
+
+  if (!isValidEmailAddress(clientEmail)) {
+    throw new InvalidEmailRecipientError(clientEmail);
+  }
 
   const endTime = addMinutes(eventDate, durationMinutes);
   const formattedDate = format(eventDate, 'MMMM d, yyyy', { timeZone: TIMEZONE });
@@ -106,6 +126,13 @@ export interface NotificationOpts {
 
 export async function sendPhilipNotificationEmail(opts: NotificationOpts) {
   const { clientName, clientEmail, packageName, eventDate, depositPaidInCents } = opts;
+
+  // siteConfig.email is the recipient — validate it so a misconfigured
+  // siteConfig doesn't silently swallow notifications.
+  if (!isValidEmailAddress(siteConfig.email)) {
+    throw new InvalidEmailRecipientError(siteConfig.email);
+  }
+
   const formattedDate = format(eventDate, 'MMMM d, yyyy h:mm a', { timeZone: TIMEZONE });
   const formattedDeposit = `$${(depositPaidInCents / 100).toFixed(0)}`;
 

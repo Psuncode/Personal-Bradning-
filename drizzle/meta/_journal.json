@@ -8,6 +8,13 @@
       "when": 1773805693529,
       "tag": "0000_stale_longshot",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1779174968568,
+      "tag": "0001_clear_betty_ross",
+      "breakpoints": true
     }
   ]
 }

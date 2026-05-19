@@ -62,6 +62,10 @@ export const bookings = pgTable("bookings", {
   // 'confirmed' | 'cancelled' | 'completed'
   status: text("status").default("confirmed").notNull(),
   notes: text("notes"),
+  // Set when confirmation email has been sent successfully. Webhook retries
+  // check this column so a Stripe redelivery never double-sends the email.
+  // See CR-01 in .planning/phases/03-booking-and-payments/03-REVIEW.md.
+  emailSentAt: timestamp("email_sent_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });
