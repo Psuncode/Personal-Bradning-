@@ -41,7 +41,8 @@
     "sharp": "^0.33.5",
     "stripe": "^20.4.1",
     "tailwind-merge": "^3.5.0",
-    "tsdav": "^2.1.8"
+    "tsdav": "^2.1.8",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

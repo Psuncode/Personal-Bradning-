@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { getSession } from '@/lib/session';
+import { getSession, isSessionValid } from '@/lib/session';
 import { db } from '@/db';
 import { contacts, bookings } from '@/db/schema';
 import { desc } from 'drizzle-orm';
@@ -10,9 +10,11 @@ export const metadata = {
 };
 
 export default async function AdminPage() {
-  // Stage 2 auth: unseal iron-session cookie and validate
+  // Stage 2 auth: unseal iron-session cookie and validate. isSessionValid
+  // also enforces the SESSION_VERSION kill switch (02-REVIEW.md CR-03) —
+  // bumping env SESSION_VERSION revokes every previously-minted cookie.
   const session = await getSession();
-  if (!session.isLoggedIn) {
+  if (!isSessionValid(session)) {
     redirect('/admin/login');
   }
 
