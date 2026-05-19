@@ -14,11 +14,12 @@ const SUBDOMAINS: Record<string, string> = {
 };
 
 export async function proxy(request: NextRequest) {
-  // Use host header if available (production), fall back to nextUrl.host (test environment)
-  const hostname = request.headers.get("host") ?? request.nextUrl.host ?? "";
-
-  // Strip port for local dev (e.g. "photography.localhost:3000" -> "photography.localhost")
-  const hostWithoutPort = hostname.split(":")[0];
+  // Use host header if available (production), fall back to nextUrl.host (test environment).
+  // Lowercase + strip port so we always compare canonical host strings (DNS is
+  // case-insensitive; `Photography.Philipsun.COM:443` and `photography.philipsun.com`
+  // should route the same way).
+  const rawHostname = request.headers.get("host") ?? request.nextUrl.host ?? "";
+  const hostWithoutPort = rawHostname.split(":")[0].toLowerCase();
 
   // Admin guard runs FIRST — before host-based early returns — so /admin is
   // protected on preview deployments (*.vercel.app) and localhost too, not
@@ -67,8 +68,20 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Extract subdomain: "photography.philipsun.com" -> "photography"
-  const subdomain = hostWithoutPort.split(".")[0];
+  // Extract subdomain by stripping the main-domain suffix explicitly. Closes
+  // 01-REVIEW.md WR-01. The naive split(".")[0] returned "www" for
+  // www.photography.philipsun.com and matched "staging" out of
+  // staging.photography.philipsun.com — both bugs. Now we require an exact
+  // single-level subdomain of `mainDomain`.
+  if (!hostWithoutPort.endsWith(`.${mainDomain}`)) {
+    return NextResponse.next();
+  }
+  const subdomain = hostWithoutPort.slice(0, -(mainDomain.length + 1));
+  // Reject deep subdomains (staging.photography.philipsun.com) and the
+  // accidental "www" host that shouldn't be in SUBDOMAINS but might collide.
+  if (!subdomain || subdomain.includes(".")) {
+    return NextResponse.next();
+  }
   const routeGroupPath = SUBDOMAINS[subdomain];
 
   if (!routeGroupPath) {

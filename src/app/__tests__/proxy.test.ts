@@ -188,4 +188,41 @@ describe("proxy subdomain routing", () => {
       expect(getRewrittenUrl(response)).toContain("/photography/pricing");
     });
   });
+
+  describe("robust host parsing — WR-01", () => {
+    it("passes through deep subdomains instead of routing them as the first label", async () => {
+      // Before the fix, split(".")[0] would yield "staging" and the proxy
+      // would happily look it up in SUBDOMAINS (here: miss → pass through, but
+      // for staging.photography.philipsun.com the bug was real).
+      const request = new NextRequest(
+        "https://staging.photography.philipsun.com/"
+      );
+      const response = await proxy(request);
+      expect(isRewrite(response)).toBe(false);
+    });
+
+    it("ignores www.* as a subdomain even if accidentally hit", async () => {
+      const request = new NextRequest("https://www.photography.philipsun.com/");
+      const response = await proxy(request);
+      // www.photography.philipsun.com has two labels before the main domain,
+      // so it must NOT rewrite to /photography.
+      expect(isRewrite(response)).toBe(false);
+    });
+
+    it("treats hostnames case-insensitively", async () => {
+      // DNS is case-insensitive; routing must match.
+      const request = new NextRequest(
+        "https://PHOTOGRAPHY.philipsun.com/gallery"
+      );
+      const response = await proxy(request);
+      expect(isRewrite(response)).toBe(true);
+      expect(getRewrittenUrl(response)).toContain("/photography/gallery");
+    });
+
+    it("does not rewrite hosts that don't end in the main domain", async () => {
+      const request = new NextRequest("https://photography.example.com/");
+      const response = await proxy(request);
+      expect(isRewrite(response)).toBe(false);
+    });
+  });
 });
