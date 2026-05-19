@@ -9,10 +9,20 @@
 //   - The burst counter resets once BURST_WINDOW_MS has elapsed since the
 //     first attempt in the current window.
 //
-// NOTE: This is a Node-process-local Map and will reset on every cold start.
-// Vercel serverless can spin up multiple isolated lambdas, so this is best-
-// effort throttling. When admin gets deployed to production, upgrade this to
-// Vercel KV or Upstash Ratelimit with the same interface.
+// Two singletons live at the bottom of this module:
+//   - `loginRateLimiter`   — guards the admin login action
+//   - `contactRateLimiter` — guards the public contact form action
+// Both use the same RateLimiter class with the same default policy (5 per
+// 15 min, then 1 per minute sustained) — adjust either independently if the
+// budgets ever need to diverge.
+//
+// SCALING CEILING: This is a Node-process-local Map and will reset on every
+// cold start. Vercel serverless can spin up multiple isolated lambdas, so this
+// is best-effort throttling — a determined attacker can amplify their budget
+// by the number of warm lambdas. Acceptable for current traffic; when either
+// surface (admin login or public contact) sees real abuse or horizontal scale,
+// upgrade to Vercel KV / Upstash Ratelimit behind the same `check(key)`
+// interface so callers don't change.
 
 export type RateLimitResult = {
   allowed: boolean;
@@ -104,3 +114,12 @@ export class RateLimiter {
 
 // Default singleton used by the loginAction. Each Node process gets its own.
 export const loginRateLimiter = new RateLimiter();
+
+// Singleton used by the public contact form action. Same policy as login
+// (5/15min burst, then 1/min sustained) but tracked independently so an
+// attacker hammering one surface doesn't lock out the other.
+export const contactRateLimiter = new RateLimiter({
+  burstLimit: 5,
+  burstWindowMs: 15 * 60 * 1000,
+  cooldownMs: 60 * 1000,
+});

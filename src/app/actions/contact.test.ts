@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { contactRateLimiter } from '@/lib/rate-limit';
 
 // Mock the database module
 const mockInsert = vi.fn().mockReturnValue({
@@ -14,7 +15,10 @@ vi.mock('@/db/schema', () => ({
   contacts: Symbol('contacts-table'),
 }));
 
-// Mock next/headers
+// Mock next/headers. The action reads BOTH 'referer' and 'x-forwarded-for';
+// the default implementation returns a referer-shaped value for everything,
+// matching the original test expectations. Individual tests can override
+// `mockHeadersGet.mockImplementation(...)` to return per-header values.
 const mockHeadersGet = vi.fn();
 vi.mock('next/headers', () => ({
   headers: vi.fn().mockResolvedValue({
@@ -26,6 +30,9 @@ describe('saveContact Server Action', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockHeadersGet.mockReturnValue('https://google.com/search?q=philip+sun');
+    // Clear the contact rate-limiter store between tests — the singleton
+    // persists across the file otherwise and 5 calls in would start failing.
+    contactRateLimiter.reset();
   });
 
   it('inserts contact with all required fields', async () => {
@@ -181,5 +188,60 @@ describe('saveContact Server Action', () => {
     expect(result.success).toBe(false);
     expect(result.fieldErrors).toBeDefined();
     expect(mockInsert).not.toHaveBeenCalled();
+  });
+
+  // CRM #8: rate-limit denial short-circuits before Zod parse + DB insert.
+  it('CRM-8: returns structured rate-limit error after the burst is exhausted', async () => {
+    const { saveContact } = await import('@/app/actions/contact');
+
+    // Make x-forwarded-for stable so all 6 attempts share one rate-limit bucket.
+    mockHeadersGet.mockImplementation((name: string) => {
+      if (name === 'x-forwarded-for') return '203.0.113.42';
+      if (name === 'referer') return 'https://example.com/contact';
+      return null;
+    });
+
+    const makeFormData = () => {
+      const fd = new FormData();
+      fd.set('name', 'Test User');
+      fd.set('email', 'test@example.com');
+      fd.set('message', 'Hello there');
+      return fd;
+    };
+
+    // First 5 attempts succeed (burst budget).
+    for (let i = 0; i < 5; i++) {
+      const ok = await saveContact({ success: false }, makeFormData());
+      expect(ok.success).toBe(true);
+    }
+
+    // 6th is denied — DB insert MUST NOT fire on this call.
+    const insertCallsBefore = mockInsert.mock.calls.length;
+    const denied = await saveContact({ success: false }, makeFormData());
+
+    expect(denied.success).toBe(false);
+    expect(denied.error).toMatch(/too many requests/i);
+    expect(denied.fieldErrors).toEqual({});
+    expect(mockInsert.mock.calls.length).toBe(insertCallsBefore);
+  });
+
+  // CRM #18: ContactFormFieldErrors is a mapped type over the schema — keys
+  // line up with schema field names and validation errors still surface.
+  it('CRM-18: mapped-type field errors are keyed by schema field names', async () => {
+    const { saveContact } = await import('@/app/actions/contact');
+
+    const formData = new FormData();
+    formData.set('name', ''); // required → field error on `name`
+    formData.set('email', 'not-an-email'); // → field error on `email`
+    formData.set('message', ''); // required → field error on `message`
+
+    const result = await saveContact({ success: false }, formData);
+
+    expect(result.success).toBe(false);
+    expect(result.fieldErrors).toBeDefined();
+    expect(Array.isArray(result.fieldErrors?.name)).toBe(true);
+    expect(Array.isArray(result.fieldErrors?.email)).toBe(true);
+    expect(Array.isArray(result.fieldErrors?.message)).toBe(true);
+    expect(result.fieldErrors?.email?.[0]).toMatch(/valid email/i);
   });
 });

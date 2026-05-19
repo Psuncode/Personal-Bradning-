@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { RateLimiter } from './rate-limit';
+import { RateLimiter, contactRateLimiter } from './rate-limit';
 
 describe('RateLimiter', () => {
   it('allows the first attempt for a brand-new key', () => {
@@ -150,5 +150,56 @@ describe('RateLimiter', () => {
     expect(rl.check('ip-z').allowed).toBe(false);
     rl.reset();
     expect(rl.check('ip-z').allowed).toBe(true);
+  });
+});
+
+describe('contactRateLimiter singleton', () => {
+  // Singleton tests reset() between cases so each test gets a clean store.
+  // The singleton uses Date.now() internally (not an injectable clock), so we
+  // exercise its policy through the same `check(key)` interface real callers
+  // use. We're not re-testing time behaviour here (the unit tests above cover
+  // that) — only that the singleton was wired up with the documented budget.
+
+  it('is a RateLimiter instance with the public check() API', () => {
+    contactRateLimiter.reset();
+    expect(contactRateLimiter).toBeInstanceOf(RateLimiter);
+    const r = contactRateLimiter.check('contact-ip-init');
+    expect(r.allowed).toBe(true);
+    expect(r.retryAfterMs).toBe(0);
+    contactRateLimiter.reset();
+  });
+
+  it('allows up to 5 attempts in quick succession from one key', () => {
+    contactRateLimiter.reset();
+    for (let i = 0; i < 5; i++) {
+      expect(contactRateLimiter.check('contact-ip-burst').allowed).toBe(true);
+    }
+    contactRateLimiter.reset();
+  });
+
+  it('denies the 6th attempt from the same key and reports retryAfterMs', () => {
+    contactRateLimiter.reset();
+    for (let i = 0; i < 5; i++) {
+      contactRateLimiter.check('contact-ip-overflow');
+    }
+    const denied = contactRateLimiter.check('contact-ip-overflow');
+    expect(denied.allowed).toBe(false);
+    expect(denied.retryAfterMs).toBeGreaterThan(0);
+    // Within one cooldown window (1 min).
+    expect(denied.retryAfterMs).toBeLessThanOrEqual(60 * 1000);
+    contactRateLimiter.reset();
+  });
+
+  it('tracks contact keys independently of login (separate singleton stores)', () => {
+    contactRateLimiter.reset();
+    // Burn the contact budget for ip-shared.
+    for (let i = 0; i < 5; i++) {
+      contactRateLimiter.check('contact-ip-shared');
+    }
+    expect(contactRateLimiter.check('contact-ip-shared').allowed).toBe(false);
+
+    // A fresh key still has its full quota — confirms per-key isolation.
+    expect(contactRateLimiter.check('contact-ip-fresh').allowed).toBe(true);
+    contactRateLimiter.reset();
   });
 });

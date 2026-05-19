@@ -20,6 +20,7 @@ import { z } from 'zod';
 import { toZonedTime } from 'date-fns-tz';
 import { differenceInCalendarDays, startOfDay, endOfDay } from 'date-fns';
 import { getAvailableSlots, type BookedEvent } from '@/lib/availabilityService';
+import { CONTROL_CHARS } from '@/lib/validation/common';
 
 const TIMEZONE = 'America/Denver';
 
@@ -37,7 +38,8 @@ export const BOOKING_LIMITS = {
 } as const;
 
 // Reject ASCII control characters — same signal as contact validation.
-const CONTROL_CHARS = /[\x00-\x1f\x7f]/;
+// Imported from @/lib/validation/common so booking + contact + future
+// validators share one regex source of truth.
 
 // ---------- Zod request schema ----------
 

@@ -1,23 +1,21 @@
 'use server';
 
+import type { z } from 'zod';
 import { db } from '@/db';
 import { contacts } from '@/db/schema';
 import { headers } from 'next/headers';
+import { contactRateLimiter } from '@/lib/rate-limit';
 import {
   contactFormSchema,
   extractContactPayload,
 } from '@/lib/validation/contact';
 
-export type ContactFormFieldErrors = {
-  name?: string[];
-  email?: string[];
-  subject?: string[];
-  message?: string[];
-  utm_source?: string[];
-  utm_medium?: string[];
-  utm_campaign?: string[];
-  referer?: string[];
-};
+// Derive the field-error map directly from the Zod schema so the type can
+// never drift from the runtime shape. Adding/renaming a field in
+// `contactFormSchema` immediately surfaces here at compile time.
+export type ContactFormFieldErrors = Partial<
+  Record<keyof z.infer<typeof contactFormSchema>, string[]>
+>;
 
 export type ContactFormState = {
   success: boolean;
@@ -44,18 +42,43 @@ function firstFieldError(errors: ContactFormFieldErrors): string | undefined {
   return undefined;
 }
 
+/**
+ * Best-effort client key for rate-limiting. Uses the left-most entry in
+ * x-forwarded-for (the original client IP per Vercel/most proxies). Falls
+ * back to a generic key when the header is missing — better to throttle
+ * everyone collectively than to leave the action unbounded.
+ */
+function getClientKey(forwardedFor: string | null): string {
+  if (!forwardedFor) return 'unknown-client';
+  const first = forwardedFor.split(',')[0]?.trim();
+  return first && first.length > 0 ? first : 'unknown-client';
+}
+
 export async function saveContact(
   _prev: ContactFormState,
   formData: FormData
 ): Promise<ContactFormState> {
   const headersList = await headers();
-  const referer = headersList.get('referer');
 
+  // 1. Per-IP rate limit. Same policy as login (5/15min burst, then 1/min).
+  //    Runs BEFORE Zod parse so we never spend cycles validating abusive
+  //    traffic. See src/lib/rate-limit.ts re: horizontal-scale ceiling.
+  const clientKey = getClientKey(headersList.get('x-forwarded-for'));
+  const gate = contactRateLimiter.check(clientKey);
+  if (!gate.allowed) {
+    return {
+      success: false,
+      error: 'Too many requests. Try again later.',
+      fieldErrors: {},
+    };
+  }
+
+  const referer = headersList.get('referer');
   const payload = extractContactPayload(formData, referer);
   const parsed = contactFormSchema.safeParse(payload);
 
   if (!parsed.success) {
-    const fieldErrors = parsed.error.flatten().fieldErrors as ContactFormFieldErrors;
+    const fieldErrors: ContactFormFieldErrors = parsed.error.flatten().fieldErrors;
     return {
       success: false,
       error:
