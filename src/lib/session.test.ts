@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { currentSessionVersion, isSessionValid } from './session';
 
 describe('currentSessionVersion', () => {
@@ -44,5 +44,48 @@ describe('isSessionValid', () => {
     expect(isSessionValid({ isLoggedIn: true, sessionVersion: '3' })).toBe(true);
     process.env.SESSION_VERSION = '4';
     expect(isSessionValid({ isLoggedIn: true, sessionVersion: '3' })).toBe(false);
+  });
+});
+
+describe('SESSION_SECRET validation (WR-02)', () => {
+  const originalNodeEnv = process.env.NODE_ENV;
+  const originalSecret = process.env.SESSION_SECRET;
+
+  afterEach(() => {
+    vi.resetModules();
+    if (originalNodeEnv === undefined) delete process.env.NODE_ENV;
+    else process.env.NODE_ENV = originalNodeEnv;
+    if (originalSecret === undefined) delete process.env.SESSION_SECRET;
+    else process.env.SESSION_SECRET = originalSecret;
+  });
+
+  it('throws at module load when SESSION_SECRET is missing in non-test environments', async () => {
+    vi.resetModules();
+    process.env.NODE_ENV = 'production';
+    delete process.env.SESSION_SECRET;
+    await expect(import('./session')).rejects.toThrow(/SESSION_SECRET/);
+  });
+
+  it('throws at module load when SESSION_SECRET is shorter than 32 chars', async () => {
+    vi.resetModules();
+    process.env.NODE_ENV = 'production';
+    process.env.SESSION_SECRET = 'tooshort';
+    await expect(import('./session')).rejects.toThrow(/at least 32 characters/);
+  });
+
+  it('accepts a ≥32 char SESSION_SECRET in non-test environments', async () => {
+    vi.resetModules();
+    process.env.NODE_ENV = 'production';
+    process.env.SESSION_SECRET = 'x'.repeat(32);
+    const mod = await import('./session');
+    expect(mod.sessionOptions.password).toBe('x'.repeat(32));
+  });
+
+  it('skips strict validation in test environments to support vi.stubEnv', async () => {
+    vi.resetModules();
+    process.env.NODE_ENV = 'test';
+    delete process.env.SESSION_SECRET;
+    const mod = await import('./session');
+    expect(mod.sessionOptions.password).toBe('');
   });
 });
