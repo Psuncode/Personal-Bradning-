@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  galleryPhotos,
   photographyFaqs,
   photographyPackages,
   photographyTestimonials,
@@ -14,10 +13,6 @@ export const metadata: Metadata = {
   description:
     "Utah couples and portrait photography by Philip Sun. Relaxed sessions for couples, graduates, and personal portraits in Provo, Utah County, and Salt Lake City.",
 };
-
-const featuredPhotos = galleryPhotos
-  .filter((photo) => photo.category === "couples" || photo.category === "portrait")
-  .slice(0, 5);
 
 const reasonsToBook = [
   "No awkward posing or modeling experience required",
@@ -135,63 +130,27 @@ export default function PhotographyHome() {
         </div>
       </section>
 
-      {featuredPhotos.length > 0 && (
-        <section className="bg-gray-50 px-6 py-20 lg:px-8">
-          <div className="mx-auto max-w-6xl">
-            <div className="mb-10 flex items-end justify-between gap-6">
-              <div>
-                <p className="mb-2 text-xs font-medium uppercase tracking-widest text-gray-500">
-                  Portfolio Highlights
-                </p>
-                <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-bold text-gray-900 md:text-4xl">
-                  Selected Couples & Portrait Sessions
-                </h2>
-              </div>
-              <Link
-                href="/photography/gallery"
-                className="hidden text-sm font-medium text-gray-700 underline-offset-4 transition-colors hover:text-gray-900 hover:underline sm:inline-flex"
-              >
-                Browse Full Gallery
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-              <div className="relative col-span-2 aspect-[4/5] overflow-hidden rounded-2xl bg-gray-200 md:col-span-1 md:row-span-2">
-                <Image
-                  src={featuredPhotos[0].src}
-                  alt={featuredPhotos[0].alt}
-                  fill
-                  className="object-cover transition-transform duration-700 hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                />
-              </div>
-              {featuredPhotos.slice(1).map((photo) => (
-                <div
-                  key={photo.id}
-                  className="relative aspect-square overflow-hidden rounded-2xl bg-gray-200"
-                >
-                  <Image
-                    src={photo.src}
-                    alt={photo.alt}
-                    fill
-                    className="object-cover transition-transform duration-700 hover:scale-105"
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                  />
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 text-center sm:hidden">
-              <Link
-                href="/photography/gallery"
-                className="text-sm font-medium text-gray-700 underline underline-offset-4"
-              >
-                Browse Full Gallery
-              </Link>
-            </div>
-          </div>
-        </section>
-      )}
+      <section className="bg-gray-50 px-6 py-20 lg:px-8">
+        <div className="mx-auto max-w-6xl text-center">
+          <p className="mb-2 text-xs font-medium uppercase tracking-widest text-gray-500">
+            Portfolio
+          </p>
+          <h2 className="font-[family-name:var(--font-playfair)] text-3xl font-bold text-gray-900 md:text-4xl">
+            See the work
+          </h2>
+          <p className="mx-auto mt-5 max-w-[60ch] text-base leading-7 text-gray-600">
+            Full client galleries — couples, portraits, and event sessions — live on Pixieset.
+          </p>
+          <a
+            href="https://psunproduction.pixieset.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-8 inline-flex items-center justify-center rounded-full border border-gray-900 px-6 py-3 text-sm font-medium text-gray-900 transition-colors hover:bg-gray-900 hover:text-white"
+          >
+            View full portfolio ↗
+          </a>
+        </div>
+      </section>
 
       <section className="px-6 py-20 lg:px-8">
         <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">

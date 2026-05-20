@@ -17,6 +17,7 @@ export const siteConfig = {
     github: "https://github.com/Psuncode",
     linkedin: "https://www.linkedin.com/in/-philipsun/",
     photography: "https://photography.philipsun.com",
+    pixieset: "https://psunproduction.pixieset.com",
     freelySweet: "https://freelysweet.com",
   },
   // Cal.com integration (free tier — embed only, no API keys required).

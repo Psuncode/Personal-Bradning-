@@ -14,6 +14,20 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },
+  async redirects() {
+    return [
+      {
+        source: "/photography/gallery",
+        destination: "https://psunproduction.pixieset.com",
+        permanent: true,
+      },
+      {
+        source: "/photography/gallery/:path*",
+        destination: "https://psunproduction.pixieset.com",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       {

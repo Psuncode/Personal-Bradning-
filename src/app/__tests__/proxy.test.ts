@@ -27,11 +27,11 @@ describe("proxy subdomain routing", () => {
       expect(getRewrittenUrl(response)).toContain("/photography");
     });
 
-    it("rewrites photography.philipsun.com/gallery to /photography/gallery", async () => {
-      const request = new NextRequest("https://photography.philipsun.com/gallery");
+    it("rewrites photography.philipsun.com/pricing to /photography/pricing", async () => {
+      const request = new NextRequest("https://photography.philipsun.com/pricing");
       const response = await proxy(request);
       expect(isRewrite(response)).toBe(true);
-      expect(getRewrittenUrl(response)).toContain("/photography/gallery");
+      expect(getRewrittenUrl(response)).toContain("/photography/pricing");
     });
   });
 
@@ -251,11 +251,11 @@ describe("proxy subdomain routing", () => {
     it("treats hostnames case-insensitively", async () => {
       // DNS is case-insensitive; routing must match.
       const request = new NextRequest(
-        "https://PHOTOGRAPHY.philipsun.com/gallery"
+        "https://PHOTOGRAPHY.philipsun.com/pricing"
       );
       const response = await proxy(request);
       expect(isRewrite(response)).toBe(true);
-      expect(getRewrittenUrl(response)).toContain("/photography/gallery");
+      expect(getRewrittenUrl(response)).toContain("/photography/pricing");
     });
 
     it("does not rewrite hosts that don't end in the main domain", async () => {

@@ -54,6 +54,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      url: `${siteConfig.url}/work-history`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
       url: `${siteConfig.url}/photography`,
       lastModified: new Date(),
       changeFrequency: "monthly",
@@ -63,12 +69,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${siteConfig.url}/photography/couples`,
       lastModified: new Date(),
       changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${siteConfig.url}/photography/gallery`,
-      lastModified: new Date(),
-      changeFrequency: "weekly",
       priority: 0.7,
     },
     {
