@@ -19,10 +19,12 @@ export function CalEmbed({ calLink }: CalEmbedProps) {
           branding: { brandColor: "#003DA5" },
         },
         hideEventTypeDetails: false,
-        // column_view puts the time picker in a side column next to the
-        // calendar (instead of stacking it below in month_view). Better
-        // desktop flow; gracefully collapses to vertical on narrow viewports.
-        layout: "column_view",
+        // month_view: monthly calendar grid; clicking a day reveals ONLY
+        // that day's time slots in an adjacent panel (when container is
+        // ≥~900px). On narrow viewports it stacks slots below the calendar.
+        // We pair this with a full-width embed container in /meet and
+        // /photography/book so the side-by-side layout activates by default.
+        layout: "month_view",
       });
     })();
   }, []);
