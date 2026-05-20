@@ -25,9 +25,11 @@ describe("Meet page (/meet)", () => {
     );
   });
 
-  it("renders the How it works steps", () => {
+  it("links to LinkedIn as a scheduling fallback", () => {
     render(<MeetPage />);
-    expect(screen.getByText(/Pick a date and time/i)).toBeDefined();
-    expect(screen.getByText(/calendar invite from Cal\.com/i)).toBeDefined();
+    const linkedin = screen.getByText(/LinkedIn/i);
+    const anchor = linkedin.closest("a");
+    expect(anchor?.getAttribute("href")).toContain("linkedin.com");
+    expect(anchor?.getAttribute("target")).toBe("_blank");
   });
 });

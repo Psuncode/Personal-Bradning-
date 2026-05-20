@@ -19,7 +19,10 @@ export function CalEmbed({ calLink }: CalEmbedProps) {
           branding: { brandColor: "#003DA5" },
         },
         hideEventTypeDetails: false,
-        layout: "month_view",
+        // column_view puts the time picker in a side column next to the
+        // calendar (instead of stacking it below in month_view). Better
+        // desktop flow; gracefully collapses to vertical on narrow viewports.
+        layout: "column_view",
       });
     })();
   }, []);
