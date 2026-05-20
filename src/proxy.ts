@@ -94,7 +94,9 @@ export async function proxy(request: NextRequest) {
   }
 
   // Rewrite to internal path: photography.philipsun.com/ -> /photography
-  // photography.philipsun.com/gallery -> /photography/gallery
+  // photography.philipsun.com/pricing -> /photography/pricing
+  // (The /gallery subpath rewrites generically too and is then caught by the
+  // 301 redirect in next.config.ts that points it at Pixieset.)
   const url = request.nextUrl.clone();
   url.pathname =
     routeGroupPath + (request.nextUrl.pathname === "/" ? "" : request.nextUrl.pathname);

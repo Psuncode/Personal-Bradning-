@@ -6,9 +6,16 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-const navLinks = [
+type NavLink = {
+  href: string;
+  label: string;
+  exact?: boolean;
+  external?: boolean;
+};
+
+const navLinks: NavLink[] = [
   { href: "/photography", label: "Home", exact: true },
-  { href: "/photography/gallery", label: "Gallery" },
+  { href: "https://psunproduction.pixieset.com", label: "Portfolio", external: true },
   { href: "/photography/pricing", label: "Pricing" },
   { href: "/photography/book", label: "Book a Session" },
 ];
@@ -37,7 +44,7 @@ export function PhotographyNav() {
         {/* Desktop links */}
         <ul className="hidden items-center gap-1 md:flex">
           {navLinks.map((link) => {
-            const active = isActive(link.href, link.exact);
+            const active = !link.external && isActive(link.href, link.exact);
             return (
               <li key={link.href}>
                 {link.label === "Book a Session" ? (
@@ -47,6 +54,15 @@ export function PhotographyNav() {
                   >
                     Book a Session
                   </Link>
+                ) : link.external ? (
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-2 rounded-md text-sm text-gray-500 hover:text-gray-900 transition-colors"
+                  >
+                    {link.label}
+                  </a>
                 ) : (
                   <Link
                     href={link.href}
@@ -81,21 +97,33 @@ export function PhotographyNav() {
         <div className="md:hidden border-t border-gray-100 bg-white px-6 pb-4">
           <nav className="flex flex-col gap-1 pt-2">
             {navLinks.map((link) => {
-              const active = isActive(link.href, link.exact);
-              return (
+              const active = !link.external && isActive(link.href, link.exact);
+              const className = cn(
+                "rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
+                link.label === "Book a Session"
+                  ? "mt-2 text-center bg-gray-900 text-white hover:bg-gray-700"
+                  : active
+                  ? "text-gray-900 bg-gray-50"
+                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+              );
+              return link.external ? (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setOpen(false)}
+                  className={className}
+                >
+                  {link.label}
+                </a>
+              ) : (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setOpen(false)}
                   aria-current={active ? "page" : undefined}
-                  className={cn(
-                    "rounded-md px-3 py-2.5 text-sm font-medium transition-colors",
-                    link.label === "Book a Session"
-                      ? "mt-2 text-center bg-gray-900 text-white hover:bg-gray-700"
-                      : active
-                      ? "text-gray-900 bg-gray-50"
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                  )}
+                  className={className}
                 >
                   {link.label}
                 </Link>
