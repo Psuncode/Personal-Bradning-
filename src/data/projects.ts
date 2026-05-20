@@ -17,7 +17,6 @@ export const projects: Project[] = [
     lessonsLearned:
       "Hardware product development requires much longer feedback loops than software. Getting clinical stakeholders involved early — before the prototype exists — accelerates validation and surfaces regulatory constraints you'd otherwise hit late.",
     techStack: ["Hardware", "Biosensing", "Clinical Research", "Product Strategy", "Figma"],
-    featured: true,
     coverImage: {
       src: "/photography/landscape-1.svg",
       alt: "Cover image for the Inara Health Diagnostic case study: founding a wearable continuous progesterone monitoring device for early pregnancy care, illustrated with a Utah mountain sunset placeholder until product imagery is ready",
@@ -41,7 +40,6 @@ export const projects: Project[] = [
     lessonsLearned:
       "At enterprise scale, the hardest part of a migration isn't the technology — it's stakeholder alignment across dozens of teams with competing priorities. Weekly 1:1s with department leads made the difference between a smooth rollout and a stalled one.",
     techStack: ["Power BI", "Microsoft Teams", "Zoom", "Power Automate", "Stakeholder Management"],
-    featured: true,
     coverImage: {
       src: "/photography/landscape-2.svg",
       alt: "Cover image for the LDS Church Enterprise Tech PM case study: coordinating zero-downtime migration of 1,200+ desk phones to Microsoft Teams Phone across 18 HQ departments, illustrated with a desert red rock formation placeholder until product imagery is ready",
@@ -65,7 +63,6 @@ export const projects: Project[] = [
     lessonsLearned:
       "Replacing a vendor with an in-house model requires more than technical accuracy — you need to match the vendor's reliability guarantees and build internal confidence before you can cut the contract. Tracking edge cases early is critical.",
     techStack: ["Python", "AI/ML", "Segment", "SQL", "Tableau"],
-    featured: true,
     coverImage: {
       src: "/photography/landscape-3.svg",
       alt: "Cover image for the Nursa AI TB verification case study: an in-house machine learning model that replaced a third-party tuberculosis test verification vendor for clinician credentialing, illustrated with an alpine lake reflection placeholder until product imagery is ready",
@@ -90,7 +87,6 @@ export const projects: Project[] = [
       "Healthcare finance is deeply fragmented — each payer has different fee schedules, and RVU values shift with each code update. Building a maintainable data model that survives code changes is as important as the analysis itself.",
     techStack: ["JavaScript", "Python", "CMS Data", "Healthcare Finance", "Data Analysis"],
     liveUrl: "/rvu-calculator/index.html",
-    featured: false,
     coverImage: {
       src: "/photography/landscape-1.svg",
       alt: "Cover image for the Granger Medical RVU analytics case study: a web-based platform covering 7,000+ CPT codes to surface reimbursement gaps and strengthen payer contract negotiations, illustrated with a mountain landscape placeholder until product imagery is ready",
@@ -114,7 +110,6 @@ export const projects: Project[] = [
     lessonsLearned:
       "Customer discovery at the 0-to-1 stage is less about confirming your hypothesis and more about finding the problem worth solving. The best insight from 200+ interviews wasn't what we expected — it reframed the entire go-to-market angle.",
     techStack: ["Product Strategy", "AI/SEO", "Email Automation", "Figma", "Go-to-Market"],
-    featured: false,
     coverImage: {
       src: "/photography/landscape-2.svg",
       alt: "Cover image for the Cocker Innovation Fellowship case study: leading 0-to-1 product development, customer discovery, and go-to-market strategy for an early-stage synthetic biology startup, illustrated with a desert red rock formation placeholder until product imagery is ready",

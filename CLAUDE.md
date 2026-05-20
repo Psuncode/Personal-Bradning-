@@ -36,14 +36,33 @@ npx vitest run src/lib/blog.test.ts
 The site is intentionally **image-forward, magazine-style**. Tokens live in `src/app/globals.css` via Tailwind 4's `@theme inline` (no `tailwind.config.ts`).
 
 **Color tokens** — cream paper, ink text, accent rust. Always reference via CSS variables, not hex literals:
-- `--color-paper` `#f4efe6` (page background)
+- `--color-paper` `#f3efe6` (page background)
 - `--color-paper-elevated` `#fbf7f1` (cards, forms)
-- `--color-ink` `#201c1a` (primary text)
-- `--color-ink-soft` `#5f5851` (secondary text)
-- `--color-accent` `#5f2f2a` (kickers, focus rings, links)
-- `--color-rule` `#d9cfc1` (borders, dividers)
+- `--color-ink` `#1a1612` (primary text)
+- `--color-ink-soft` `#7a6f60` (secondary text)
+- `--color-accent` `#5f2f2a` (interaction states — focus rings, hover-link color)
+- `--color-rule` `#d9d0bd` (borders, dividers)
+
+**Accent usage is reserved for interaction states only** (focus-visible outlines, hover link color).
+Decorative accent (eyebrows, plain kickers, default link color) was removed in the 2026-05-19
+homepage redesign. Hierarchy comes from size, weight, and whitespace — not hue.
 
 The old `byu-*` color names have been fully removed from production code — editorial tokens are the only palette.
+
+#### Design principles (Philip Sun, 2026)
+
+1. **Editorial first** — pages read like magazine spreads, not landing pages.
+2. **Hierarchy from typography** — size, weight, whitespace; never hue.
+3. **Accent is interaction** — focus rings + hover links only; never decoration.
+4. **Image-forward** — covers and full-bleed media set the tone; text supports.
+5. **Quiet kickers** — eyebrows are labels (ink-soft), not signage (accent).
+6. **One Playfair, one Inter** — display vs. body; never blend the two roles.
+7. **Generous whitespace** — restraint is a feature; never crowd a fold.
+8. **Asymmetric grids** — 12-col leans (asym-left/right) over centered slabs.
+9. **Rule over box** — thin rules and dividers over heavy borders/cards.
+10. **Grain everywhere** — fixed overlay, never per-section.
+11. **Motion respects reduced-motion** — entrances gated, view-transitions disabled.
+12. **Tokens, not literals** — never inline hex; always `var(--color-*)`.
 
 **Fonts:** Inter (`--font-inter`, sans default), Playfair Display (`--font-playfair`, all display/heading type), Geist Mono (`--font-mono`).
 

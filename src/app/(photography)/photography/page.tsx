@@ -106,52 +106,32 @@ export default function PhotographyHome() {
         dangerouslySetInnerHTML={{ __html: safeJsonLd(photographerJsonLd) }}
       />
 
-      <section className="relative overflow-hidden bg-gray-950 text-white">
-        {featuredPhotos[0] && (
-          <Image
-            src={featuredPhotos[0].src}
-            alt=""
-            fill
-            priority
-            className="object-cover opacity-35"
-            sizes="100vw"
-          />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-950 via-gray-950/90 to-gray-900/70" />
+      <section
+        aria-label="Utah night sky"
+        className="relative h-[90vh] w-full overflow-hidden bg-black"
+      >
+        <Image
+          src="/hero/utah-night-sky.jpg"
+          alt=""
+          fill
+          priority
+          className="object-cover"
+          sizes="100vw"
+        />
+      </section>
 
-        <div className="relative mx-auto flex min-h-[82vh] max-w-6xl flex-col justify-end px-6 pb-20 pt-32 lg:px-8">
-          <p className="mb-4 text-sm font-medium uppercase tracking-[0.2em] text-amber-200/85">
-            Serving Provo, Utah County, and Salt Lake City
+      <section className="bg-[color:var(--color-paper)] px-6 py-20 lg:px-8">
+        <div className="editorial-shell text-center">
+          <p className="mb-4 text-xs uppercase tracking-[0.28em] text-[color:var(--color-ink-soft)]">
+            Photography
           </p>
-          <h1 className="max-w-3xl font-[family-name:var(--font-playfair)] text-5xl font-bold leading-[1.05] text-white md:text-7xl">
-            Utah Couples & Portrait Photographer
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-gray-200">
-            Natural, guided photos for couples, graduates, and personal portraits
-            that feel relaxed, personal, and actually look like you.
+          <h2 className="font-[family-name:var(--font-playfair)] text-4xl leading-tight text-[color:var(--color-ink)] md:text-5xl">
+            Philip Sun Photography
+          </h2>
+          <p className="mx-auto mt-5 max-w-[60ch] text-base leading-7 text-[color:var(--color-ink-soft)] md:text-lg">
+            Photography by Philip Sun. Utah-based. Available for portrait, event,
+            and commercial work.
           </p>
-          <p className="mt-4 max-w-2xl text-sm leading-6 text-gray-300">
-            <Link
-              href="/photography/couples"
-              className="font-medium text-white underline underline-offset-4 transition-colors hover:text-amber-200"
-            >
-              Looking specifically for couples sessions?
-            </Link>
-          </p>
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-            <Link
-              href="/photography/book"
-              className="inline-flex items-center justify-center rounded-full bg-white px-8 py-4 text-sm font-semibold text-gray-950 transition-colors hover:bg-gray-100"
-            >
-              Book a Session
-            </Link>
-            <Link
-              href="/photography/pricing"
-              className="inline-flex items-center justify-center rounded-full border border-white/25 px-8 py-4 text-sm font-medium text-white transition-colors hover:border-white/60 hover:bg-white/5"
-            >
-              View Pricing
-            </Link>
-          </div>
         </div>
       </section>
 
@@ -363,35 +343,6 @@ export default function PhotographyHome() {
         </div>
       </section>
 
-      <section className="bg-gray-950 px-6 py-24 text-center text-white lg:px-8">
-        <div className="mx-auto max-w-3xl">
-          <p className="mb-4 text-xs font-medium uppercase tracking-widest text-gray-500">
-            Next Step
-          </p>
-          <h2 className="font-[family-name:var(--font-playfair)] text-4xl font-bold leading-tight md:text-5xl">
-            Ready To Plan Your Session?
-          </h2>
-          <p className="mx-auto mt-6 max-w-2xl text-sm leading-7 text-gray-300">
-            If you want couples photos, graduation portraits, or a personal
-            session that feels straightforward from start to finish, book a date
-            and I will help with the rest.
-          </p>
-          <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link
-              href="/photography/book"
-              className="inline-flex items-center justify-center rounded-full bg-white px-8 py-4 text-sm font-semibold text-gray-950 transition-colors hover:bg-gray-100"
-            >
-              Book a Session
-            </Link>
-            <Link
-              href="/photography/pricing"
-              className="inline-flex items-center justify-center rounded-full border border-white/20 px-8 py-4 text-sm font-medium text-white transition-colors hover:border-white/60 hover:bg-white/5"
-            >
-              View Pricing
-            </Link>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

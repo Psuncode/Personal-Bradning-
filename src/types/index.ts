@@ -14,7 +14,6 @@ export interface Project {
   techStack: string[];
   githubUrl?: string;
   liveUrl?: string;
-  featured?: boolean;
   slug?: string;
   problem?: string;
   solution?: string;

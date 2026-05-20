@@ -1,45 +1,63 @@
 import type { Metadata } from "next";
-import { Container } from "@/components/layout/container";
-import { SectionHeading } from "@/components/section-heading";
-import { siteConfig } from "@/data/site-config";
-import { BookingForm } from "@/components/booking/BookingForm";
-import { getServerAvailability } from "@/lib/serverCalendar";
+import { CalEmbed } from "@/components/cal-embed";
+import { calLinkFor, siteConfig } from "@/data/site-config";
 
 export const metadata: Metadata = {
   title: "Book a Call — Philip Sun",
-  description: `Book a 30-minute call with ${siteConfig.name} — PM, healthcare founder, and photographer. Let's discuss opportunities, collaborations, or photography sessions.`,
+  description: `Book a quick chat with ${siteConfig.name} — product, healthtech, and the boring parts of building things that hold up under scrutiny.`,
+  alternates: { canonical: `${siteConfig.url}/meet` },
 };
 
-export default async function MeetPage() {
-  const availability = await getServerAvailability();
+export default function MeetPage() {
+  const calLink = calLinkFor(siteConfig.cal.quickChatEventSlug);
 
   return (
-    <div className="pb-24 pt-12">
-      <Container>
-        <SectionHeading
-          title="Book a Call"
-          subtitle="Select an available time slot. All times are in Mountain Time (MT)."
-        />
-
-        <div className="mx-auto max-w-3xl rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
-          <BookingForm initialData={availability} />
-        </div>
-
-        <div className="mx-auto max-w-lg mt-12 text-center text-gray-600">
-          <p className="text-sm">
-            Can&apos;t find a time that works? Feel free to reach out on{" "}
+    <div
+      className="min-h-screen"
+      style={{ backgroundColor: "var(--color-paper)" }}
+    >
+      <div className="mx-auto max-w-6xl px-6 pb-24 pt-16 lg:px-8">
+        {/* Context strip — sits above the embed, not beside it. Lets Cal.com's
+            column_view layout breathe at full container width. */}
+        <header className="mb-10 max-w-2xl">
+          <p
+            className="mb-3 text-xs font-medium uppercase tracking-widest"
+            style={{ color: "var(--color-ink-soft)" }}
+          >
+            Let&apos;s talk
+          </p>
+          <h1
+            className="mb-4 font-[family-name:var(--font-playfair)] text-4xl font-bold md:text-5xl"
+            style={{ color: "var(--color-ink)" }}
+          >
+            Book a quick chat
+          </h1>
+          <p
+            className="text-base leading-relaxed"
+            style={{ color: "var(--color-ink-soft)" }}
+          >
+            Product, healthtech, side projects — whatever you want to dig
+            into. Pick a slot below; you&apos;ll get a calendar invite from
+            Cal.com. If scheduling gives you trouble, reach out on{" "}
             <a
-              href={siteConfig.links.linkedin}
+              href={siteConfig.social?.linkedin ?? siteConfig.links.linkedin}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-700 hover:text-gray-900 transition-colors font-medium"
+              className="underline-offset-4 transition-[font-style] duration-150 hover:italic"
+              style={{ color: "var(--color-ink)" }}
             >
               LinkedIn
             </a>
             .
           </p>
+        </header>
+
+        {/* Full-width Cal.com embed. column_view layout shows the date picker
+            on the left and time slots on the right within the iframe. */}
+        <div className="h-[min(85vh,800px)] w-full overflow-hidden rounded-2xl border border-[color:var(--color-rule)] bg-[color:var(--color-paper-elevated)]">
+          <CalEmbed calLink={calLink} />
         </div>
-      </Container>
+      </div>
     </div>
   );
 }

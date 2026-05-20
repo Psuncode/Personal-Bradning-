@@ -83,7 +83,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
             <div className="mt-3">
               <Link
                 href={`/projects/${project.slug}`}
-                className="text-sm text-[color:var(--color-accent)] hover:text-[color:var(--color-ink)] underline underline-offset-2 transition-colors"
+                className="text-sm text-[color:var(--color-ink)] hover:text-[color:var(--color-accent)] underline underline-offset-2 transition-colors"
               >
                 View Details →
               </Link>

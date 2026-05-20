@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Geist_Mono, Playfair_Display } from "next/font/google";
 import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
+import { SitemapFooter } from "@/components/layout/sitemap-footer";
 import { GrainOverlay } from "@/components/editorial/grain-overlay";
 import { siteConfig } from "@/data/site-config";
 import { safeJsonLd } from "@/lib/json-ld";
@@ -110,7 +110,7 @@ export default function RootLayout({
       <Navbar />
       <main id="main-content" className="flex-1">{children}</main>
       <GrainOverlay />
-      <Footer />
+      <SitemapFooter />
       <Analytics />
       <SpeedInsights />
     </div>

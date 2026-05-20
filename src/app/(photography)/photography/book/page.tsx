@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { CheckCircle } from 'lucide-react';
 import { CalEmbed } from '@/components/cal-embed';
 import { calLinkFor, siteConfig } from '@/data/site-config';
 
@@ -9,13 +8,6 @@ export const metadata: Metadata = {
     'Book your photography session — choose a package, pick a date, and pay a deposit to secure your spot.',
 };
 
-const howItWorks = [
-  'Pick a date and time',
-  'Choose your package',
-  'Pay the deposit (handled by Cal.com + Stripe)',
-  "You'll receive a calendar invite and prep email from Cal.com",
-];
-
 export default function BookingPage() {
   const calLink = calLinkFor(siteConfig.cal.photographyEventSlug);
 
@@ -24,102 +16,37 @@ export default function BookingPage() {
       className="min-h-screen"
       style={{ backgroundColor: 'var(--color-paper)' }}
     >
-      <div className="max-w-6xl mx-auto px-6 lg:px-8 py-16">
-        <div className="grid lg:grid-cols-[1fr_2fr] gap-12 items-start">
-          {/* Left: context panel */}
-          <div className="lg:sticky lg:top-24">
-            <p
-              className="text-xs font-medium tracking-widest uppercase mb-3"
-              style={{ color: 'var(--color-accent)' }}
-            >
-              Let&apos;s shoot
-            </p>
-            <h1
-              className="font-[family-name:var(--font-playfair)] text-3xl md:text-4xl font-bold mb-4"
-              style={{ color: 'var(--color-ink)' }}
-            >
-              Book a Couples or Portrait Session
-            </h1>
-            <p
-              className="text-sm leading-relaxed mb-8"
-              style={{ color: 'var(--color-ink-soft)' }}
-            >
-              Choose your package, pick a date, and reserve your session. If
-              scheduling gives you trouble, send an inquiry and I will follow
-              up directly.
-            </p>
-
-            <div>
-              <p
-                className="text-xs font-semibold tracking-widest uppercase mb-4"
-                style={{ color: 'var(--color-accent)' }}
-              >
-                How it works
-              </p>
-              <ol className="space-y-3">
-                {howItWorks.map((step, i) => (
-                  <li key={i} className="flex gap-3 items-start">
-                    <span
-                      className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-semibold"
-                      style={{
-                        backgroundColor: 'var(--color-ink)',
-                        color: 'var(--color-paper)',
-                      }}
-                    >
-                      {i + 1}
-                    </span>
-                    <span
-                      className="text-sm leading-snug"
-                      style={{ color: 'var(--color-ink-soft)' }}
-                    >
-                      {step}
-                    </span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-
-            <div
-              className="mt-8 rounded-xl border p-5"
-              style={{
-                borderColor: 'var(--color-rule)',
-                backgroundColor: 'var(--color-paper-elevated)',
-              }}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <CheckCircle
-                  className="size-4"
-                  style={{ color: 'var(--color-accent)' }}
-                />
-                <span
-                  className="text-sm font-medium"
-                  style={{ color: 'var(--color-ink)' }}
-                >
-                  Secure checkout
-                </span>
-              </div>
-              <p
-                className="text-xs leading-relaxed"
-                style={{ color: 'var(--color-ink-soft)' }}
-              >
-                Scheduling and payment are handled by Cal.com with Stripe. Your
-                deposit holds the date — the balance is due on the day of your
-                session.
-              </p>
-            </div>
-          </div>
-
-          {/* Right: Cal.com embed */}
-          <div
-            className="rounded-2xl border p-2 md:p-4"
-            style={{
-              borderColor: 'var(--color-rule)',
-              backgroundColor: 'var(--color-paper-elevated)',
-              minHeight: '720px',
-            }}
+      <div className="mx-auto max-w-6xl px-6 pb-24 pt-16 lg:px-8">
+        {/* Context strip — same shape as /meet so Cal.com's month_view
+            layout gets full container width below. */}
+        <header className="mb-10 max-w-2xl">
+          <p
+            className="mb-3 text-xs font-medium uppercase tracking-widest"
+            style={{ color: 'var(--color-ink-soft)' }}
           >
-            <CalEmbed calLink={calLink} />
-          </div>
+            Let&apos;s shoot
+          </p>
+          <h1
+            className="mb-4 font-[family-name:var(--font-playfair)] text-4xl font-bold md:text-5xl"
+            style={{ color: 'var(--color-ink)' }}
+          >
+            Book a Couples or Portrait Session
+          </h1>
+          <p
+            className="text-base leading-relaxed"
+            style={{ color: 'var(--color-ink-soft)' }}
+          >
+            Pick a date and time below — Cal.com collects the deposit via
+            Stripe and sends a calendar invite. Balance is due the day of your
+            session.
+          </p>
+        </header>
+
+        {/* Full-width Cal.com embed. month_view layout renders the date
+            picker with the selected day's time slots in an adjacent panel
+            on desktop, and stacks vertically on mobile. */}
+        <div className="h-[min(85vh,800px)] w-full overflow-hidden rounded-2xl border border-[color:var(--color-rule)] bg-[color:var(--color-paper-elevated)]">
+          <CalEmbed calLink={calLink} />
         </div>
       </div>
     </div>

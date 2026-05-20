@@ -44,7 +44,6 @@ const mockProject: Project = {
   techStack: ["React", "TypeScript", "Tailwind CSS"],
   githubUrl: "https://github.com/example/test",
   liveUrl: "https://example.com",
-  featured: true,
   coverImage: mockCoverImage,
 };
 
@@ -53,7 +52,6 @@ const mockProjectWithoutLinks: Project = {
   title: "Test Project 2",
   description: "A test project without links",
   techStack: ["Next.js"],
-  featured: false,
   coverImage: mockCoverImage,
 };
 

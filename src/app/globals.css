@@ -5,11 +5,11 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-paper: #f4efe6;
+  --color-paper: #f3efe6;
   --color-paper-elevated: #fbf7f1;
-  --color-ink: #201c1a;
-  --color-ink-soft: #5f5851;
-  --color-rule: #d9cfc1;
+  --color-ink: #1a1612;
+  --color-ink-soft: #7a6f60;
+  --color-rule: #d9d0bd;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -159,7 +159,7 @@
   }
 
   .editorial-kicker {
-    color: var(--color-accent);
+    color: var(--color-ink-soft);
     @apply text-[11px] font-semibold uppercase tracking-[0.28em];
   }
 

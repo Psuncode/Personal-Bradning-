@@ -37,20 +37,21 @@ vi.mock("next/image", () => ({
 }));
 
 describe("Photography Page", () => {
-  it("renders Utah couples and portrait landing page content", () => {
+  it("renders the quiet brand strip below the night-sky hero", () => {
     render(<PhotographyPage />);
 
     expect(
       screen.getByRole("heading", {
-        level: 1,
-        name: /Utah Couples & Portrait Photographer/i,
+        level: 2,
+        name: /Philip Sun Photography/i,
       }),
     ).toBeDefined();
     expect(
-      screen.getByText(/Serving Provo, Utah County, and Salt Lake City/i),
+      screen.getByText(/Photography by Philip Sun\. Utah-based\./i),
     ).toBeDefined();
+    // Per design audit V2: dark gray-950 hero with two pill CTAs removed;
+    // only package-card "Book a Session" links should remain.
     expect(screen.getAllByRole("link", { name: /Book a Session/i }).length).toBeGreaterThan(0);
-    expect(screen.getAllByRole("link", { name: /View Pricing/i }).length).toBeGreaterThan(0);
   });
 
   it("renders package durations in natural time units", () => {

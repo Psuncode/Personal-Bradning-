@@ -60,6 +60,21 @@ describe("Navbar Component", () => {
     expect(screen.queryByText("Contact")).toBeNull();
   });
 
+  it("does NOT have a top-level Photography link (Photography lives in the Ventures dropdown only)", () => {
+    const { container } = render(<Navbar />);
+    // Only the direct <li> children of the top desktop <ul> are top-level links.
+    // Anything nested inside the Ventures dropdown panel is excluded by :scope.
+    const topUl = container.querySelector("nav > ul");
+    expect(topUl).toBeDefined();
+    const topLabels = Array.from(
+      topUl?.querySelectorAll(":scope > li > a") ?? [],
+    )
+      .map((a) => a.textContent?.trim())
+      .filter(Boolean);
+
+    expect(topLabels).not.toContain("Photography");
+  });
+
   it("navigation links have correct hrefs", () => {
     render(<Navbar />);
     const projectsLink = screen.getByText("Projects").closest("a");

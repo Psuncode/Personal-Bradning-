@@ -157,7 +157,7 @@ export function ContactSection() {
 
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-[color:var(--color-ink)] mb-1">
-                  Name <span aria-hidden="true" className="text-[color:var(--color-accent)]">*</span>
+                  Name <span aria-hidden="true" className="text-[color:var(--color-ink-soft)]">*</span>
                 </label>
                 <input
                   id="name"
@@ -171,7 +171,7 @@ export function ContactSection() {
 
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-[color:var(--color-ink)] mb-1">
-                  Email <span aria-hidden="true" className="text-[color:var(--color-accent)]">*</span>
+                  Email <span aria-hidden="true" className="text-[color:var(--color-ink-soft)]">*</span>
                 </label>
                 <input
                   id="email"
@@ -198,7 +198,7 @@ export function ContactSection() {
 
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-[color:var(--color-ink)] mb-1">
-                  Message <span aria-hidden="true" className="text-[color:var(--color-accent)]">*</span>
+                  Message <span aria-hidden="true" className="text-[color:var(--color-ink-soft)]">*</span>
                 </label>
                 <textarea
                   id="message"

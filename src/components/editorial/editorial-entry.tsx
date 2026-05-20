@@ -20,7 +20,7 @@ export function EditorialEntry({ index, title, description, href, kicker, cover,
       <div className={cn(orientation)}>
         <Link href={href} className="group block">
           {kicker && (
-            <span className="block font-[family-name:var(--font-playfair)] text-3xl text-[color:var(--color-accent)] mb-4">
+            <span className="block font-[family-name:var(--font-playfair)] text-3xl text-[color:var(--color-ink-soft)] mb-4">
               {kicker}
             </span>
           )}

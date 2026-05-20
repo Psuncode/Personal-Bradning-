@@ -60,7 +60,7 @@ function TypographyPlate({ title, initial, kickerLabel, transitionName, variant 
 
       {/* Header row — kicker + cover-forthcoming note */}
       <div className="relative flex items-baseline justify-between">
-        <span className="text-[0.65rem] uppercase tracking-[0.32em] text-[color:var(--color-accent)] md:text-xs">
+        <span className="text-[0.65rem] uppercase tracking-[0.32em] text-[color:var(--color-ink-soft)] md:text-xs">
           {kickerLabel}
         </span>
         <span className="text-[0.6rem] uppercase tracking-[0.22em] text-[color:var(--color-ink-soft)] md:text-[0.7rem]">
@@ -82,7 +82,7 @@ function TypographyPlate({ title, initial, kickerLabel, transitionName, variant 
       <div className="relative flex flex-col gap-3">
         <span
           aria-hidden
-          className="block h-[2px] w-12 bg-[color:var(--color-accent)]"
+          className="block h-[2px] w-12 bg-[color:var(--color-ink-soft)]"
         />
         <span className="font-[family-name:var(--font-playfair)] text-lg leading-snug text-[color:var(--color-ink)] md:text-2xl">
           {title}
@@ -125,7 +125,7 @@ export function ProjectCover({ project, numeral }: Props) {
         </div>
         <div className="col-span-12 md:col-span-5 flex flex-col justify-end pb-6">
           {numeral && (
-            <span className="font-[family-name:var(--font-playfair)] text-5xl text-[color:var(--color-accent)] mb-4">
+            <span className="font-[family-name:var(--font-playfair)] text-5xl text-[color:var(--color-ink-soft)] mb-4">
               {numeral}
             </span>
           )}

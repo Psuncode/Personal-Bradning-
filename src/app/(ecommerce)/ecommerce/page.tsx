@@ -27,7 +27,7 @@ export default function EcommerceHome() {
       {/* SECTION 2 — Hero */}
       <section className="py-24 md:py-32 bg-white">
         <div className="max-w-6xl mx-auto px-6">
-          <p className="text-sm font-mono text-[color:var(--color-accent)] uppercase tracking-widest mb-6">
+          <p className="text-sm font-mono text-[color:var(--color-ink-soft)] uppercase tracking-widest mb-6">
             B2B · Global Wholesale
           </p>
           <h1
@@ -50,7 +50,7 @@ export default function EcommerceHome() {
             </a>
             <a
               href="#products"
-              className="text-[color:var(--color-accent)] text-base font-medium underline-offset-2 hover:underline flex items-center gap-1 py-4"
+              className="text-[color:var(--color-ink)] text-base font-medium underline-offset-2 hover:underline hover:text-[color:var(--color-accent)] flex items-center gap-1 py-4 transition-colors"
             >
               View Products <ArrowRight className="w-4 h-4" aria-hidden="true" />
             </a>
@@ -62,17 +62,17 @@ export default function EcommerceHome() {
       <section className="py-10 border-y border-slate-100 bg-slate-50">
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="flex flex-col items-start gap-2">
-            <Globe className="w-6 h-6 text-[color:var(--color-accent)]" aria-hidden="true" />
+            <Globe className="w-6 h-6 text-[color:var(--color-ink-soft)]" aria-hidden="true" />
             <p className="font-semibold text-[color:var(--color-ink)]">Global Distribution</p>
             <p className="text-sm text-slate-500">Shipping to buyers in North America, Europe, and Asia-Pacific</p>
           </div>
           <div className="flex flex-col items-start gap-2">
-            <Factory className="w-6 h-6 text-[color:var(--color-accent)]" aria-hidden="true" />
+            <Factory className="w-6 h-6 text-[color:var(--color-ink-soft)]" aria-hidden="true" />
             <p className="font-semibold text-[color:var(--color-ink)]">Direct Sourcing</p>
             <p className="text-sm text-slate-500">Chinese manufacturers with verified quality standards</p>
           </div>
           <div className="flex flex-col items-start gap-2">
-            <Handshake className="w-6 h-6 text-[color:var(--color-accent)]" aria-hidden="true" />
+            <Handshake className="w-6 h-6 text-[color:var(--color-ink-soft)]" aria-hidden="true" />
             <p className="font-semibold text-[color:var(--color-ink)]">Deal-Based Pricing</p>
             <p className="text-sm text-slate-500">All pricing negotiated directly — no hidden markups</p>
           </div>
@@ -107,7 +107,7 @@ export default function EcommerceHome() {
                 </div>
                 <a
                   href={`mailto:${siteConfig.email}?subject=Puno Filter Inquiry`}
-                  className="text-[color:var(--color-accent)] font-medium hover:underline inline-flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-[color:var(--color-accent)] focus-visible:outline-none rounded"
+                  className="text-[color:var(--color-ink)] font-medium hover:underline hover:text-[color:var(--color-accent)] inline-flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-[color:var(--color-accent)] focus-visible:outline-none rounded transition-colors"
                 >
                   Inquire about Puno Filter <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </a>
@@ -116,7 +116,7 @@ export default function EcommerceHome() {
 
             {/* Smart Sync card */}
             <div className="rounded-xl bg-white shadow-sm border border-slate-200 motion-safe:hover:shadow-md motion-safe:hover:scale-[1.01] transition-all duration-150 flex flex-col min-h-[420px]">
-              <div className="h-1.5 bg-[color:var(--color-accent)] rounded-t-xl" />
+              <div className="h-1.5 bg-[color:var(--color-ink-soft)] rounded-t-xl" />
               <div className="p-8 flex flex-col flex-1">
                 <h3 className="text-2xl font-bold text-[color:var(--color-ink)] mb-1">Smart Sync</h3>
                 <p className="text-base font-medium text-slate-500 mb-4">Smart Home Systems &amp; Automation</p>
@@ -135,7 +135,7 @@ export default function EcommerceHome() {
                 </div>
                 <a
                   href={`mailto:${siteConfig.email}?subject=Smart Sync Inquiry`}
-                  className="text-[color:var(--color-accent)] font-medium hover:underline inline-flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-[color:var(--color-accent)] focus-visible:outline-none rounded"
+                  className="text-[color:var(--color-ink)] font-medium hover:underline hover:text-[color:var(--color-accent)] inline-flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-[color:var(--color-accent)] focus-visible:outline-none rounded transition-colors"
                 >
                   Inquire about Smart Sync <ArrowRight className="w-4 h-4" aria-hidden="true" />
                 </a>
@@ -151,7 +151,7 @@ export default function EcommerceHome() {
           <h2 className="text-3xl font-bold text-[color:var(--color-ink)] mb-3">Who We Work With</h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10">
             <div className="p-6 rounded-xl border border-slate-200 bg-white">
-              <Ruler className="w-10 h-10 text-[color:var(--color-accent)] mb-4" aria-hidden="true" />
+              <Ruler className="w-10 h-10 text-[color:var(--color-ink-soft)] mb-4" aria-hidden="true" />
               <h3 className="text-lg font-semibold text-[color:var(--color-ink)]">Architects &amp; Designers</h3>
               <p className="text-sm text-slate-600 leading-relaxed mt-2">
                 Specifying smart home systems for residential and commercial projects. Get product specs
@@ -159,7 +159,7 @@ export default function EcommerceHome() {
               </p>
             </div>
             <div className="p-6 rounded-xl border border-slate-200 bg-white">
-              <Package className="w-10 h-10 text-[color:var(--color-accent)] mb-4" aria-hidden="true" />
+              <Package className="w-10 h-10 text-[color:var(--color-ink-soft)] mb-4" aria-hidden="true" />
               <h3 className="text-lg font-semibold text-[color:var(--color-ink)]">Distributors &amp; Wholesalers</h3>
               <p className="text-sm text-slate-600 leading-relaxed mt-2">
                 Looking to carry filtration or smart home products in your market. Let&apos;s discuss
@@ -167,7 +167,7 @@ export default function EcommerceHome() {
               </p>
             </div>
             <div className="p-6 rounded-xl border border-slate-200 bg-white">
-              <Building2 className="w-10 h-10 text-[color:var(--color-accent)] mb-4" aria-hidden="true" />
+              <Building2 className="w-10 h-10 text-[color:var(--color-ink-soft)] mb-4" aria-hidden="true" />
               <h3 className="text-lg font-semibold text-[color:var(--color-ink)]">Commercial Buyers</h3>
               <p className="text-sm text-slate-600 leading-relaxed mt-2">
                 Procurement for large-scale facilities and commercial properties. Custom arrangement
@@ -184,21 +184,21 @@ export default function EcommerceHome() {
           <h2 className="text-3xl font-bold text-[color:var(--color-ink)] mb-3">Simple Process. Direct Deals.</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-10">
             <div className="flex flex-col gap-3">
-              <span className="text-5xl font-bold text-[color:var(--color-accent)]">01</span>
+              <span className="text-5xl font-bold text-[color:var(--color-ink-soft)]">01</span>
               <h3 className="text-xl font-semibold text-[color:var(--color-ink)]">Send an inquiry</h3>
               <p className="text-sm text-slate-600">
                 Email Philip directly with your product interest and quantity requirements.
               </p>
             </div>
             <div className="flex flex-col gap-3">
-              <span className="text-5xl font-bold text-[color:var(--color-accent)]">02</span>
+              <span className="text-5xl font-bold text-[color:var(--color-ink-soft)]">02</span>
               <h3 className="text-xl font-semibold text-[color:var(--color-ink)]">Discuss terms</h3>
               <p className="text-sm text-slate-600">
                 Pricing, MOQ, shipping, and timeline are negotiated directly — no middlemen.
               </p>
             </div>
             <div className="flex flex-col gap-3">
-              <span className="text-5xl font-bold text-[color:var(--color-accent)]">03</span>
+              <span className="text-5xl font-bold text-[color:var(--color-ink-soft)]">03</span>
               <h3 className="text-xl font-semibold text-[color:var(--color-ink)]">Ship globally</h3>
               <p className="text-sm text-slate-600">
                 Products ship from manufacturer to your destination. All logistics coordinated.

@@ -9,7 +9,7 @@ export function EditorialPageHeader({ title, kicker, sub, numeral }: Props) {
   return (
     <header className="editorial-shell pt-24 pb-10">
       {numeral && (
-        <span className="block font-[family-name:var(--font-playfair)] text-5xl text-[color:var(--color-accent)] mb-6">
+        <span className="block font-[family-name:var(--font-playfair)] text-5xl text-[color:var(--color-ink-soft)] mb-6">
           {numeral}
         </span>
       )}
