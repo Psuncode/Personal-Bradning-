@@ -20,7 +20,7 @@ describe('Photography booking page', () => {
       })
     ).toBeDefined();
     expect(
-      screen.getByText(/If scheduling gives you trouble, send an inquiry and I will follow up directly/i)
+      screen.getByText(/Cal\.com collects the deposit via Stripe/i)
     ).toBeDefined();
   });
 

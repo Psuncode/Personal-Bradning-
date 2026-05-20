@@ -51,7 +51,7 @@ function ToolCard({ tool }: { tool: FeaturedProject }) {
             <div className="absolute inset-0 flex items-center justify-center">
               <span
                 aria-hidden
-                className="font-[family-name:var(--font-playfair)] text-[10rem] font-light leading-none tracking-[-0.04em] text-[color:var(--color-ink)] md:text-[14rem]"
+                className="font-[family-name:var(--font-playfair)] text-[6rem] font-light leading-none tracking-[-0.04em] text-[color:var(--color-ink)] sm:text-[8rem] md:text-[14rem]"
               >
                 {displayInitial(tool.name)}
               </span>
