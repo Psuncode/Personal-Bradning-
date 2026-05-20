@@ -1,45 +1,96 @@
 import type { Metadata } from "next";
-import { Container } from "@/components/layout/container";
-import { SectionHeading } from "@/components/section-heading";
-import { siteConfig } from "@/data/site-config";
-import { BookingForm } from "@/components/booking/BookingForm";
-import { getServerAvailability } from "@/lib/serverCalendar";
+import { CheckCircle } from "lucide-react";
+import { CalEmbed } from "@/components/cal-embed";
+import { calLinkFor, siteConfig } from "@/data/site-config";
 
 export const metadata: Metadata = {
   title: "Book a Call — Philip Sun",
-  description: `Book a 30-minute call with ${siteConfig.name} — PM, healthcare founder, and photographer. Let's discuss opportunities, collaborations, or photography sessions.`,
+  description: `Book a quick chat with ${siteConfig.name} — product, healthtech, and the boring parts of building things that hold up under scrutiny.`,
+  alternates: { canonical: `${siteConfig.url}/meet` },
 };
 
-export default async function MeetPage() {
-  const availability = await getServerAvailability();
+const howItWorks = [
+  "Pick a date and time",
+  "Confirm your email",
+  "You'll get a calendar invite from Cal.com",
+  "We'll meet over your preferred video tool",
+];
+
+export default function MeetPage() {
+  const calLink = calLinkFor(siteConfig.cal.quickChatEventSlug);
 
   return (
-    <div className="pb-24 pt-12">
-      <Container>
-        <SectionHeading
-          title="Book a Call"
-          subtitle="Select an available time slot. All times are in Mountain Time (MT)."
-        />
-
-        <div className="mx-auto max-w-3xl rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
-          <BookingForm initialData={availability} />
-        </div>
-
-        <div className="mx-auto max-w-lg mt-12 text-center text-gray-600">
-          <p className="text-sm">
-            Can&apos;t find a time that works? Feel free to reach out on{" "}
-            <a
-              href={siteConfig.links.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-700 hover:text-gray-900 transition-colors font-medium"
+    <div
+      className="min-h-screen"
+      style={{ backgroundColor: "var(--color-paper)" }}
+    >
+      <div className="mx-auto max-w-6xl px-6 py-16 lg:px-8">
+        <div className="grid items-start gap-12 lg:grid-cols-[1fr_2fr]">
+          {/* Left: context panel */}
+          <div className="lg:sticky lg:top-24">
+            <p
+              className="mb-3 text-xs font-medium uppercase tracking-widest"
+              style={{ color: "var(--color-ink-soft)" }}
             >
-              LinkedIn
-            </a>
-            .
-          </p>
+              Let&apos;s talk
+            </p>
+            <h1
+              className="mb-4 font-[family-name:var(--font-playfair)] text-3xl font-bold md:text-4xl"
+              style={{ color: "var(--color-ink)" }}
+            >
+              Book a quick chat
+            </h1>
+            <p
+              className="mb-8 text-sm leading-relaxed"
+              style={{ color: "var(--color-ink-soft)" }}
+            >
+              Product, healthtech, side projects — whatever you want to dig
+              into. If the scheduler gives you trouble, reach out on{" "}
+              <a
+                href={siteConfig.social?.linkedin ?? siteConfig.links.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline-offset-4 transition-[font-style] duration-150 hover:italic"
+                style={{ color: "var(--color-ink)" }}
+              >
+                LinkedIn
+              </a>{" "}
+              and I&apos;ll follow up.
+            </p>
+
+            <div>
+              <p
+                className="mb-4 text-xs font-semibold uppercase tracking-widest"
+                style={{ color: "var(--color-ink-soft)" }}
+              >
+                How it works
+              </p>
+              <ol className="space-y-3">
+                {howItWorks.map((step, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <CheckCircle
+                      aria-hidden
+                      className="mt-0.5 size-4 shrink-0"
+                      style={{ color: "var(--color-ink-soft)" }}
+                    />
+                    <span
+                      className="text-sm leading-relaxed"
+                      style={{ color: "var(--color-ink)" }}
+                    >
+                      {step}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+
+          {/* Right: Cal.com embed */}
+          <div className="h-[min(85vh,800px)] w-full overflow-hidden rounded-2xl border border-[color:var(--color-rule)] bg-[color:var(--color-paper-elevated)]">
+            <CalEmbed calLink={calLink} />
+          </div>
         </div>
-      </Container>
+      </div>
     </div>
   );
 }

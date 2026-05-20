@@ -25,7 +25,9 @@ export const siteConfig = {
   // forward-compat path to Cal.com Pro (webhooks / server API).
   cal: {
     username: "philip-sun-lrwiqb",
-    // Generic intro call — also used by /meet when it migrates to the embed
+    // Quick intro chat — wired into /meet (the "Book a Call" CTA destination).
+    quickChatEventSlug: "quick-chat",
+    // Generic 30-min slot — kept for callers that want the longer format.
     meetEventSlug: "30min",
     // Photography session — created in Cal.com dashboard; wire the Stripe
     // payment app to this event type to collect the deposit.
