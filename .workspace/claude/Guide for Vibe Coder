@@ -1,0 +1,301 @@
+to do:
+ 2 manual steps remaining (external setup)
+
+  1. Provision Neon database + run migrations
+  # In .env.local:
+  DATABASE_URL=postgresql://...pooler.../DBNAME?sslmode=require
+  DATABASE_URL_UNPOOLED=postgresql://.../DBNAME?sslmode=require
+
+  # Then:
+  npx drizzle-kit migrate
+
+  2. Add DNS CNAME records + Vercel domains
+  - In Vercel project → Domains: add photography.philipsun.com and ecommerce.philipsun.com
+  - At DNS provider: add CNAME records pointing both to cname.vercel-dns.com
+  - DNS propagates in 24–48h
+
+  Both are external setup steps — all code is in place and verified.
+    Before going live, you need to:
+
+  1. Neon DB — set DATABASE_URL + DATABASE_URL_UNPOOLED in .env.local → run npx drizzle-kit migrate
+  2. Admin — set ADMIN_PASSWORD + SESSION_SECRET (generate with openssl rand -hex 32) in .env.local + Vercel settings
+  3. Photos — upload to Vercel Blob dashboard → replace placeholder URLs in src/data/photography.ts
+
+⏺ GSD + Ralph-Loop Guide                                                                                                                            
+                                                                                                                                  
+  What is GSD?                                                                                                                                      
+                                                                                                                                                    
+  GSD (Get Shit Done) is a project management system built into your Claude Code setup. It turns big ideas into executable plans using a consistent 
+  cycle: initialize → plan → execute → verify → repeat.                                                                                             
+                                                                                                                                                    
+  Rather than one massive conversation where Claude tries to build everything at once, GSD breaks work into phases, each phase into plans, each plan
+   into tasks — and it uses specialized subagents for each step.
+                                                                                                                                                    
+  ---                                                                                                                                               
+  The Core Loop                                
+                                                                                                                                                    
+  new-project → plan-phase → execute-phase → verify → repeat
+                                                                                                                                                    
+  Everything GSD creates lives in .planning/ in your project root. All decisions, research, plans, and progress are written to files — so nothing is
+   lost between sessions.                                                                                                                           
+                                                                                                                                                    
+  ---                                          
+  Starting a New Project                       
+                        
+  Step 1: (Brownfield only) Map the existing codebase
+                                                                                                                                                    
+  /gsd:map-codebase                                                                                                                                 
+  Run this first if you have an existing codebase. It spawns 4 parallel agents to analyze your stack, architecture, conventions, tests,             
+  integrations, and concerns. Creates .planning/codebase/ with 7 reference documents that every future agent reads.                                 
+                                                                                                                                                    
+  Skip this on a fresh project with no code yet.                                                                                                    
+                                                                                                                                                    
+  Step 2: Initialize the project               
+                                                                                                                                                    
+  /gsd:new-project                           
+  This one command does everything:                                                                                                                 
+  - Asks questions to understand what you're building and for whom
+  - Optionally runs 4 parallel research agents to map the domain                                                                                    
+  - Defines scoped requirements (v1, v2, out-of-scope) with unique REQ-IDs                                                                          
+  - Creates a roadmap with phases, goals, and success criteria                                                                                      
+                                                                                                                                                    
+  Creates:                                                                                                                                          
+  .planning/                                                                                                                                        
+  ├── PROJECT.md        ← vision, decisions, key context                                                                                            
+  ├── REQUIREMENTS.md   ← all requirements with IDs (SUB-01, CRM-02, etc.)                                                                          
+  ├── ROADMAP.md        ← phases with goals and success criteria                                                                                    
+  ├── STATE.md          ← project memory, updated after every action                                                                                
+  └── config.json       ← workflow mode (interactive vs YOLO)                                                                                       
+                                                                                                                                                    
+  After this: /clear to start fresh, then plan Phase 1.                                                                                             
+                                                                                                                                                    
+  ---                                                                                                                                               
+  Planning a Phase                                                                                                                                  
+                                                                                                                                                    
+  Optional: Capture your vision first          
+                                                                                                                                                    
+  /gsd:discuss-phase 1                       
+  If you have opinions about how something should look or work, run this before planning. It asks targeted questions and creates CONTEXT.md — a file
+   of locked decisions the planner must follow. Skip it if you're happy letting Claude make all design calls.                                       
+                                                                                                                                                    
+  Create the plan                                                                                                                                   
+                                               
+  /gsd:plan-phase 1                            
+  This is the main planning command. It:                                                                                                            
+  1. Researches the domain — checks official docs, package versions, known pitfalls                                                                 
+  2. Creates PLAN.md files — concrete tasks with exact file paths, code snippets, and grep-verifiable acceptance criteria                           
+  3. Verifies the plan — a checker agent reviews whether the plan actually achieves the phase goal (up to 3 revision rounds)                        
+                                                                                                                                                    
+  Creates in .planning/phases/01-your-phase/:                                                                                                       
+  01-RESEARCH.md      ← what the researcher found                                                                                                   
+  01-VALIDATION.md    ← test strategy (Nyquist validation)                                                                                          
+  01-PLAN-01-name.md  ← executable plan with tasks                                                                                                  
+  01-PLAN-02-name.md  ← second plan (if phase has parallel work)                                                                                    
+                                                                                                                                                    
+  After this: /clear to start fresh, then execute.                                                                                                  
+                                                                                                                                                    
+  ---                                                                                                                                               
+  Executing a Phase                                                                                                                                 
+                                               
+  /gsd:execute-phase 1                         
+  Runs all plans in the phase. Plans are grouped into waves (wave 1 runs first, wave 2 runs after, etc.). Plans within the same wave run in parallel
+   using separate Claude agents.                                                                                                                    
+                                                                                                                                                    
+  After execution:                                                                                                                                  
+  - Creates SUMMARY.md for each plan           
+  - Runs verification against the phase goal                                                                                                        
+  - Updates STATE.md, ROADMAP.md, and REQUIREMENTS.md
+                                                                                                                                                    
+  ---                                                                                                                                               
+  The Full Workflow (Your Project)             
+                                                                                                                                                    
+  Your project has 4 phases:                 
+                                                                                                                                                    
+  Phase 1: Infrastructure          ← subdomain middleware + Neon/Drizzle DB
+  Phase 2: Content and CRM         ← photography gallery, pricing, contact capture                                                                  
+  Phase 3: Booking and Payments    ← Stripe deposit, CalDAV, confirmation email                                                                     
+  Phase 4: GEO and Ecommerce       ← JSON-LD schema, llms.txt, ecommerce landing                                                                    
+                                                                                                                                                    
+  Each phase follows the same pattern:                                                                                                              
+  /clear                                                                                                                                            
+  /gsd:plan-phase N      ← plan it (research → plan → verify)
+  /clear                                                     
+  /gsd:execute-phase N   ← build it                                                                                                                 
+                                                                                                                                                    
+  ---                                                                                                                                               
+  Useful Commands                                                                                                                                   
+                                               
+  ┌─────────────────────────┬───────────────────────────────────────────────────────────────┐
+  │         Command         │                         What it does                          │                                                       
+  ├─────────────────────────┼───────────────────────────────────────────────────────────────┤                                                       
+  │ /gsd:progress           │ Check where you are, see what's next                          │                                                       
+  ├─────────────────────────┼───────────────────────────────────────────────────────────────┤                                                       
+  │ /gsd:resume-work        │ Restore full context after a break                            │                                                       
+  ├─────────────────────────┼───────────────────────────────────────────────────────────────┤                                                       
+  │ /gsd:do <text>          │ "I want to add X" — routes to the right command automatically │                                                       
+  ├─────────────────────────┼───────────────────────────────────────────────────────────────┤                                                       
+  │ /gsd:quick              │ Small one-off tasks without a full phase cycle                │
+  ├─────────────────────────┼───────────────────────────────────────────────────────────────┤                                                       
+  │ /gsd:debug <issue>      │ Systematic debugging that survives /clear                     │
+  ├─────────────────────────┼───────────────────────────────────────────────────────────────┤                                                       
+  │ /gsd:note <text>        │ Capture an idea instantly, no questions asked                 │
+  ├─────────────────────────┼───────────────────────────────────────────────────────────────┤                                                       
+  │ /gsd:add-todo <text>    │ Save a task to work on later                                  │
+  ├─────────────────────────┼───────────────────────────────────────────────────────────────┤                                                       
+  │ /gsd:check-todos        │ Review and pick a saved todo to work on                       │
+  ├─────────────────────────┼───────────────────────────────────────────────────────────────┤                                                       
+  │ /gsd:settings           │ Toggle research, plan-checking, verification agents           │
+  ├─────────────────────────┼───────────────────────────────────────────────────────────────┤                                                       
+  │ /gsd:set-profile budget │ Switch to cheaper models when burning through quota           │
+  ├─────────────────────────┼───────────────────────────────────────────────────────────────┤                                                       
+  │ /gsd:update             │ Update GSD to latest version                                  │
+  └─────────────────────────┴───────────────────────────────────────────────────────────────┘                                                       
+                                             
+  ---                                          
+  Model Profiles
+                
+  GSD uses multiple Claude agents. You can control which model each uses:
+                                                                                                                                                    
+  ┌────────────────────┬───────────────────────────────────────────────────────┐                                                                    
+  │      Profile       │                       Use when                        │                                                                    
+  ├────────────────────┼───────────────────────────────────────────────────────┤                                                                    
+  │ balanced (default) │ Normal work — Opus for planning, Sonnet for execution │
+  ├────────────────────┼───────────────────────────────────────────────────────┤                                                                    
+  │ quality            │ Architecture-heavy phases — Opus everywhere           │                                                                    
+  ├────────────────────┼───────────────────────────────────────────────────────┤                                                                    
+  │ budget             │ High-volume work or when conserving quota             │                                                                    
+  ├────────────────────┼───────────────────────────────────────────────────────┤                                                                    
+  │ inherit            │ Follow whatever model you have set in the session     │
+  └────────────────────┴───────────────────────────────────────────────────────┘                                                                    
+                                             
+  /gsd:set-profile budget                                                                                                                           
+  /gsd:set-profile quality                                                                                                                          
+                                                                                                                                                    
+  ---                                                                                                                                               
+  Workflow Modes                                                                                                                                    
+                                               
+  Set when you ran /gsd:new-project. Your project is on YOLO mode — Claude auto-approves decisions and doesn't pause for confirmations. Change in
+  .planning/config.json:                                                                                                                            
+   
+  { "mode": "interactive" }   ← pauses at checkpoints for approval                                                                                  
+  { "mode": "yolo" }          ← full autonomy, minimal interruptions                                                                                
+                                                                                                                                                    
+  ---                                                                                                                                               
+  What is Ralph-Loop?                                                                                                                               
+                                                                                                                                                    
+  Ralph-loop is a self-correcting iteration tool. Instead of running a command once and hoping it works, ralph-loop runs the command in a loop —
+  each time Claude exits, the same prompt is fed back automatically. Claude sees its previous work in files and git history, and improves on it.    
+                                             
+  It's built on a Stop hook: when Claude tries to end the session, the hook intercepts the exit and re-injects the original prompt.                 
+                                             
+  Named after Ralph Wiggum. The philosophy: keep trying until it's actually done.                                                                   
+                                             
+  ---                                                                                                                                               
+  How to Use Ralph-Loop                      
+                                               
+  Basic usage
+                                                                                                                                                    
+  /ralph-loop <your task> --completion-promise "DONE" --max-iterations 5
+                                                                                                                                                    
+  - --completion-promise — the exact phrase Claude must output (inside <promise> tags) to stop the loop. Claude can only output it when it's        
+  genuinely true.                                                                                                                                   
+  - --max-iterations — safety cap. Always set this. Without it, the loop runs forever.                                                              
+                                                                                                                                                    
+  Cancel an active loop                                                                                                                             
+                                                                                                                                                    
+  /cancel-ralph                                                                                                                                     
+                                                                                                                                                    
+  With GSD: execute a phase in a loop                                                                                                               
+                                                                                                                                                    
+  This is the most powerful combination. Instead of running execute-phase once and hoping it works, run it in a loop so Claude keeps fixing failures
+   until the phase is genuinely complete:      
+                                                                                                                                                    
+  /ralph-loop /gsd:execute-phase 1 --completion-promise "PHASE 1 COMPLETE" --max-iterations 5
+                                                                                         
+  What happens:                                                                                                                                     
+  1. Claude runs /gsd:execute-phase 1                                                                                                               
+  2. If tests fail, build breaks, or verification fails — Claude tries to exit                                                                      
+  3. The Stop hook blocks exit and feeds the same prompt back                 
+  4. Claude sees the failed state in files and git, diagnoses the problem, and tries again                                                          
+  5. Repeats until Claude outputs <promise>PHASE 1 COMPLETE</promise> or hits 5 iterations                                                          
+                                                                                                                                                    
+  Phase-by-phase pattern                                                                                                                            
+                                                                                                                                                    
+  /clear                                                                                                                                            
+  /gsd:plan-phase 1                                                                                                                                 
+  /clear                                       
+  /ralph-loop /gsd:execute-phase 1 --completion-promise "PHASE 1 COMPLETE" --max-iterations 5
+                                                                                                                                                    
+  /clear
+  /gsd:plan-phase 2                                                                                                                                 
+  /clear                                     
+  /ralph-loop /gsd:execute-phase 2 --completion-promise "PHASE 2 COMPLETE" --max-iterations 5                                                       
+                                                                                                                                                    
+  ---                                                                                                                                               
+  When to Use ralph-loop vs not                                                                                                                     
+                                                                                                                                                    
+  Use ralph-loop when:                         
+  - Executing phases with build steps, tests, or migrations that can fail                                                                           
+  - You want to walk away and let Claude handle failures autonomously                                                                               
+  - The task has clear, verifiable success criteria (tests pass, build succeeds)                                                                    
+                                                                                                                                                    
+  Skip ralph-loop when:                                                                                                                             
+  - Planning phases (planning doesn't need iteration — do it once, then clear)                                                                      
+  - Tasks requiring judgment calls you need to review                                                                                               
+  - Debugging (use /gsd:debug instead — it has its own state management)
+  - Quick one-off edits (/gsd:quick is faster)                                                                                                      
+                                                                                                                                                    
+  ---                                                                                                                                               
+  Writing Good Completion Promises                                                                                                                  
+                                                                                                                                                    
+  The completion promise must be something Claude can only honestly claim when done. Bad promises let Claude exit too early.
+                                                                                                                                                    
+  ┌─────────────────────────────┬─────────────────────────────────────┐
+  │             Bad             │                Good                 │                                                                             
+  ├─────────────────────────────┼─────────────────────────────────────┤
+  │ "DONE" (too vague)          │ "ALL TESTS PASSING"                 │
+  ├─────────────────────────────┼─────────────────────────────────────┤
+  │ "FINISHED"                  │ "PHASE 1 COMPLETE"                  │                                                                             
+  ├─────────────────────────────┼─────────────────────────────────────┤                                                                             
+  │ "COMPLETE" with no criteria │ "BUILD SUCCEEDS AND MIGRATIONS RAN" │                                                                             
+  └─────────────────────────────┴─────────────────────────────────────┘                                                                             
+                                               
+  Claude is instructed not to output the promise if it's not true — it won't lie to escape the loop.                                                
+                                             
+  ---                                                                                                                                               
+  Practical Tips                             
+                                                                                                                                                    
+  Always /clear between major steps. Context windows fill up fast with agent output. Plan-phase and execute-phase are heavy. Fresh context = better
+  results.                                                                                                                                          
+                                             
+  Check progress anytime:                                                                                                                           
+  /gsd:progress                              
+                                               
+  When something breaks mid-phase:
+  /gsd:debug "describe what broke"                                                                                                                  
+  This creates a persistent debug session that survives /clear. Run /gsd:debug with no args to resume.
+                                                                                                                                                    
+  Captured a random idea during work:                                                                                                               
+  /gsd:note refactor the booking form validation                                                                                                    
+  Zero friction, saved instantly. Promote it to a todo later.                                                                                       
+                                                                                                                                                    
+  Burned through quota mid-phase:                                                                                                                   
+  /gsd:set-profile budget                                                                                                                           
+  Switches all agents to cheaper models mid-flight. No need to restart.                                                                             
+                                                                       
+  Stuck and don't know what to run next:                                                                                                            
+  /gsd:do <describe what you want in plain English>                                                                                                 
+  It routes to the right command automatically.                                                                                                     
+                                                                                                                                                    
+  ---                                          
+  Your Current State                                                                                                                                
+                                                                                                                                                    
+  Phase 1: Infrastructure — PLANNED, ready to execute
+  Phase 2: Content and CRM — not started                                                                                                            
+  Phase 3: Booking and Payments — not started                                                                                                       
+  Phase 4: GEO and Ecommerce — not started     
+                                                                                                                                                    
+  Next action:                                                                                                                                      
+  /clear                                       
+  /ralph-loop /gsd:execute-phase 1 --completion-promise "PHASE 1 COMPLETE" --max-iterations 5      
+1 

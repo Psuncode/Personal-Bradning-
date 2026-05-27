@@ -1,0 +1,129 @@
+Action Plan for Remaining Items
+
+  ---
+  1. Upload Real Photography Photos to Vercel Blob
+
+  What's needed: Replace placeholder URLs in src/data/photography.ts with
+  real Vercel Blob URLs.
+
+  Steps:
+  1. Go to your Vercel dashboard → Storage → Blob
+  2. Create folders: portrait/, landscape/, event/
+  3. Upload your photos (JPG/WebP recommended, 1200–2400px wide)
+  4. Copy each public URL from Vercel Blob
+  5. Open src/data/photography.ts and replace the 9 placeholder entries:
+  // Replace lines like:
+  { id: 'p1', src:
+  'https://placeholder.public.blob.vercel-storage.com/portrait/photo1.jpg',
+  ... }
+  // With your real Blob URLs:
+  { id: 'p1', src: 'https://YOUR_BLOB_URL.public.blob.vercel-storage.com/por
+  trait/photo1.jpg', ... }
+  6. Update the alt text for each photo to describe the actual shot
+  7. Run npm run build to verify — done
+
+  ---
+  2. Write Additional Blog Posts
+
+  What's needed: Add .mdx files to content/blog/.
+
+  Steps:
+  1. Copy the existing post as a template:
+  cp content/blog/photography-session-guide.mdx
+  content/blog/your-new-post.mdx
+  2. Update the frontmatter at the top:
+  ---
+  title: "Your Post Title"
+  date: "2026-03-24"
+  excerpt: "One sentence summary shown in the blog list."
+  tags: ["Healthcare PM", "Product Strategy"]
+  published: true
+  ---
+  3. Write the post body in Markdown below the frontmatter
+  4. Optional — add FAQ structured data for GEO:
+  faq:
+    - question: "Question here?"
+      answer: "Answer here."
+  5. Save the file — the post auto-appears on /blog and the homepage "Latest
+   Writing" section
+
+  Suggested post topics (based on your experience):
+  - How I shipped an AI diagnostic model as a PM intern
+  - What I learned founding a medtech hardware startup
+  - The difference between PM at a startup vs. an enterprise org
+
+  ---
+  3. Add Real Client Testimonials to Photography Page
+
+  What's needed: A testimonials section in
+  src/app/(photography)/photography/page.tsx.
+
+  Steps:
+  1. Collect 2–3 real quotes from photography clients (name, quote, session
+  type)
+  2. Open src/app/(photography)/photography/page.tsx
+  3. Add a testimonials section between the Specialties and Pricing
+  sections:
+  {/* Testimonials */}
+  <section className="py-20 px-6 lg:px-8">
+    <div className="max-w-6xl mx-auto">
+      <h2 className="font-[family-name:var(--font-playfair)] text-3xl
+  font-bold mb-10">
+        What clients say
+      </h2>
+      <div className="grid md:grid-cols-3 gap-6">
+        {[
+          { quote: "...", name: "Jane D.", session: "Portrait" },
+          { quote: "...", name: "Mark T.", session: "Event" },
+        ].map((t) => (
+          <div key={t.name} className="bg-gray-50 rounded-2xl p-6">
+            <p className="text-gray-700 leading-relaxed
+  mb-4">"{t.quote}"</p>
+            <p className="font-semibold text-gray-900 text-sm">{t.name}</p>
+            <p className="text-gray-500 text-xs">{t.session} Session</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+  4. Run npm run build and npx vitest run — done
+
+  ---
+  4. Verify Resend Domain for Production Email
+
+  What's needed: Switch booking confirmation emails from
+  onboarding@resend.dev to your own domain.
+
+  Steps:
+  1. Go to resend.com/domains → Add Domain → enter psunproduction.com
+  2. Add the DNS records Resend provides to your domain registrar (SPF,
+  DKIM, DMARC)
+  3. Wait for verification (usually 5–30 min)
+  4. Once verified, open src/lib/email.ts and update line 17:
+  // Change:
+  const FROM_ADDRESS = 'Philip Sun Photography <onboarding@resend.dev>';
+  // To:
+  const FROM_ADDRESS = 'Philip Sun Photography
+  <bookings@photography.psunproduction.com>';
+  5. Remove the TODO comment on line 16
+  6. Deploy and send a test booking to confirm emails arrive
+
+  ---
+  Priority Order
+
+  ┌─────┬──────────────────┬─────────────────┬──────────────────────────┐
+  │  #  │       Task       │  Time estimate  │          Impact          │
+  ├─────┼──────────────────┼─────────────────┼──────────────────────────┤
+  │ 1   │ Resend domain    │ 30 min          │ High — bookings won't    │
+  │     │ verification     │                 │ work properly without it │
+  ├─────┼──────────────────┼─────────────────┼──────────────────────────┤
+  │ 2   │ Upload real      │ 1–2 hr          │ High — gallery shows     │
+  │     │ photos           │                 │ broken images now        │
+  ├─────┼──────────────────┼─────────────────┼──────────────────────────┤
+  │     │                  │ 30 min (once    │ Medium — increases       │
+  │ 3   │ Add testimonials │ you have        │ photography booking      │
+  │     │                  │ quotes)         │ conversion               │
+  ├─────┼──────────────────┼─────────────────┼──────────────────────────┤
+  │ 4   │ Write blog posts │ 2–4 hr each     │ Medium — improves SEO    │
+  │     │                  │                 │ over time                │
+  └─────┴──────────────────┴─────────────────┴──────────────────────────┘
